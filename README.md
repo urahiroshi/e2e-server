@@ -8,36 +8,116 @@ Nightmare-api
 
 ### インターフェース
 
-**Action API**
+**Create Usecase**
+
+POST /usecase
 
 - Request
 
+```json
+{
+    "url": "<initial_url>",
+    "flow": [
+        {
+            "selector": "<String>",
+            "action": "", // click or type or select
+            "param": "", // parameter of type or select
+            "timeout": 1000 // timeout by next action (ms)
+        }
+    ],
+    "timeout": 3000,        // total timeout (ms)
+    "validation": [
+        {
+            "selector": "<String>", // css selector for target element
+            "target": "<Enum>",     // innerHTML or innerText or attribute([attr])
+            "reg": "<regexp>"       // regexp for value
+        }
+    ],
+    "browser": {
+        "width": 800,
+        "height": 600
+    }
+}
 ```
+
+- Response
+
+```json
+{
+    "id": "<id>"
+}
 ```
+
+**Get Usecase**
+
+GET /usecase
+GET /usecase?id=<id>
 
 - Response
 
 ```
 ```
 
-**Result API**
+**Remove Usecase**
+
+DELETE /usecase?id=<id>
+
+- Response
+
+```json
+{
+    "result": "Success"
+}
+```
+
+**Create Trial**
+
+POST /trial
 
 - Request
 
-```
+```json
+{
+    "usecase": "<id>"
+}
 ```
 
 - Response
 
-```
+```json
+{
+    "usecase": "<usecase_id>",
+    "id": "<request_id>",
+    "request_dt": "<YYYY/MM/DD HH:mm:ss>"
+}
 ```
 
-**GetHTML API**
+**Get Trial**
 
-**GetScreenShot API**
+GET /trial?id=<id>
+
+- Response
+
+```json
+{
+    "usecase": "<usecase_id>",
+    "id": "<request_id>",
+    "request_dt": "<YYYY/MM/DD HH:mm:ss>",
+    "start_dt": "<YYYY/MM/DD HH:mm:ss>",
+    "status": 0, // 0:prepare 1:running 20:success 40:fail
+    "end_dt": "<YYYY/MM/DD HH:mm:ss>"
+}
+```
 
 
 ### ロードマップ
 
-1. Action, Result API
-2. GetHTML, GetScreenShot API
+1. Basic Usecase, Trial API
+    - Usecase: GET, POST, DELETE
+    - Trial: POST, GET
+2. Advanced Usecase, Trial API
+    - Fix Usecase API (PATCH, PUT)
+    - Add callback parameter ( or pubsub API?)
+    - Usecase の組み合わせ, 階層構造
+    - Customize Nightmare.js
+3. GetHTML, GetScreenShot API
