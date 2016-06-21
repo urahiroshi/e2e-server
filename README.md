@@ -10,7 +10,7 @@ Nightmare-api
 
 **Create Usecase**
 
-POST /usecase
+POST /usecases
 
 - Request
 
@@ -50,8 +50,8 @@ POST /usecase
 
 **Get Usecase**
 
-GET /usecase
-GET /usecase?id=<id>
+GET /usecases
+GET /usecases?id=<id>
 
 - Response
 
@@ -60,7 +60,7 @@ GET /usecase?id=<id>
 
 **Remove Usecase**
 
-DELETE /usecase?id=<id>
+DELETE /usecases?id=<id>
 
 - Response
 
@@ -72,7 +72,7 @@ DELETE /usecase?id=<id>
 
 **Create Trial**
 
-POST /trial
+POST /trials
 
 - Request
 
