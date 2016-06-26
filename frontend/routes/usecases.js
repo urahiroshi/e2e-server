@@ -1,9 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const model = require('/models/usecase');
+const Usecase = require('../models/usecase');
 
-router.get('/', (req, res, next) => {
-  res.send('respond with a resource');
+router.get('/', function(req, res, next) {
+  res.render('index', { title: 'Express' });
+  res.json(Usecase.getAll());
+  next();
+});
+
+router.post('/', function(req, res, next) {
+  usecase = new Usecase(req.body);
+  usecase.save();
+  res.status(201).end();
 });
 
 module.exports = router;
