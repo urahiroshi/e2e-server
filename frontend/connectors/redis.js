@@ -1,4 +1,7 @@
 const redis = require('redis');
+const bluebird = require('bluebird');
+bluebird.promisifyAll(redis.RedisClient.prototype);
+bluebird.promisifyAll(redis.Multi.prototype);
 
 class Connector {
   constructor(options) {
@@ -6,25 +9,35 @@ class Connector {
   }
 
   get(key) {
-    json = this._client.get(key);
-    return JSON.parse(json);
+    return this._client.getAsync(key).then((res) => {
+      console.log(res);
+      return JSON.parse(res);
+    });
   }
 
   set(key, value) {
-    json = JSON.stringify(value);
-    this._client.set(key, json);
+    const json = JSON.stringify(value);
+    return this._client.setAsync(key, json);
   }
 
   close() {
-    this._client.end(true);
+    return this._client.endAsync(true);
+  }
+
+  multi() {
+    this._client.multi();
+    return this;
+  }
+
+  exec() {
+    return this._client.execAsync();
   }
 }
 
 
-['multi', 'exec'].forEach((method) => {
+['exec'].forEach((method) => {
   Connector.prototype[method] = () => {
-    this._client[method].apply(this._client, arguments);
-    return this;
+    return this._client[method + 'Async']();
   }
 });
 
