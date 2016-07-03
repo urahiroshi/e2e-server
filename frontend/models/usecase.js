@@ -33,6 +33,22 @@ class Usecase {
     });
   }
 
+  delete() {
+    const connector = new Connector();
+    const key = this.key;
+    return connector.multi()
+    .del(key)
+    .srem('usecases', key)
+    .exec()
+    .then((res) => {
+      console.log(res);
+      return res;
+    })
+    .finally(() => {
+      connector.close();
+    });
+  }
+
   static find(key) {
     const connector = new Connector();
     return connector.get(key)

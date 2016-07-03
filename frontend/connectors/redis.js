@@ -45,8 +45,8 @@ class Connector {
   }
 }
 
-// arguments: key, value(object) methods
-['set', 'sadd'].forEach((method) => {
+// arguments: key, value methods
+['set', 'sadd', 'srem'].forEach((method) => {
   Connector.prototype[method] = function (key, value) {
     const requestValue = _.isString(value) ? value : JSON.stringify(value);
     this._log(method, key, requestValue);
@@ -60,11 +60,11 @@ class Connector {
 });
 
 // arguments: key methods
-['smembers'].forEach((method) => {
+['smembers', 'del'].forEach((method) => {
   Connector.prototype[method] = function (key, value) {
     this._log(method, key);
     if (this._multi) {
-      this._multi[method](key, json);
+      this._multi[method](key);
       return this;
     } else {
       return this._client[method + 'Async'](key);
