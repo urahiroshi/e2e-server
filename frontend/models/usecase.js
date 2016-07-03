@@ -22,7 +22,7 @@ class Usecase {
     const key = this.key || createKey();
     connector.multi()
     .set(key, this.params)
-    .set('usecases', key)
+    .sadd('usecases', key)
     .exec()
     .then((res) => {
       console.log(res);
@@ -50,6 +50,8 @@ class Usecase {
     const connector = new Connector();
     connector.get('usecases')
     .then((res) => {
+      console.log('usecases', res);
+      if (!res) return Promise.reject('no usecases');
       const keysAsync = res.map((key) => {
         return connector.get(key);
       });

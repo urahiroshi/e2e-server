@@ -3,9 +3,11 @@ const router = express.Router();
 const Usecase = require('../models/usecase');
 
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-  res.json(Usecase.getAll());
-  next();
+  try {
+    res.json(Usecase.findAll());
+  } catch (err) {
+    next(err);
+  }
 });
 
 router.post('/', function(req, res, next) {

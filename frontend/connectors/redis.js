@@ -6,18 +6,19 @@ bluebird.promisifyAll(redis.Multi.prototype);
 class Connector {
   constructor(options) {
     this._client = redis.createClient(options);
+    this._multi = undefined;
+  }
+
+  _log() {
+    console.log.apply(global, ['[redis]'].concat(arguments));
   }
 
   get(key) {
+    this._log('GET', key);
     return this._client.getAsync(key).then((res) => {
-      console.log(res);
+      this._log(res);
       return JSON.parse(res);
     });
-  }
-
-  set(key, value) {
-    const json = JSON.stringify(value);
-    return this._client.setAsync(key, json);
   }
 
   close() {
@@ -25,20 +26,31 @@ class Connector {
   }
 
   multi() {
-    this._client.multi();
+    this._multi = this._client.multi();
+    this._log('MULTI START');
     return this;
   }
 
   exec() {
-    return this._client.execAsync();
+    this._log('MULTI END');
+    const result = this._multi.execAsync();
+    this._multi = undefined;
+    return result;
   }
 }
 
-
-['exec'].forEach((method) => {
-  Connector.prototype[method] = () => {
-    return this._client[method + 'Async']();
-  }
+// arguments: key, value(object) methods
+['set', 'sadd'].forEach((method) => {
+  Connector.prototype[method] = function (key, value) {
+    const json = JSON.stringify(value);
+    this._log(method, key, json);
+    if (this._multi) {
+      this._multi[method](key, json);
+      return this;
+    } else {
+      return this._client[method + 'Async'](key, json);
+    }
+  };
 });
 
 module.exports = Connector;
