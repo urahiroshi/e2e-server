@@ -21,7 +21,9 @@ class Connector {
     this._log('GET', key);
     return this._client.getAsync(key).then((res) => {
       this._log(res);
-      return JSON.parse(res);
+      const obj = JSON.parse(res);
+      obj.id = key;
+      return obj;
     });
   }
 

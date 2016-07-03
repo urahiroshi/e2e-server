@@ -49,9 +49,9 @@ class Usecase {
   static findAll() {
     const connector = new Connector();
     return connector.smembers('usecases')
-    .then((res) => {
-      console.log('usecases', res);
-      const keysAsync = res.map((key) => {
+    .then((keys) => {
+      console.log('usecases', keys);
+      const keysAsync = keys.map((key) => {
         return connector.get(key);
       });
       return Promise.all(keysAsync);
