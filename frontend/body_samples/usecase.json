@@ -1,0 +1,19 @@
+{
+  "url": "http://localhost:8000",
+  "flow": [
+    {
+      "selector": "button",
+      "action": "click",
+      "param": "",
+      "timeout": 1000
+    }
+  ],
+  "timeout": 3000,
+  "validation": [
+    {
+      "selector": "input",
+      "target": "innerText",
+      "reg": "hoge"
+    }
+  ]
+}

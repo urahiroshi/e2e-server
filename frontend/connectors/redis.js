@@ -1,5 +1,6 @@
 const redis = require('redis');
 const bluebird = require('bluebird');
+const _ = require('lodash');
 bluebird.promisifyAll(redis.RedisClient.prototype);
 bluebird.promisifyAll(redis.Multi.prototype);
 
@@ -10,7 +11,10 @@ class Connector {
   }
 
   _log() {
-    console.log.apply(global, ['[redis]'].concat(arguments));
+    console.log.apply(
+      global,
+      ['[redis]'].concat(Array.prototype.slice.call(arguments))
+    );
   }
 
   get(key) {
@@ -42,15 +46,29 @@ class Connector {
 // arguments: key, value(object) methods
 ['set', 'sadd'].forEach((method) => {
   Connector.prototype[method] = function (key, value) {
-    const json = JSON.stringify(value);
-    this._log(method, key, json);
+    const requestValue = _.isString(value) ? value : JSON.stringify(value);
+    this._log(method, key, requestValue);
+    if (this._multi) {
+      this._multi[method](key, requestValue);
+      return this;
+    } else {
+      return this._client[method + 'Async'](key, requestValue);
+    }
+  };
+});
+
+// arguments: key methods
+['smembers'].forEach((method) => {
+  Connector.prototype[method] = function (key, value) {
+    this._log(method, key);
     if (this._multi) {
       this._multi[method](key, json);
       return this;
     } else {
-      return this._client[method + 'Async'](key, json);
+      return this._client[method + 'Async'](key);
     }
   };
 });
+
 
 module.exports = Connector;
