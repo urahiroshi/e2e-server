@@ -1,10 +1,7 @@
 const Connector = require('../connectors/redis');
+const Helper = require('helper');
 const crypto = require('crypto');
 const Promise = require('bluebird');
-
-function createKey() {
-  return crypto.randomBytes(8).toString('base64');
-}
 
 class Usecase {
   constructor(params) {
@@ -19,7 +16,7 @@ class Usecase {
 
   save() {
     const connector = new Connector();
-    const key = this.key || createKey();
+    const key = this.key || Helper.createKey();
     return connector.multi()
     .set(key, this.params)
     .sadd('usecases', key)
