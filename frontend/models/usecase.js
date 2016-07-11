@@ -1,5 +1,5 @@
 const Connector = require('../connectors/redis');
-const Helper = require('helper');
+const Helper = require('./helper');
 const crypto = require('crypto');
 const Promise = require('bluebird');
 

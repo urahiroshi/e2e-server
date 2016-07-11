@@ -33,23 +33,34 @@ class Connector {
     _retryCount = _retryCount || 0;
     this._log('request: ', JSON.stringify(options));
     request(options, (error, response, body) => {
-      const RETRY_MAX = 2;
-      const RETRY_INTERVAL_MS = 3000;
-      if (error) {
-        this._log('error: ', error);
-        this._retryRequest(options, resolve, reject, _retryCount);
-        return;
-      }
-      const statusCode = response.statusCode;
-      this._log('response: ', JSON.stringify([statusCode, body]));
-      if (statusCode >= 200 && statusCode < 300) {
-        resolve(body);
-      } else if (statusCode >= 500 && statusCode < 600) {
-        this._log('server error: ', statusCode)
-        this._retryRequest(options, resolve, reject, _retryCount);
-      } else {
-        this._log('status code error: ', statusCode)
-        reject(statusCode);
+      try {
+        const RETRY_MAX = 2;
+        const RETRY_INTERVAL_MS = 3000;
+        if (error) {
+          this._log('error: ', error);
+          this._retryRequest(options, resolve, reject, _retryCount);
+          return;
+        }
+        const statusCode = response.statusCode;
+        this._log('response: ', JSON.stringify(response));
+        if (statusCode >= 200 && statusCode < 300) {
+          if (
+            response.headers['content-type'] &&
+            response.headers['content-type'].indexOf('application/json') >= 0
+          ) {
+            resolve(JSON.parse(body));
+          } else {
+            resolve(body);
+          }
+        } else if (statusCode >= 500 && statusCode < 600) {
+          this._log('server error: ', statusCode)
+          this._retryRequest(options, resolve, reject, _retryCount);
+        } else {
+          this._log('status code error: ', statusCode)
+          reject(statusCode);
+        }
+      } catch (err) {
+        reject(err);
       }
     });
   }
@@ -62,11 +73,11 @@ class Connector {
         method: 'GET',
         encoding: 'utf-8',
         headers: {},
-        strictSSL: true,
+        strictSSL: false,
         rejectUnauthorized: false,
-        'Content-Type': 'application/json'
       }
       const requestOptions = Object.assign(defaultOptions, options);
+      requestOptions.headers['Content-Type'] = requestOptions.headers['Content-Type'] || 'application/json';
       if (requestOptions.body && _.isObject(requestOptions.body)) {
         requestOptions.body = JSON.stringify(requestOptions.body);
         requestOptions.headers['Content-Length'] = requestOptions.body.length;
@@ -75,3 +86,5 @@ class Connector {
     });
   }
 }
+
+module.exports = Connector;
