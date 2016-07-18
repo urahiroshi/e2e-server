@@ -1,10 +1,15 @@
 {
-  "url": "http://localhost:8000",
+  "url": "http://yahoo.com",
   "flow": [
     {
-      "selector": "button",
+      "selector": "form[action*=\"/search\"] [name=p]",
+      "action": "type",
+      "param": "github nightmare",
+      "timeout": 1000
+    },
+    {
+      "selector": "form[action*=\"/search\"] [type=submit]",
       "action": "click",
-      "param": "",
       "timeout": 1000
     }
   ],

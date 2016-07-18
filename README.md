@@ -51,7 +51,7 @@ POST /usecases
 **Get Usecase**
 
 GET /usecases
-GET /usecases?id=<id>
+GET /usecases/:id
 
 - Response
 
@@ -60,7 +60,7 @@ GET /usecases?id=<id>
 
 **Remove Usecase**
 
-DELETE /usecases?id=<id>
+DELETE /usecases/:id
 
 - Response
 
@@ -78,7 +78,7 @@ POST /trials
 
 ```json
 {
-    "usecase": "<id>"
+    "usecaseId": "<usecase_id>"
 }
 ```
 
@@ -86,26 +86,52 @@ POST /trials
 
 ```json
 {
-    "usecase": "<usecase_id>",
-    "id": "<request_id>",
-    "request_dt": "<YYYY/MM/DD HH:mm:ss>"
+    "id": "<trial_id>",
 }
 ```
 
 **Get Trial**
 
-GET /trial?id=<id>
+GET /trials/:id
 
-- Response
+- json
 
 ```json
 {
-    "usecase": "<usecase_id>",
-    "id": "<request_id>",
-    "request_dt": "<YYYY/MM/DD HH:mm:ss>",
-    "start_dt": "<YYYY/MM/DD HH:mm:ss>",
-    "status": 0, // 0:prepare 1:running 20:success 40:fail
-    "end_dt": "<YYYY/MM/DD HH:mm:ss>"
+  "usecaseId": "<usecase_id>",
+  // usecase parameter
+  "params": {
+    "browser": {},
+    "validation": [
+      {
+        "reg": "hoge",
+        "target": "innerText",
+        "selector": "#hoge"
+      }
+    ],
+    "timeout": 3000,
+    "flow": [
+      {
+        "timeout": 1000,
+        "param": "",
+        "action": "click",
+        "selector": "#fuga"
+      }
+    ],
+    "url": "http://localhost:8000"
+  },
+  "id": "12",
+  "priority": 0,
+  "progress": 0,
+  "state": "inactive",
+  "created_at": "1468331406461",
+  "promote_at": "1468331406461",
+  "updated_at": "1468331406468",
+  "attempts": {
+    "max": 1,
+    "remaining": 1,
+    "made": 0
+  }
 }
 ```
 
