@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "kue": "^0.11.1",
     "nightmare": "^2.5.3"
   }
 }
