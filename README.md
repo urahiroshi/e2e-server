@@ -20,8 +20,8 @@ POST /usecases
     "flow": [
         {
             "selector": "<String>",
-            "action": "", // click or type or select
-            "param": "", // parameter of type or select
+            "action": "", // "click" or "type" or "select" or "innerHTML" or "innerText"
+            "param": "", // parameter for type/select or regExp for innerHTML/innerText
             "timeout": 1000 // timeout by next action (ms)
         }
     ],
@@ -133,6 +133,25 @@ GET /trials/:id
     "made": 0
   }
 }
+```
+
+**GET Result**
+
+GET /results
+
+- Response
+
+```json
+[
+    {
+        "id": "<id>",
+        "trialId": "<trial_id>",
+        "failed_at": null,
+        "finished_at": "1468331406468",
+        "values": {},
+        "screenShots": {}
+    }
+]
 ```
 
 

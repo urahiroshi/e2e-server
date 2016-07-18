@@ -9,7 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bluebird": "^3.4.1",
     "kue": "^0.11.1",
-    "nightmare": "^2.5.3"
+    "nightmare": "^2.5.3",
+    "redis": "^2.6.2"
   }
 }
