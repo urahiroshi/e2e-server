@@ -17,22 +17,15 @@ POST /usecases
 ```json
 {
     "url": "<initial_url>",
-    "flow": [
+    "actions": [
         {
             "selector": "<String>",
-            "action": "", // "click" or "type" or "select" or "innerHTML" or "innerText"
-            "param": "", // parameter for type/select or regExp for innerHTML/innerText
+            "type": "", // "click" or "type" or "select" or "innerHTML" or "innerText" or "screenShort"
+            "param": "", // parameter for type/select or regExp for innerHTML/innerText or name of screenShot
             "timeout": 1000 // timeout by next action (ms)
         }
     ],
     "timeout": 3000,        // total timeout (ms)
-    "validation": [
-        {
-            "selector": "<String>", // css selector for target element
-            "target": "<Enum>",     // innerHTML or innerText or attribute([attr])
-            "reg": "<regexp>"       // regexp for value
-        }
-    ],
     "browser": {
         "width": 800,
         "height": 600
@@ -102,19 +95,12 @@ GET /trials/:id
   // usecase parameter
   "params": {
     "browser": {},
-    "validation": [
-      {
-        "reg": "hoge",
-        "target": "innerText",
-        "selector": "#hoge"
-      }
-    ],
     "timeout": 3000,
-    "flow": [
+    "actions": [
       {
         "timeout": 1000,
         "param": "",
-        "action": "click",
+        "type": "click",
         "selector": "#fuga"
       }
     ],

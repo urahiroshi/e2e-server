@@ -1,24 +1,17 @@
 {
   "url": "http://yahoo.com",
-  "flow": [
+  "actions": [
     {
       "selector": "form[action*=\"/search\"] [name=p]",
-      "action": "type",
+      "type": "type",
       "param": "github nightmare",
       "timeout": 1000
     },
     {
       "selector": "form[action*=\"/search\"] [type=submit]",
-      "action": "click",
+      "type": "click",
       "timeout": 1000
     }
   ],
-  "timeout": 3000,
-  "validation": [
-    {
-      "selector": "input",
-      "target": "innerText",
-      "reg": "hoge"
-    }
-  ]
+  "timeout": 3000
 }

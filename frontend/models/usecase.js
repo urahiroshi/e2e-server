@@ -7,7 +7,7 @@ class Usecase {
   constructor(params) {
     this.params = {
       url: params.url || '',
-      flow: params.flow || [],
+      actions: params.actions || [],
       timeout: params.timeout || 0,
       validation: params.validation || [],
       browser: params.browser || {}

@@ -16,15 +16,15 @@ function trial (params, done) {
   const url = params.url;
   const nightmare = Nightmare({show: true});
   nightmare.goto(url);
-  params.flow.forEach((flow) => {
+  params.actions.forEach((action) => {
     try {
-      nightmare.wait(flow.selector);
-      if (flow.param == null) {
-        nightmare[flow.action](flow.selector);
+      nightmare.wait(action.selector);
+      if (action.param == null) {
+        nightmare[action.type](action.selector);
       } else {
-        nightmare[flow.action](flow.selector, flow.param);
+        nightmare[action.type](action.selector, action.param);
       }
-      nightmare.exec(() => { log('Finish', flow.action, flow.selector); })
+      nightmare.exec(() => { log('Finish', action.type, action.selector); })
     } catch (err) {
       log('ERROR', err);
       done(err);
