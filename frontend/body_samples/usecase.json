@@ -11,6 +11,9 @@
       "selector": "form[action*=\"/search\"] [type=submit]",
       "type": "click",
       "timeout": 1000
+    },
+    {
+      "type": "screenshot"
     }
   ],
   "timeout": 3000
