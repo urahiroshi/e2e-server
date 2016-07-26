@@ -5,8 +5,9 @@ bluebird.promisifyAll(redis.RedisClient.prototype);
 bluebird.promisifyAll(redis.Multi.prototype);
 
 class ScreenShot {
-  constructor(binary) {
-    this.binary = binary;
+  constructor(params) {
+    this.name = params.name;
+    this.binary = params.binary;
   }
 
   save() {
@@ -15,6 +16,7 @@ class ScreenShot {
     return client.multi()
     .set(key, this.binary)
     .sadd('screenshots', key)
+    .sadd('screenshots:' + this.name, key)
     .execAsync()
     .then((res) => {
       console.log(res);

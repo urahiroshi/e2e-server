@@ -14,6 +14,11 @@ function log () {
 }
 
 function trial (params, done) {
+  var resultParams = {
+    screenshots: {},
+    innerHTMLs: {},
+    innerTexts: {}
+  };
   log(params);
   const url = params.url;
   const nightmare = Nightmare({show: true});
@@ -24,11 +29,15 @@ function trial (params, done) {
       if (action.type === 'screenshot') {
         return nightmare.screenshot()
         .then((buf) => {
-          const screenshot = new ScreenShot(buf);
+          const screenshot = new ScreenShot({
+            name: action.param,
+            binary: buf
+          });
           return screenshot.save();
         })
         .then((key) => {
           log('ScreenShot', key);
+          resultParams.screenshots[action.param] = key;
           return;
         });
       } else if (action.param == null) {
@@ -43,49 +52,24 @@ function trial (params, done) {
     });
   }, Promise.resolve([]))
 
-  actionsPromise.finally(() => {
-    nightmare.end().then(() => {
-      const result = new Result({finished_at: (new Date()).getTime()})
+  actionsPromise
+  .then(() => {
+    return nightmare.end().then(() => {
+      resultParams.finished_at = (new Date()).getTime();
+      const result = new Result(resultParams)
       result.save();
       done();
     });
+  })
+  .catch((err) => {
+    done(err);
   });
-
-  // params.actions.forEach((action) => {
-  //   try {
-  //     nightmare.wait(action.selector);
-  //     if (action.param == null) {
-  //       nightmare[action.type](action.selector);
-  //     } else {
-  //       nightmare[action.type](action.selector, action.param);
-  //     }
-  //     nightmare.exec(() => { log('Finish', action.type, action.selector); })
-  //   } catch (err) {
-  //     log('ERROR', err);
-  //     done(err);
-  //   }
-  // });
-  // nightmare.screenshot()
-  // .end()
-  // .then((buf) => {
-  //   const screenshot = new ScreenShot(buf);
-  //   screenshot.save()
-  //   .then((key) => {
-  //     log('ScreenShot', key);
-  //     const result = new Result({finished_at: (new Date()).getTime()})
-  //     result.save();
-  //     done();
-  //   })
-  //   .catch((error) => {
-  //     log('ScreenShot Error', error);
-  //   });
-  // });
 }
 
 function process () {
   queue.process('trial', (job, done) => {
     try {
-      log('id', job.id);
+      log('job', job.id);
       trial(job.data.params, done);
     } catch (err) {
       log('ERROR', err);

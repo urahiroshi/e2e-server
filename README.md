@@ -21,7 +21,7 @@ POST /usecases
         {
             "selector": "<String>",
             "type": "", // "click" or "type" or "select" or "innerHTML" or "innerText" or "screenShort"
-            "param": "", // parameter for type/select or regExp for innerHTML/innerText or name of screenShot
+            "param": "", // parameter for type/select or name of innerHTML/innerText/screenShot
             "timeout": 1000 // timeout by next action (ms)
         }
     ],
@@ -134,8 +134,9 @@ GET /results
         "trialId": "<trial_id>",
         "failed_at": null,
         "finished_at": "1468331406468",
-        "values": {},
-        "screenShots": {}
+        "innerHTMLs": {},
+        "innerTexts": {},
+        "screenshots": {}
     }
 ]
 ```

@@ -17,7 +17,7 @@ class Result {
     .sadd('results', key)
     .execAsync()
     .then((res) => {
-      console.log(res);
+      console.log('Success to create result', key, res);
       return res;
     })
     .finally(() => {
