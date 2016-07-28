@@ -40,6 +40,26 @@ function trial (params, done) {
           resultParams.screenshots[action.param] = key;
           return;
         });
+      } else if (action.type === 'innerHTML') {
+        return nightmare.evaluate((selector) => {
+          var elem = document.querySelector(selector);
+          return elem ? elem.innerHTML : null;
+        }, action.selector)
+        .then((result) => {
+          log('innerHTML', result);
+          resultParams.innerHTMLs[action.param] = result;
+          return;
+        });
+      } else if (action.type === 'innerText') {
+        return nightmare.evaluate((selector) => {
+          var elem = document.querySelector(selector);
+          return elem ? elem.innerText : null;
+        }, action.selector)
+        .then((result) => {
+          log('innerText', result);
+          resultParams.innerTexts[action.param] = result;
+          return;
+        });
       } else if (action.param == null) {
         nightmare[action.type](action.selector);
       } else {

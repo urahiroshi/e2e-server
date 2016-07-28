@@ -15,6 +15,16 @@
     {
       "type": "screenshot",
       "param": "finishView"
+    },
+    {
+      "selector": ".title",
+      "type": "innerHTML",
+      "param": "titleHTML"
+    },
+    {
+      "selector": ".title",
+      "type": "innerText",
+      "param": "titleText"
     }
   ],
   "timeout": 3000
