@@ -29,11 +29,6 @@ const actions = {
       log('ScreenShot', key);
       resultParams.screenshots[param] = key;
       return;
-    })
-    .catch((err) => {
-      console.log('error occurred!');
-      console.log(err);
-      return err;
     });
   },
 
@@ -91,6 +86,11 @@ const actions = {
   }
 });
 
+function onError(error, done) {
+  log('ERROR', error);
+  done(error);
+}
+
 function trial (params, done) {
   var resultParams = {
     screenshots: {},
@@ -102,18 +102,25 @@ function trial (params, done) {
   const nightmare = Nightmare({show: true});
   nightmare.goto(url);
 
+  let hasError = false;
   const actionsPromise = params.actions.reduce((promise, action) => {
     return promise.then(() => {
+      if (hasError) return false;
       return actions[action.type](nightmare, {
         selector: action.selector,
         param: action.param,
         resultParams: resultParams
+      })
+      .catch((error) => {
+        hasError = true;
+        onError(error, done);
       });
     });
   }, Promise.resolve([]))
 
   actionsPromise
   .then(() => {
+    if (hasError) return false;
     return nightmare.end().then(() => {
       resultParams.finished_at = (new Date()).getTime();
       const result = new Result(resultParams)
@@ -121,8 +128,8 @@ function trial (params, done) {
       done();
     });
   })
-  .catch((err) => {
-    done(err);
+  .catch((error) => {
+    onError(error, done);
   });
 }
 
@@ -131,9 +138,8 @@ function process () {
     try {
       log('job', job.id);
       trial(job.data.params, done);
-    } catch (err) {
-      log('ERROR', err);
-      done(err);
+    } catch (error) {
+      onError(error, done)
     }
   });
 }
