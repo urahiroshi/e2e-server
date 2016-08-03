@@ -13,6 +13,84 @@ function log () {
   );
 }
 
+const actions = {
+  screenshot(nightmare, opts) {
+    const param = opts.param;
+    const resultParams = opts.resultParams;
+    return nightmare.screenshot()
+    .then((buf) => {
+      const screenshot = new ScreenShot({
+        name: param,
+        binary: buf
+      });
+      return screenshot.save();
+    })
+    .then((key) => {
+      log('ScreenShot', key);
+      resultParams.screenshots[param] = key;
+      return;
+    })
+    .catch((err) => {
+      console.log('error occurred!');
+      console.log(err);
+      return err;
+    });
+  },
+
+  innerHTML(nightmare, opts) {
+    const selector = opts.selector;
+    const param = opts.param;
+    const resultParams = opts.resultParams;
+    return nightmare.evaluate((selector) => {
+      var elem = document.querySelector(selector);
+      return elem ? elem.innerHTML : null;
+    }, selector)
+    .then((result) => {
+      log('innerHTML', result);
+      resultParams.innerHTMLs[param] = result;
+      return;
+    });
+  },
+  
+  innerText(nightmare, opts) {
+    const selector = opts.selector;
+    const param = opts.param;
+    const resultParams = opts.resultParams;
+    return nightmare.evaluate((selector) => {
+      var elem = document.querySelector(selector);
+      return elem ? elem.innerText : null;
+    }, selector)
+    .then((result) => {
+      log('innerText', result);
+      resultParams.innerTexts[param] = result;
+      return;
+    });
+  }
+};
+
+['click'].forEach((actionType) => {
+  actions[actionType] = (nightmare, opts) => {
+    const selector = opts.selector;
+    return nightmare[actionType](selector)
+    .then(() => {
+      log('Finish', actionType, selector);
+      return;
+    });
+  }
+});
+
+['type', 'select'].forEach((actionType) => {
+  actions[actionType] = (nightmare, opts) => {
+    const selector = opts.selector;
+    const param = opts.param;
+    return nightmare[actionType](selector, param)
+    .then(() => {
+      log('Finish', actionType, selector, param);
+      return;
+    });
+  }
+});
+
 function trial (params, done) {
   var resultParams = {
     screenshots: {},
@@ -26,49 +104,11 @@ function trial (params, done) {
 
   const actionsPromise = params.actions.reduce((promise, action) => {
     return promise.then(() => {
-      if (action.type === 'screenshot') {
-        return nightmare.screenshot()
-        .then((buf) => {
-          const screenshot = new ScreenShot({
-            name: action.param,
-            binary: buf
-          });
-          return screenshot.save();
-        })
-        .then((key) => {
-          log('ScreenShot', key);
-          resultParams.screenshots[action.param] = key;
-          return;
-        });
-      } else if (action.type === 'innerHTML') {
-        return nightmare.evaluate((selector) => {
-          var elem = document.querySelector(selector);
-          return elem ? elem.innerHTML : null;
-        }, action.selector)
-        .then((result) => {
-          log('innerHTML', result);
-          resultParams.innerHTMLs[action.param] = result;
-          return;
-        });
-      } else if (action.type === 'innerText') {
-        return nightmare.evaluate((selector) => {
-          var elem = document.querySelector(selector);
-          return elem ? elem.innerText : null;
-        }, action.selector)
-        .then((result) => {
-          log('innerText', result);
-          resultParams.innerTexts[action.param] = result;
-          return;
-        });
-      } else if (action.param == null) {
-        nightmare[action.type](action.selector);
-      } else {
-        nightmare[action.type](action.selector, action.param);
-      }
-      return nightmare.then(() => {
-        log('Finish', action.type, action.selector);
-        return;
-      })
+      return actions[action.type](nightmare, {
+        selector: action.selector,
+        param: action.param,
+        resultParams: resultParams
+      });
     });
   }, Promise.resolve([]))
 
