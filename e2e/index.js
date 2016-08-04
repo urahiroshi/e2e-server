@@ -17,6 +17,9 @@ const actions = {
   screenshot(nightmare, opts) {
     const param = opts.param;
     const resultParams = opts.resultParams;
+    if (!param || !resultParams) {
+      return Promise.reject(new Error('invalid parameter'));
+    }
     return nightmare.screenshot()
     .then((buf) => {
       const screenshot = new ScreenShot({
@@ -36,6 +39,9 @@ const actions = {
     const selector = opts.selector;
     const param = opts.param;
     const resultParams = opts.resultParams;
+    if (!selector || !param || !resultParams) {
+      return Promise.reject(new Error('invalid parameter'));
+    }
     return nightmare.evaluate((selector) => {
       var elem = document.querySelector(selector);
       return elem ? elem.innerHTML : null;
@@ -51,6 +57,9 @@ const actions = {
     const selector = opts.selector;
     const param = opts.param;
     const resultParams = opts.resultParams;
+    if (!selector || !param || !resultParams) {
+      return Promise.reject(new Error('invalid parameter'));
+    }
     return nightmare.evaluate((selector) => {
       var elem = document.querySelector(selector);
       return elem ? elem.innerText : null;
@@ -66,6 +75,9 @@ const actions = {
 ['click'].forEach((actionType) => {
   actions[actionType] = (nightmare, opts) => {
     const selector = opts.selector;
+    if (!selector) {
+      return Promise.reject(new Error('invalid parameter'));
+    }
     return nightmare[actionType](selector)
     .then(() => {
       log('Finish', actionType, selector);
@@ -78,6 +90,9 @@ const actions = {
   actions[actionType] = (nightmare, opts) => {
     const selector = opts.selector;
     const param = opts.param;
+    if (!selector || !param) {
+      return Promise.reject(new Error('invalid parameter'));
+    }
     return nightmare[actionType](selector, param)
     .then(() => {
       log('Finish', actionType, selector, param);
