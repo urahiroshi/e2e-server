@@ -1,6 +1,10 @@
-const React = require('react');
-const ReactDOM = require('react-dom');
+import React, { PropTypes } from 'react';
 
-module.exports = ({ label }) => {
-  return <button className="btn btn-default">{label}</button>
+const Button = ({ label }) =>
+  <button className="btn btn-default">{label}</button>;
+
+Button.propTypes = {
+  label: PropTypes.string.isRequired,
 };
+
+export default Button;

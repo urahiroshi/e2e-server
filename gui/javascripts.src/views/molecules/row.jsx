@@ -1,16 +1,14 @@
-const React = require('react');
-const ReactDOM = require('react-dom');
+import React, { PropTypes } from 'react';
 
-module.exports = ({ cells }) => {
-  return (
-    <tr>
-      {
-        cells.map((cell, i) => {
-          return (
-            <td key={i}>{cell}</td>
-          )
-        })
-      }
-    </tr>
-  );
+const Row = ({ cells }) =>
+  <tr>
+    {
+      cells.map((cell, i) => <td key={i}>{cell}</td>)
+    }
+  </tr>;
+
+Row.propTypes = {
+  cells: PropTypes.array.isRequired,
 };
+
+export default Row;

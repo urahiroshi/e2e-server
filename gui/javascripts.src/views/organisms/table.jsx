@@ -1,24 +1,23 @@
-const React = require('react');
-const ReactDOM = require('react-dom');
+import React, { PropTypes } from 'react';
 
-const Row = require('../molecules/row.jsx');
-const HeaderRow = require('../molecules/header-row.jsx')
+import Row from '../molecules/row.jsx';
+import HeaderRow from '../molecules/header-row.jsx';
 
-module.exports = ({ header, rows }) => {
-  return (
-    <table className="table table-striped">
-      <thead>
-        <HeaderRow cells={header}></HeaderRow>
-      </thead>
-      <tbody>
-        {
-          rows.map((cells, i) => {
-            return (
-              <Row key={i} cells={cells}></Row>
-            )
-          })
-        }
-      </tbody>
-    </table>
-  );
+const Table = ({ header, rows }) =>
+  <table className="table table-striped">
+    <thead>
+      <HeaderRow cells={header} />
+    </thead>
+    <tbody>
+      {
+        rows.map((cells, i) => <Row key={i} cells={cells} />)
+      }
+    </tbody>
+  </table>;
+
+Table.propTypes = {
+  header: PropTypes.array.isRequired,
+  rows: PropTypes.array.isRequired,
 };
+
+export default Table;
