@@ -1,3 +1,3 @@
 var kue = require('kue');
 kue.createQueue();
-kue.app.listen(3001);
+kue.app.listen(3002);

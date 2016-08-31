@@ -1,6 +1,6 @@
 const Config = {
-  job: {
-    baseUrl: 'http://localhost:3002'
+  api: {
+    baseUrl: 'http://localhost:3001'
   }
 };
 

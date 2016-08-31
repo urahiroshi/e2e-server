@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  div(id='content')
+  script(type='text/javascript').
+    window.Models = {};
+    window.Models.Usecases = !{JSON.stringify(usecases)};
+  script(src='/javascripts/usecases.js')

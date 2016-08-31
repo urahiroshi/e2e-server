@@ -1,6 +1,6 @@
 module.exports = {
   context: __dirname + '/javascripts.src',
-  entry: ['./index.js', './views/pages/usecases.js'],
+  entry: ['./index.js', './views/pages/usecases.jsx'],
   output: {
     path: __dirname,
     filename: "public/javascripts/usecases.js"
