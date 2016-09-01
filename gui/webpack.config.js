@@ -1,9 +1,9 @@
 module.exports = {
   context: __dirname + '/javascripts.src',
-  entry: ['./index.js', './views/pages/usecases.jsx'],
+  entry: './index.js',
   output: {
     path: __dirname,
-    filename: "public/javascripts/usecases.js"
+    filename: "public/javascripts/index.js"
   },
   module: {
     loaders: [

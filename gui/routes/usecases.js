@@ -2,13 +2,10 @@ var express = require('express');
 var router = express.Router();
 var Usecase = require('../models/usecase');
 
-router.get('/', function(req, res, next) {
+router.get('/', (req, res, next) => {
   Usecase.findAll()
-  .then((usecases) => {
-    res.render('usecases', {
-      title: 'Usecases',
-      usecases: usecases,
-    });
+  .then((result) => {
+    res.json(result);
   })
   .catch(next);
 });

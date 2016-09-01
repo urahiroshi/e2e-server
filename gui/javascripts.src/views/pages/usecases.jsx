@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
+import axios from 'axios';
 import UsecasesContainer from '../containers/usecases';
 import Reducers from '../../reducers';
 import { setUsecases } from '../../actions/usecases';
@@ -18,6 +19,6 @@ function render() {
 }
 
 render();
-if (window.Models && window.Models.Usecases) {
-  store.dispatch(setUsecases(window.Models.Usecases));
-}
+axios.get('/api/usecases').then((response) => {
+  store.dispatch(setUsecases(response.data));
+});
