@@ -2,7 +2,6 @@ import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 import UsecaseTable from '../organisms/table.jsx';
 import AddUsecaseButton from '../atoms/button.jsx';
-// import Link from '../atoms/link.jsx';
 
 const Usecases = ({ usecases }) => {
   const header = [
