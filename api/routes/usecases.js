@@ -10,6 +10,15 @@ router.get('/', (req, res, next) => {
   .catch(next);
 });
 
+router.get('/:id', (req, res, next) => {
+  const id = req.params.id;
+  Usecase.find(id)
+  .then((result) => {
+    res.json(result);
+  })
+  .catch(next);
+});
+
 router.post('/', (req, res, next) => {
   usecase = new Usecase(req.body);
   usecase.save()
