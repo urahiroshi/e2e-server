@@ -1,6 +1,8 @@
 import React, { PropTypes } from 'react';
+import { Link } from 'react-router';
 import UsecaseTable from '../organisms/table.jsx';
 import AddUsecaseButton from '../atoms/button.jsx';
+// import Link from '../atoms/link.jsx';
 
 const Usecases = ({ usecases }) => {
   const header = [
@@ -8,7 +10,7 @@ const Usecases = ({ usecases }) => {
   ];
   const rows = usecases.map((usecase) =>
     [
-      usecase.id,
+      <Link to={`/usecases/${usecase.id}`}>{usecase.id}</Link>,
       usecase.name,
       usecase.createDt,
     ]
