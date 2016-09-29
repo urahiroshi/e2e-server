@@ -19,4 +19,13 @@ router.get('/:id', (req, res, next) => {
   .catch(next);
 });
 
+router.post('/', (req, res, next) => {
+  usecase = new Usecase(req.body);
+  usecase.save()
+  .then((result) => {
+    res.status(201).end();
+  })
+  .catch(next);
+});
+
 module.exports = router;

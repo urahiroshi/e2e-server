@@ -1,18 +1,26 @@
+import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import { Router, browserHistory } from 'react-router';
+import createSagaMiddleware from 'redux-saga';
 import axios from 'axios';
 
 import 'bootstrap/dist/css/bootstrap.css';
 
 import Reducers from './reducers';
+import Sagas from './sagas';
 import Usecases from './views/containers/usecases';
 import Usecase from './views/containers/usecase';
 import { setUsecases, setUsecase } from './actions/usecases';
 
-const store = createStore(Reducers);
+const sagaMiddleware = createSagaMiddleware();
+const store = createStore(
+  Reducers,
+  applyMiddleware(sagaMiddleware)
+);
+sagaMiddleware.run(Sagas);
 
 const routes = {
   path: '/',
