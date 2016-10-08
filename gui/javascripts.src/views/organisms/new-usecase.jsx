@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 
 import Button from '../atoms/button.jsx';
 import TextBox from '../atoms/text-box.jsx';
+import ComboBox from '../atoms/combo-box.jsx';
 import Heading from '../atoms/heading.jsx';
 import VerticalRow from '../molecules/vertical-row.jsx';
 import Table from '../organisms/table.jsx';
@@ -14,7 +15,7 @@ const NewUsecase = ({
 }) => {
   const header = ['Order', 'Selector', 'Type', 'param', 'Add/Delete'];
   let newSelector;
-  let newType;
+  let newType = 'click';
   let newParam;
   const usecase = Object.assign({}, newUsecase);
   const rows = newUsecase.actions.map((action, i) => [
@@ -32,7 +33,18 @@ const NewUsecase = ({
   rows.push([
     newUsecase.actions.length + 1,
     <TextBox onChange={(value) => { newSelector = value; }} />,
-    <TextBox onChange={(value) => { newType = value; }} />,
+    <ComboBox
+      onChange={(value) => { newType = value; }}
+      selections={{
+        click: 'click',
+        type: 'type',
+        select: 'select',
+        innerHTML: 'innerHTML',
+        innerText: 'innerText',
+        screenShot: 'screenShot',
+      }}
+      selected={newType}
+    />,
     <TextBox onChange={(value) => { newParam = value; }} />,
     <Button
       label="Add"

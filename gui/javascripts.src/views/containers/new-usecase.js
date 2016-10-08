@@ -10,6 +10,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   onClickAddAction: (action, usecase) => {
     if (!(action.selector && action.type)) {
+      console.warn(`NO VALUE: selector: ${action.selector}, type: ${action.type}`);
       return;
     }
     usecase.actions.push(action);

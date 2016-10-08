@@ -4,7 +4,7 @@ const Modal = ({ isVisible, children }) => {
   const displayStyle = isVisible ? 'block' : 'none';
   return (
     <div className="modal" style={{ display: displayStyle }}>
-      <div className="modal-dialog">
+      <div className="modal-dialog modal-lg">
         <div className="modal-content">
           <div className="modal-body">
             {children}
