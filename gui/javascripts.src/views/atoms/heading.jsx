@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 
 const Heading = ({ value }) =>
-  <h3>{value}</h3>;
+  <h4>{value}</h4>;
 
 Heading.propTypes = {
   value: PropTypes.string.isRequired,

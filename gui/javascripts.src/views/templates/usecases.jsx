@@ -5,7 +5,7 @@ import AddUsecaseButton from '../atoms/button.jsx';
 import NewUsecase from '../containers/new-usecase';
 import NewUsecaseModal from '../containers/new-usecase-modal';
 
-const Usecases = ({ usecases, onClickAddNewUsecase }) => {
+const Usecases = ({ usecases, onClickAddNewUsecase, onClickCloseNewUsecase }) => {
   const header = [
     'ID', 'Usecase', 'Create Date Time',
   ];
@@ -18,9 +18,9 @@ const Usecases = ({ usecases, onClickAddNewUsecase }) => {
   );
   return (
     <div>
-      <AddUsecaseButton label="追加" onClick={onClickAddNewUsecase} />
+      <AddUsecaseButton label="Add" onClick={onClickAddNewUsecase} />
       <UsecaseTable header={header} rows={rows} />
-      <NewUsecaseModal>
+      <NewUsecaseModal onClose={onClickCloseNewUsecase} title="New Usecase">
         <NewUsecase />
       </NewUsecaseModal>
     </div>
@@ -30,6 +30,7 @@ const Usecases = ({ usecases, onClickAddNewUsecase }) => {
 Usecases.propTypes = {
   usecases: PropTypes.array.isRequired,
   onClickAddNewUsecase: PropTypes.func.isRequired,
+  onClickCloseNewUsecase: PropTypes.func.isRequired,
 };
 
 export default Usecases;

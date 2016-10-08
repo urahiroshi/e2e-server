@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import Usecases from '../templates/usecases.jsx';
-import { showNewUsecase } from '../../actions/new-usecase';
+import { showNewUsecase, hideNewUsecase } from '../../actions/new-usecase';
 
 const mapStateToProps = (state) => ({
   usecases: state.usecases,
@@ -9,6 +9,9 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   onClickAddNewUsecase: () => {
     dispatch(showNewUsecase());
+  },
+  onClickCloseNewUsecase: () => {
+    dispatch(hideNewUsecase());
   },
 });
 
