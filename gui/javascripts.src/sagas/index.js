@@ -24,7 +24,17 @@ function* modifyUsecase(action) {
   }
 }
 
+function* deleteUsecase(action) {
+  const usecase = action.usecase;
+  const response = yield call(Api.delete, usecase);
+  console.log('response:', response);
+  if (response.status >= 200) {
+    yield put(Action.deleteUsecase(usecase));
+  }
+}
+
 export default function* rootSaga() {
   yield fork(takeEvery, Action.ADD_USECASE_START, addUsecase);
   yield fork(takeEvery, Action.MODIFY_USECASE_START, modifyUsecase);
+  yield fork(takeEvery, Action.DELETE_USECASE_START, deleteUsecase);
 }

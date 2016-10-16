@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 
 import Parameters from '../organisms/parameters.jsx';
 import EditUsecase from '../containers/edit-usecase';
+import DeleteUsecase from '../containers/delete-usecase';
 import Modal from '../containers/modal';
 
 const Usecase = ({
@@ -9,6 +10,7 @@ const Usecase = ({
   onClickShowModal,
 }) => {
   const editUsecaseModalName = 'editUsecaseModal';
+  const deleteUsecaseModalName = 'deleteUsecaseModal';
   const keyValues = {
     Id: usecase.id,
     Name: usecase.name,
@@ -32,12 +34,15 @@ const Usecase = ({
         onClickEdit={
           () => { onClickShowModal(editUsecaseModalName); }
         }
+        onClickDelete={
+          () => { onClickShowModal(deleteUsecaseModalName); }
+        }
       />
-      <Modal
-        name={editUsecaseModalName}
-        title="Edit Usecase"
-      >
+      <Modal name={editUsecaseModalName} title="Edit Usecase">
         <EditUsecase />
+      </Modal>
+      <Modal name={deleteUsecaseModalName} title="Delete Usecase">
+        <DeleteUsecase />
       </Modal>
     </div>
   );

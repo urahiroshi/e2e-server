@@ -36,10 +36,10 @@ class Usecase {
     });
   }
 
-  delete(key) {
+  delete() {
     const connector = new Connector();
     return connector.request({
-      uri: Usecase._toUri(key),
+      uri: Usecase._toUri(this.id),
       method: 'DELETE'
     });
   }
@@ -61,10 +61,15 @@ class Usecase {
     return path ? baseUrl + '/' + path : baseUrl;
   }
 
-  static find(key) {
+  static find(id) {
     const connector = new Connector();
     return connector.request({
-      uri: Usecase._toUri(key)
+      uri: Usecase._toUri(id)
+    })
+    .then((res) => {
+      const usecase = new Usecase(res);
+      usecase.id = id;
+      return usecase;
     });
   }
 
@@ -72,6 +77,13 @@ class Usecase {
     const connector = new Connector();
     return connector.request({
       uri: Usecase._toUri()
+    })
+    .then((res) => {
+      return res.map((usecaseObj) => {
+        const usecase = new Usecase(usecaseObj);
+        usecase.id = usecaseObj.id;
+        return usecase;
+      })
     });
   }
 }

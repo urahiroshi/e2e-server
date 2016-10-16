@@ -4,6 +4,8 @@ export const ADD_USECASE = 'ADD_USECASE';
 export const ADD_USECASE_START = 'ADD_USECASE_START';
 export const MODIFY_USECASE_START = 'MODIFY_USECASE_START';
 export const MODIFY_USECASE = 'MODIFY_USECASE';
+export const DELETE_USECASE_START = 'DELETE_USECASE_START';
+export const DELETE_USECASE = 'DELETE_USECASE';
 
 export const setUsecases = (usecases) => ({
   type: SET_USECASES,
@@ -33,5 +35,15 @@ export const modifyUsecaseStart = (usecase, newUsecase) => ({
 
 export const modifyUsecase = (usecase) => ({
   type: MODIFY_USECASE,
+  usecase,
+});
+
+export const deleteUsecaseStart = (usecase) => ({
+  type: DELETE_USECASE_START,
+  usecase,
+});
+
+export const deleteUsecase = (usecase) => ({
+  type: DELETE_USECASE,
   usecase,
 });
