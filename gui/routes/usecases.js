@@ -19,6 +19,16 @@ router.get('/:id', (req, res, next) => {
   .catch(next);
 });
 
+router.put('/:id', (req, res, next) => {
+  usecase = new Usecase(req.body);
+  usecase.id = req.params.id;
+  usecase.save()
+  .then((result) => {
+    res.json(req.body);
+  })
+  .catch(next);
+});
+
 router.post('/', (req, res, next) => {
   usecase = new Usecase(req.body);
   usecase.save()

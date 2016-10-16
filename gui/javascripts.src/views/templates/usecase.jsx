@@ -1,16 +1,21 @@
 import React, { PropTypes } from 'react';
-import _ from 'lodash';
 
 import Parameters from '../organisms/parameters.jsx';
+import EditUsecase from '../containers/edit-usecase';
+import EditUsecaseModal from '../containers/edit-usecase-modal';
 
-const Usecase = ({ usecase }) => {
+const Usecase = ({
+  usecase,
+  onClickStartEditUsecase,
+  onClickCloseEditUsecase,
+}) => {
   const keyValues = {
-    Id: usecase.key,
+    Id: usecase.id,
     Name: usecase.name,
-    URL: usecase.params ? usecase.params.url : undefined,
-    Actions: usecase.params ? {
+    URL: usecase.url,
+    Actions: usecase.actions ? {
       header: ['Order', 'Selector', 'Type', 'Param'],
-      rows: _.map(usecase.params.actions, (action, index) => (
+      rows: usecase.actions.map((action, index) => (
         [
           index + 1,
           action.selector,
@@ -22,13 +27,21 @@ const Usecase = ({ usecase }) => {
   };
   return (
     <div>
-      <Parameters keyValues={keyValues} />
+      <Parameters keyValues={keyValues} onClickEdit={onClickStartEditUsecase} />
+      <EditUsecaseModal
+        onClose={onClickCloseEditUsecase}
+        title="Edit Usecase"
+      >
+        <EditUsecase />
+      </EditUsecaseModal>
     </div>
   );
 };
 
 Usecase.propTypes = {
   usecase: PropTypes.object.isRequired,
+  onClickStartEditUsecase: PropTypes.func.isRequired,
+  onClickCloseEditUsecase: PropTypes.func.isRequired,
 };
 
 export default Usecase;

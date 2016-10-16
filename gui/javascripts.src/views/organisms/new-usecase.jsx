@@ -8,16 +8,19 @@ import VerticalRow from '../molecules/vertical-row.jsx';
 import Table from '../organisms/table.jsx';
 
 const NewUsecase = ({
+  usecase,
   newUsecase,
+  isLoading,
   onClickAddAction,
   onClickDeleteAction,
-  onClickSendNewUsecase,
+  onClickSendUsecase,
 }) => {
+  if (isLoading) return <div />;
   const header = ['Order', 'Selector', 'Type', 'param', 'Add/Delete'];
   let newSelector;
   let newType = 'click';
   let newParam;
-  const usecase = Object.assign({}, newUsecase);
+  const tempUsecase = Object.assign({}, newUsecase);
   const rows = newUsecase.actions.map((action, i) => [
     i + 1,
     action.selector,
@@ -26,7 +29,7 @@ const NewUsecase = ({
     <Button
       label="Delete"
       onClick={() => {
-        onClickDeleteAction(i, usecase);
+        onClickDeleteAction(i, tempUsecase);
       }}
     />,
   ]);
@@ -55,7 +58,7 @@ const NewUsecase = ({
             type: newType,
             param: newParam,
           },
-          usecase
+          tempUsecase
         );
       }}
     />,
@@ -67,10 +70,16 @@ const NewUsecase = ({
         <table>
           <tbody>
             <VerticalRow name="Name">
-              <TextBox onChange={(value) => { usecase.name = value; }} />
+              <TextBox
+                defaultValue={tempUsecase.name}
+                onChange={(value) => { tempUsecase.name = value; }}
+              />
             </VerticalRow>
             <VerticalRow name="URL">
-              <TextBox onChange={(value) => { usecase.url = value; }} />
+              <TextBox
+                defaultValue={tempUsecase.url}
+                onChange={(value) => { tempUsecase.url = value; }}
+              />
             </VerticalRow>
             <VerticalRow name="Actions">
               <Table header={header} rows={rows} />
@@ -82,7 +91,7 @@ const NewUsecase = ({
         <Button
           label="Send"
           onClick={() => {
-            onClickSendNewUsecase(usecase);
+            onClickSendUsecase(usecase, tempUsecase);
           }}
         />
       </div>
@@ -91,10 +100,12 @@ const NewUsecase = ({
 };
 
 NewUsecase.propTypes = {
+  usecase: PropTypes.object,
   newUsecase: PropTypes.object.isRequired,
+  isLoading: PropTypes.bool.isRequired,
   onClickAddAction: PropTypes.func.isRequired,
   onClickDeleteAction: PropTypes.func.isRequired,
-  onClickSendNewUsecase: PropTypes.func.isRequired,
+  onClickSendUsecase: PropTypes.func.isRequired,
 };
 
 export default NewUsecase;

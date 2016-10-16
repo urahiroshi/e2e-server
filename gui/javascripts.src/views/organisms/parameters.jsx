@@ -19,7 +19,7 @@ const style = {
   },
 };
 
-const Parameters = ({ keyValues }) =>
+const Parameters = ({ keyValues, onClickEdit }) =>
   <div>
     <Heading value="Parameters" />
     <table style={style.table}>
@@ -42,11 +42,12 @@ const Parameters = ({ keyValues }) =>
       }
       </tbody>
     </table>
-    <Button label="edit" />
+    <Button label="edit" onClick={onClickEdit} />
   </div>;
 
 Parameters.propTypes = {
   keyValues: PropTypes.object.isRequired,
+  onClickEdit: PropTypes.func.isRequired,
 };
 
 export default Parameters;

@@ -6,10 +6,13 @@ import { connect } from 'react-redux';
 import Usecases from './views/containers/usecases';
 import Usecase from './views/containers/usecase';
 import { setUsecases, setUsecase } from './actions/usecases';
+import { setNewUsecase, resetNewUsecase } from './actions/new-usecase';
 
 const AppRouterComponent = ({
   onEnterUsecases,
+  onLeaveUsecases,
   onEnterUsecase,
+  onLeaveUsecase,
 }) => {
   const routes = {
     path: '/',
@@ -22,11 +25,13 @@ const AppRouterComponent = ({
         path: 'usecases',
         component: Usecases,
         onEnter: onEnterUsecases,
+        onLeave: onLeaveUsecases,
       },
       {
         path: 'usecases/:id',
         component: Usecase,
         onEnter: onEnterUsecase,
+        onLeave: onLeaveUsecase,
       },
     ],
   };
@@ -35,7 +40,9 @@ const AppRouterComponent = ({
 
 AppRouterComponent.propTypes = {
   onEnterUsecases: PropTypes.func.isRequired,
+  onLeaveUsecases: PropTypes.func.isRequired,
   onEnterUsecase: PropTypes.func.isRequired,
+  onLeaveUsecase: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
@@ -44,10 +51,17 @@ const mapDispatchToProps = (dispatch) => ({
       dispatch(setUsecases(response.data));
     });
   },
+  onLeaveUsecases: () => {
+    dispatch(resetNewUsecase());
+  },
   onEnterUsecase: ({ params }) => {
     axios.get(`/api/usecases/${params.id}`).then((response) => {
       dispatch(setUsecase(response.data));
+      dispatch(setNewUsecase(response.data));
     });
+  },
+  onLeaveUsecase: () => {
+    dispatch(resetNewUsecase());
   },
 });
 

@@ -7,9 +7,24 @@ import * as Action from '../actions/usecases';
 function* addUsecase(action) {
   const usecase = action.usecase;
   const response = yield call(Api.add, usecase);
-  yield put(Action.addUsecase(response.body));
+  console.log('response:', response);
+  if (response.status === 200) {
+    yield put(Action.addUsecase(response.body));
+  }
+}
+
+function* modifyUsecase(action) {
+  const usecase = action.usecase;
+  const newUsecase = action.newUsecase;
+  const response = yield call(Api.modify, usecase, newUsecase);
+  console.log('response:', response);
+  if (response.status === 200) {
+    yield put(Action.modifyUsecase(action.newUsecase));
+    yield put(Action.setUsecase(action.newUsecase));
+  }
 }
 
 export default function* rootSaga() {
   yield fork(takeEvery, Action.ADD_USECASE_START, addUsecase);
+  yield fork(takeEvery, Action.MODIFY_USECASE_START, modifyUsecase);
 }
