@@ -1,17 +1,14 @@
 import { connect } from 'react-redux';
 import Usecase from '../templates/usecase.jsx';
-import { showEditUsecase, hideEditUsecase } from '../../actions/usecase';
+import { showModal } from '../../actions/modal';
 
 const mapStateToProps = (state) => ({
   usecase: state.usecase,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onClickStartEditUsecase: () => {
-    dispatch(showEditUsecase());
-  },
-  onClickCloseEditUsecase: () => {
-    dispatch(hideEditUsecase());
+  onClickShowModal: (name) => {
+    dispatch(showModal(name));
   },
 });
 

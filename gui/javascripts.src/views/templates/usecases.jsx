@@ -3,9 +3,10 @@ import { Link } from 'react-router';
 import UsecaseTable from '../organisms/table.jsx';
 import AddUsecaseButton from '../atoms/button.jsx';
 import NewUsecase from '../containers/new-usecase';
-import NewUsecaseModal from '../containers/new-usecase-modal';
+import Modal from '../containers/modal';
 
-const Usecases = ({ usecases, onClickAddNewUsecase, onClickCloseNewUsecase }) => {
+const Usecases = ({ usecases, onClickShowModal }) => {
+  const newUsecaseModalName = 'newUsecaseModal';
   const header = [
     'ID', 'Usecase', 'Create Date Time',
   ];
@@ -18,19 +19,26 @@ const Usecases = ({ usecases, onClickAddNewUsecase, onClickCloseNewUsecase }) =>
   );
   return (
     <div>
-      <AddUsecaseButton label="Add" onClick={onClickAddNewUsecase} />
+      <AddUsecaseButton
+        label="Add"
+        onClick={
+          () => { onClickShowModal(newUsecaseModalName); }
+        }
+      />
       <UsecaseTable header={header} rows={rows} />
-      <NewUsecaseModal onClose={onClickCloseNewUsecase} title="New Usecase">
+      <Modal
+        name={newUsecaseModalName}
+        title="New Usecase"
+      >
         <NewUsecase />
-      </NewUsecaseModal>
+      </Modal>
     </div>
   );
 };
 
 Usecases.propTypes = {
   usecases: PropTypes.array.isRequired,
-  onClickAddNewUsecase: PropTypes.func.isRequired,
-  onClickCloseNewUsecase: PropTypes.func.isRequired,
+  onClickShowModal: PropTypes.func.isRequired,
 };
 
 export default Usecases;

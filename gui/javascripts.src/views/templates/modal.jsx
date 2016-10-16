@@ -1,7 +1,10 @@
 import React, { PropTypes } from 'react';
 
-const Modal = ({ isVisible, title, children, onClose }) => {
-  const displayStyle = isVisible ? 'block' : 'none';
+const Modal = ({ name, title, onClose, children, modalState, hideModal }) => {
+  if (modalState.name !== name) {
+    return <div style={{ display: 'none' }} />;
+  }
+  const displayStyle = modalState.isVisible ? 'block' : 'none';
   return (
     <div className="modal" style={{ display: displayStyle }}>
       <div className="modal-dialog modal-lg">
@@ -11,7 +14,12 @@ const Modal = ({ isVisible, title, children, onClose }) => {
               type="button"
               className="close"
               aria-label="Close"
-              onClick={onClose}
+              onClick={
+                () => {
+                  hideModal(name);
+                  if (onClose) { onClose(); }
+                }
+              }
             >
               <span aria-hidden="true">×</span>
             </button>
@@ -27,10 +35,12 @@ const Modal = ({ isVisible, title, children, onClose }) => {
 };
 
 Modal.propTypes = {
-  isVisible: PropTypes.bool,
+  name: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
+  onClose: PropTypes.func,
   children: PropTypes.element.isRequired,
-  onClose: PropTypes.func.isRequired,
+  modalState: PropTypes.object.isRequired,
+  hideModal: PropTypes.func.isRequired,
 };
 
 export default Modal;

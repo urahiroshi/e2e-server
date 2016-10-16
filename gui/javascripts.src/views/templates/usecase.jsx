@@ -2,13 +2,13 @@ import React, { PropTypes } from 'react';
 
 import Parameters from '../organisms/parameters.jsx';
 import EditUsecase from '../containers/edit-usecase';
-import EditUsecaseModal from '../containers/edit-usecase-modal';
+import Modal from '../containers/modal';
 
 const Usecase = ({
   usecase,
-  onClickStartEditUsecase,
-  onClickCloseEditUsecase,
+  onClickShowModal,
 }) => {
+  const editUsecaseModalName = 'editUsecaseModal';
   const keyValues = {
     Id: usecase.id,
     Name: usecase.name,
@@ -27,21 +27,25 @@ const Usecase = ({
   };
   return (
     <div>
-      <Parameters keyValues={keyValues} onClickEdit={onClickStartEditUsecase} />
-      <EditUsecaseModal
-        onClose={onClickCloseEditUsecase}
+      <Parameters
+        keyValues={keyValues}
+        onClickEdit={
+          () => { onClickShowModal(editUsecaseModalName); }
+        }
+      />
+      <Modal
+        name={editUsecaseModalName}
         title="Edit Usecase"
       >
         <EditUsecase />
-      </EditUsecaseModal>
+      </Modal>
     </div>
   );
 };
 
 Usecase.propTypes = {
   usecase: PropTypes.object.isRequired,
-  onClickStartEditUsecase: PropTypes.func.isRequired,
-  onClickCloseEditUsecase: PropTypes.func.isRequired,
+  onClickShowModal: PropTypes.func.isRequired,
 };
 
 export default Usecase;
