@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react';
-import _ from 'lodash';
 
 import Heading from '../atoms/heading.jsx';
 import Button from '../atoms/button.jsx';
@@ -25,9 +24,10 @@ const Parameters = ({ keyValues, onClickEdit, onClickDelete }) =>
     <table style={style.table}>
       <tbody>
       {
-        _.map(keyValues, (value, key) => {
+        Object.keys(keyValues).map((key) => {
+          const value = keyValues[key];
           let cell;
-          if (_.isObject(value)) {
+          if (typeof value === 'object') {
             cell = <Table header={value.header} rows={value.rows} />;
           } else {
             cell = value;
