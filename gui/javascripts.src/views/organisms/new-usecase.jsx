@@ -91,7 +91,7 @@ const NewUsecase = ({
         <Button
           label="Send"
           onClick={() => {
-            onClickSendUsecase(usecase, tempUsecase);
+            onClickSendUsecase(tempUsecase, usecase);
           }}
         />
       </div>

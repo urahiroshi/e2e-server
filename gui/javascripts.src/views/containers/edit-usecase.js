@@ -22,7 +22,7 @@ const mapDispatchToProps = (dispatch) => ({
     newUsecase.actions.splice(index, 1);
     dispatch(setNewUsecase(newUsecase));
   },
-  onClickSendUsecase: (usecase, newUsecase) => {
+  onClickSendUsecase: (newUsecase, usecase) => {
     if (!newUsecase.url) {
       // TODO: Add Error Action
       console.log('NO URL');
