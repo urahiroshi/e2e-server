@@ -1,5 +1,5 @@
-const kue = require('kue');
-const queue = kue.createQueue();
+const Queue = require('bull');
+const queue = Queue('trial');
 const Nightmare = require('nightmare');
 const Promise = require('bluebird');
 const Result = require('./libs/result');
@@ -149,10 +149,10 @@ function trial (params, done) {
 }
 
 function process () {
-  queue.process('trial', (job, done) => {
+  queue.process((job, done) => {
     try {
-      log('job', job.id);
-      trial(job.data.params, done);
+      log('job', job.jobId);
+      trial(job.data, done);
     } catch (error) {
       onError(error, done)
     }

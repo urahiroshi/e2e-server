@@ -1,46 +1,100 @@
-const Connector = require('../connectors/http');
+const Connector = require('../connectors/redis');
 const Usecase = require('./usecase');
+const Helper = require('./helper');
 const Config = require('../config/config');
 const _ = require('lodash');
 
+const Queue = require('bull');
+const trialQueue = Queue('trial');
+
 class Trial {
-  constructor(params) {
-    this.params = {
-      usecaseId: params.usecaseId
-    };
+  constructor({ usecaseId }) {
+    this.usecaseId = usecaseId;
   }
 
   save() {
-    return Usecase.find(this.params.usecaseId)
+    return Usecase.find(this.usecaseId)
     .then((usecase) => {
-      const connector = new Connector();
-      let data = Object.assign(usecase, {
-        usecaseId: usecase.key
+      const data = Object.assign(usecase.toJSON(), {
+        usecaseId: this.usecaseId
       });
-      data = _.omit(data, ['key']);
-      return connector.request({
-        uri: Config.job.baseUrl + '/job',
-        method: 'POST',
-        body: {
-          type: 'trial',
-          data: data
-        }
+      const jobId = Helper.random();
+      const connector = new Connector();
+      return connector.multi()
+      .sadd('jobs', jobId)
+      .sadd(`${this.usecaseId}:jobs`, jobId)
+      .exec()
+      .then((res) => {
+        console.log(res);
+        return trialQueue.add(data, { jobId: jobId });
       })
+      .finally(() => {
+        connector.close();
+      });
     });
   }
 
+  static delete(jobId) {
+    let usecaseId;
+    trialQueue.getJob(jobId)
+    .then((job) => {
+      usecaseId = job.data.usecaseId;
+      return job.remove();
+    })
+    .then((res) => {
+      console.log('remove job', res);
+      const connector = new Connector();
+      return connector.multi()
+      .srem('jobs', jobId)
+      .srem(`${usecaseId}:jobs`, jobId)
+      .exec()
+      .finally(() => {
+        connector.close();
+      })
+    })
+  }
+
   static _jobToTrial(job) {
-    let trial = Object.assign(job, job.data);
-    trial = _.omit(trial, ['data', 'type'])
-    return trial;
+    const trial = new Trial({ usecaseId: job.data.usecaseId });
+    Object.assign(trial, job.toJSON());
+    // TODO: Consider performance by many jobs
+    return job.getState()
+    .then((state) => {
+      trial.state = state;
+      return trial;
+    });
   }
 
   static find(id) {
+    return trialQueue.getJob(id)
+    .then((job) => {
+      if (job && job.data) {
+        return Trial._jobToTrial(job);
+      } else {
+        return null;
+      }
+    });
+  }
+
+  static findAll({ offset, length, usecaseId }) {
     const connector = new Connector();
-    return connector.request({
-      uri: Config.job.baseUrl + '/job/' + id
-    })
-    .then(Trial._jobToTrial);
+    const key = usecaseId ? `${usecaseId}:jobs` : 'jobs';
+    return connector.smembers(key)
+    .then((ids) => {
+      let targetIds = ids.slice().reverse();
+      if (offset && length) {
+        targetIds = ids.slice(offset, offset + length);
+      } else if (length) {
+        targetIds = ids.slice(0, length);
+      } else if (offset) {
+        targetIds = ids.slice(offset);
+      }
+      console.log('trials', targetIds);
+      return Promise.all(targetIds.map(Trial.find))
+      .then((trials) => {
+        return trials.filter((trial) => !!trial);
+      });
+    });
   }
 }
 

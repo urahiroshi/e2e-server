@@ -18,6 +18,17 @@ class Usecase {
     this.browser = {};
   }
 
+  toJSON() {
+    return {
+      name: this.name,
+      url: this.url,
+      actions: this.actions,
+      timeout: this.timeout,
+      validation: this.validation,
+      browser: this.browser
+    };
+  }
+
   set(params) {
     [
       'name', 'url', 'actions', 'timeout', 'validation', 'browser'
@@ -35,14 +46,7 @@ class Usecase {
     let result = (
       connector
       .multi()
-      .set(id, {
-        name: this.name,
-        url: this.url,
-        actions: this.actions,
-        timeout: this.timeout,
-        validation: this.validation,
-        browser: this.browser
-      })
+      .set(id, this.toJSON())
     );
     if (isNew) {
       result.sadd('usecases', id);

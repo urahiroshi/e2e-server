@@ -5,7 +5,7 @@ const Usecase = require('../models/usecase');
 router.get('/', (req, res, next) => {
   Usecase.findAll()
   .then((result) => {
-    res.json(result);
+    res.json(result.map((usecase) => usecase.toJSON()));
   })
   .catch(next);
 });
@@ -14,7 +14,7 @@ router.get('/:id', (req, res, next) => {
   const id = req.params.id;
   Usecase.find(id)
   .then((result) => {
-    res.json(result);
+    res.json(result.toJSON());
   })
   .catch(next);
 });

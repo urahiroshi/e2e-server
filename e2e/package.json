@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "bluebird": "^3.4.1",
+    "bull": "git://github.com/OptimalBits/bull.git",
     "kue": "^0.11.1",
     "nightmare": "^2.5.3",
     "redis": "^2.6.2"
