@@ -38,9 +38,15 @@ router.get('/', (req, res, next) => {
 
 router.delete('/:id', (req, res, next) => {
   const id = req.params.id;
-  Trial.delete(id)
-  .then((res) => {
-    res.status(204);
+  Trial.find(id)
+  .then((trial) => {
+    if (!trial) {
+      return;
+    }
+    return trial.delete();
+  })
+  .then(() => {
+    res.status(204).end();
   })
   .catch(next);
 });

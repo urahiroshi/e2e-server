@@ -34,19 +34,14 @@ class Trial {
     });
   }
 
-  static delete(jobId) {
-    let usecaseId;
-    trialQueue.getJob(jobId)
-    .then((job) => {
-      usecaseId = job.data.usecaseId;
-      return job.remove();
-    })
+  delete() {
+    return this.job.remove()
     .then((res) => {
       console.log('remove job', res);
       const connector = new Connector();
       return connector.multi()
-      .srem('jobs', jobId)
-      .srem(`${usecaseId}:jobs`, jobId)
+      .srem('jobs', this.id)
+      .srem(`${this.usecaseId}:jobs`, this.id)
       .exec()
       .finally(() => {
         connector.close();
@@ -54,14 +49,28 @@ class Trial {
     })
   }
 
+  toJSON() {
+    const result = { usecaseId: this.usecaseId };
+    if (this.job) {
+      Object.assign(
+        result,
+        this.job.toJSON(),
+        { id: this.id, state: this.state }
+      );
+    }
+    return result;
+  }
+
   static _jobToTrial(job) {
     const trial = new Trial({ usecaseId: job.data.usecaseId });
-    Object.assign(trial, job.toJSON());
     // TODO: Consider performance by many jobs
     return job.getState()
     .then((state) => {
-      trial.state = state;
-      return trial;
+      return Object.assign(
+        trial,
+        job.toJSON(),
+        { id: job.opts.jobId, state: state, job }
+      );
     });
   }
 
