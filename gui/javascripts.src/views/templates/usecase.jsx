@@ -4,6 +4,7 @@ import Parameters from '../organisms/parameters.jsx';
 import EditUsecase from '../containers/edit-usecase';
 import DeleteUsecase from '../containers/delete-usecase';
 import Modal from '../containers/modal';
+import Trials from '../containers/trials';
 
 const Usecase = ({
   usecase,
@@ -38,6 +39,7 @@ const Usecase = ({
           () => { onClickShowModal(deleteUsecaseModalName); }
         }
       />
+      <Trials />
       <Modal name={editUsecaseModalName} title="Edit Usecase">
         <EditUsecase />
       </Modal>

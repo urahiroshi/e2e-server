@@ -7,6 +7,7 @@ import Usecases from './views/containers/usecases';
 import Usecase from './views/containers/usecase';
 import { setUsecases, setUsecase } from './actions/usecases';
 import { setNewUsecase, resetNewUsecase } from './actions/new-usecase';
+import { setTrials } from './actions/trials';
 
 const AppRouterComponent = ({
   onEnterUsecases,
@@ -58,6 +59,9 @@ const mapDispatchToProps = (dispatch) => ({
     axios.get(`/api/usecases/${params.id}`).then((response) => {
       dispatch(setUsecase(response.data));
       dispatch(setNewUsecase(response.data));
+    });
+    axios.get(`/api/trials?usecaseId=${params.id}&length=10`).then((response) => {
+      dispatch(setTrials(response.data));
     });
   },
   onLeaveUsecase: () => {
