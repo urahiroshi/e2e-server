@@ -20,6 +20,7 @@ class Usecase {
 
   toJSON() {
     return {
+      id: this.id,
       name: this.name,
       url: this.url,
       actions: this.actions,
@@ -80,14 +81,18 @@ class Usecase {
     });
   }
 
-  static find(id) {
-    const connector = new Connector();
+  static _find(id, connector) {
     return connector.get(id)
     .then((res) => {
       const usecase = new Usecase(res);
       usecase.id = id;
       return usecase;
-    })
+    });
+  }
+
+  static find(id) {
+    const connector = new Connector();
+    return Usecase._find(id, connector)
     .finally(() => {
       connector.close();
     });
@@ -98,10 +103,10 @@ class Usecase {
     return connector.smembers('usecases')
     .then((ids) => {
       console.log('usecases', ids);
-      const idsAsync = ids.map((id) => {
-        return connector.get(id);
+      const usecases = ids.map((id) => {
+        return Usecase._find(id, connector);
       });
-      return Promise.all(idsAsync);
+      return Promise.all(usecases);
     })
     .finally(() => {
       connector.close();
