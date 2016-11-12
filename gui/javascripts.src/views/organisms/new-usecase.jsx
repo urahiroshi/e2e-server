@@ -44,7 +44,7 @@ const NewUsecase = ({
         select: 'select',
         innerHTML: 'innerHTML',
         innerText: 'innerText',
-        screenShot: 'screenShot',
+        screenshot: 'screenshot',
       }}
       selected={newType}
     />,
