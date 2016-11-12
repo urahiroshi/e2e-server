@@ -22,7 +22,9 @@ const style = {
 const Trials = ({ trials, usecaseId, onClickShowModal, onClickStartTrial }) => {
   const header = ['id', 'state', 'timestamp'];
   const rows = trials.map((trial) => [
-    trial.id, trial.state, (new Date(trial.timestamp)).toLocaleString(),
+    <a href={`/trials/${trial.id}`}>{trial.id}</a>,
+    trial.state,
+    (new Date(trial.timestamp)).toLocaleString(),
   ]);
   const startTrialModalName = 'startTrialModal';
   return (

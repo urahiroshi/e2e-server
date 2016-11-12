@@ -5,15 +5,18 @@ import { connect } from 'react-redux';
 
 import Usecases from './views/containers/usecases';
 import Usecase from './views/containers/usecase';
+import Trial from './views/containers/trial';
 import { setUsecases, setUsecase } from './actions/usecases';
 import { setNewUsecase, resetNewUsecase } from './actions/new-usecase';
-import { setTrials } from './actions/trials';
+import { setTrials, setTrial, resetTrial } from './actions/trials';
 
 const AppRouterComponent = ({
   onEnterUsecases,
   onLeaveUsecases,
   onEnterUsecase,
   onLeaveUsecase,
+  onEnterTrial,
+  onLeaveTrial,
 }) => {
   const routes = {
     path: '/',
@@ -34,6 +37,12 @@ const AppRouterComponent = ({
         onEnter: onEnterUsecase,
         onLeave: onLeaveUsecase,
       },
+      {
+        path: 'trials/:id',
+        component: Trial,
+        onEnter: onEnterTrial,
+        onLeave: onLeaveTrial,
+      },
     ],
   };
   return <Router history={browserHistory} routes={routes} />;
@@ -44,6 +53,8 @@ AppRouterComponent.propTypes = {
   onLeaveUsecases: PropTypes.func.isRequired,
   onEnterUsecase: PropTypes.func.isRequired,
   onLeaveUsecase: PropTypes.func.isRequired,
+  onEnterTrial: PropTypes.func.isRequired,
+  onLeaveTrial: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
@@ -66,6 +77,14 @@ const mapDispatchToProps = (dispatch) => ({
   },
   onLeaveUsecase: () => {
     dispatch(resetNewUsecase());
+  },
+  onEnterTrial: ({ params }) => {
+    axios.get(`/api/trials/${params.id}`).then((response) => {
+      dispatch(setTrial(response.data));
+    });
+  },
+  onLeaveTrial: () => {
+    dispatch(resetTrial());
   },
 });
 

@@ -27,7 +27,7 @@ const Parameters = ({ keyValues, onClickEdit, onClickDelete }) =>
         Object.keys(keyValues).map((key) => {
           const value = keyValues[key];
           let cell;
-          if (typeof value === 'object') {
+          if (value && value.header && value.rows) {
             cell = <Table header={value.header} rows={value.rows} />;
           } else {
             cell = value;
@@ -42,14 +42,18 @@ const Parameters = ({ keyValues, onClickEdit, onClickDelete }) =>
       }
       </tbody>
     </table>
-    <Button label="edit" onClick={onClickEdit} />
-    <Button label="delete" onClick={onClickDelete} />
+    { (onClickEdit) ?
+      <Button label="edit" onClick={onClickEdit} /> : ''
+    }
+    { (onClickDelete) ?
+      <Button label="delete" onClick={onClickDelete} /> : ''
+    }
   </div>;
 
 Parameters.propTypes = {
   keyValues: PropTypes.object.isRequired,
-  onClickEdit: PropTypes.func.isRequired,
-  onClickDelete: PropTypes.func.isRequired,
+  onClickEdit: PropTypes.func,
+  onClickDelete: PropTypes.func,
 };
 
 export default Parameters;

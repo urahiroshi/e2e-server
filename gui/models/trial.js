@@ -34,7 +34,7 @@ class Trial {
   static find(id) {
     const connector = new Connector();
     return connector.request({
-      uri: Trial._toUri(this.id),
+      uri: Trial._toUri(id),
     });
   }
 

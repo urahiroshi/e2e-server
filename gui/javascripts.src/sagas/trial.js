@@ -1,5 +1,5 @@
 import { takeEvery } from 'redux-saga';
-import { fork, call, put } from 'redux-saga/effects';
+import { fork, call } from 'redux-saga/effects';
 
 import Api from '../apis/trial';
 import { START_TRIAL } from '../actions/trials';
