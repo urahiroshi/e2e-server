@@ -9,6 +9,7 @@ var routes = require('./routes/index');
 var usecases = require('./routes/usecases');
 var trials = require('./routes/trials');
 var results = require('./routes/results');
+var screenshots = require('./routes/screenshots');
 
 var app = express();
 
@@ -19,7 +20,8 @@ app.set('view engine', 'jade');
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
-app.use(bodyParser.json());
+// Extend limit allow to send large data such as screenshot.
+app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -28,6 +30,7 @@ app.use('/', routes);
 app.use('/usecases', usecases);
 app.use('/trials', trials);
 app.use('/results', results);
+app.use('/screenshots', screenshots);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

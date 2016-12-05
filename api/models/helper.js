@@ -4,8 +4,8 @@ const Helper = {
     return crypto.randomBytes(8).toString('hex');
   },
 
-  random() {
-    return crypto.randomBytes(6).readUIntBE(0, 6);
+  randomInt() {
+    return crypto.randomBytes(4).readUIntBE(0, 4);
   }
 };
 

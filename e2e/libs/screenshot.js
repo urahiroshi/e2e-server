@@ -11,7 +11,7 @@ class ScreenShot {
   }
 
   save() {
-    const key = crypto.randomBytes(8).toString('base64');
+    const key = crypto.randomBytes(8).toString('hex');
     const client = redis.createClient();
     return client.multi()
     .set(key, this.binary)

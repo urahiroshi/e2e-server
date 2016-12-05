@@ -14,31 +14,18 @@ function log () {
 }
 
 const actions = {
-  screenshot(nightmare, opts) {
-    const param = opts.param;
-    const resultParams = opts.resultParams;
+  screenshot(nightmare, { param, resultParams }) {
     if (!param || !resultParams) {
       return Promise.reject(new Error('invalid parameter'));
     }
     return nightmare.screenshot()
     .then((buf) => {
-      const screenshot = new ScreenShot({
-        name: param,
-        binary: buf
-      });
-      return screenshot.save();
-    })
-    .then((key) => {
-      log('ScreenShot', key);
-      resultParams.screenshots[param] = key;
+      resultParams.screenshots[param] = buf;
       return;
     });
   },
 
-  innerHTML(nightmare, opts) {
-    const selector = opts.selector;
-    const param = opts.param;
-    const resultParams = opts.resultParams;
+  innerHTML(nightmare, { selector, param, resultParams }) {
     if (!selector || !param || !resultParams) {
       return Promise.reject(new Error('invalid parameter'));
     }
@@ -53,10 +40,7 @@ const actions = {
     });
   },
   
-  innerText(nightmare, opts) {
-    const selector = opts.selector;
-    const param = opts.param;
-    const resultParams = opts.resultParams;
+  innerText(nightmare, { selector, param, resultParams }) {
     if (!selector || !param || !resultParams) {
       return Promise.reject(new Error('invalid parameter'));
     }
@@ -73,8 +57,7 @@ const actions = {
 };
 
 ['click'].forEach((actionType) => {
-  actions[actionType] = (nightmare, opts) => {
-    const selector = opts.selector;
+  actions[actionType] = (nightmare, { selector }) => {
     if (!selector) {
       return Promise.reject(new Error('invalid parameter'));
     }
@@ -87,9 +70,7 @@ const actions = {
 });
 
 ['type', 'select'].forEach((actionType) => {
-  actions[actionType] = (nightmare, opts) => {
-    const selector = opts.selector;
-    const param = opts.param;
+  actions[actionType] = (nightmare, { selector, param }) => {
     if (!selector || !param) {
       return Promise.reject(new Error('invalid parameter'));
     }
@@ -106,8 +87,9 @@ function onError(error, done) {
   done(error);
 }
 
-function trial (params, done) {
+function trial (jobId, params, done) {
   var resultParams = {
+    jobId,
     screenshots: {},
     innerHTMLs: {},
     innerTexts: {}
@@ -152,7 +134,7 @@ function process () {
   queue.process((job, done) => {
     try {
       log('job', job.jobId);
-      trial(job.data, done);
+      trial(job.jobId, job.data, done);
     } catch (error) {
       onError(error, done)
     }

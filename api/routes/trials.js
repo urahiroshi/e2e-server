@@ -1,12 +1,22 @@
 const express = require('express');
 const router = express.Router();
 const Trial = require('../models/trial');
+const Result = require('../models/result');
 
 router.get('/:id', (req, res, next) => {
   const id = req.params.id;
   Trial.find(id)
   .then((trial) => {
     res.json(trial);
+  })
+  .catch(next);
+});
+
+router.get('/:id/result', (req, res, next) => {
+  const id = req.params.id;
+  Result.find(id)
+  .then((result) => {
+    res.json(result);
   })
   .catch(next);
 });
@@ -38,11 +48,16 @@ router.get('/', (req, res, next) => {
 
 router.delete('/:id', (req, res, next) => {
   const id = req.params.id;
-  Trial.find(id)
+  Result.find(id)
+  .then((result) => {
+    if (!result) { return; }
+    return result.delete();
+  })
+  .then(() => {
+    return Trial.find(id)
+  })
   .then((trial) => {
-    if (!trial) {
-      return;
-    }
+    if (!trial) { return; }
     return trial.delete();
   })
   .then(() => {

@@ -18,7 +18,7 @@ class Trial {
       const data = Object.assign(usecase.toJSON(), {
         usecaseId: this.usecaseId
       });
-      const jobId = Helper.random();
+      const jobId = Helper.randomInt();
       const connector = new Connector();
       return connector.multi()
       .sadd('jobs', jobId)
