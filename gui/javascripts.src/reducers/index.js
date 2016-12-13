@@ -5,6 +5,7 @@ import newUsecase from './new-usecase';
 import modal from './modal';
 import trials from './trials';
 import trial from './trial';
+import result from './result';
 
 export default combineReducers({
   usecases,
@@ -13,4 +14,5 @@ export default combineReducers({
   modal,
   trials,
   trial,
+  result,
 });

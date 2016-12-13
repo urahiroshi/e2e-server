@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 
 import Parameters from '../organisms/parameters.jsx';
+import Result from '../containers/result';
 
 const Trial = ({
   trial,
@@ -30,12 +31,8 @@ const Trial = ({
   };
   return (
     <div>
-      <Parameters
-        keyValues={keyValues}
-        onClickDelete={
-          () => { console.log('delete clicked'); }
-        }
-      />
+      <Parameters keyValues={keyValues} />
+      <Result />
     </div>
   );
 };

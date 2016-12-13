@@ -24,8 +24,8 @@ class Connector {
         RETRY_INTERVAL_MS
       );
     } else {
-      this._log('error(retry over): ', error);
-      reject(err);
+      this._log('error(retry over)');
+      reject(new Error('Retry Over'));
     }
   }
 

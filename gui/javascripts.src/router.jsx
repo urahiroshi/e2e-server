@@ -9,6 +9,7 @@ import Trial from './views/containers/trial';
 import { setUsecases, setUsecase } from './actions/usecases';
 import { setNewUsecase, resetNewUsecase } from './actions/new-usecase';
 import { setTrials, setTrial, resetTrial } from './actions/trials';
+import { setResult, resetResult } from './actions/results';
 
 const AppRouterComponent = ({
   onEnterUsecases,
@@ -82,9 +83,13 @@ const mapDispatchToProps = (dispatch) => ({
     axios.get(`/api/trials/${params.id}`).then((response) => {
       dispatch(setTrial(response.data));
     });
+    axios.get(`/api/results?jobId=${params.id}`).then((response) => {
+      dispatch(setResult(response.data));
+    });
   },
   onLeaveTrial: () => {
     dispatch(resetTrial());
+    dispatch(resetResult());
   },
 });
 
