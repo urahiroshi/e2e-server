@@ -16,8 +16,10 @@ class Connector {
   }
 
   query() {
-    let query = Array.prototype.slice(arguments);
+    let query = Array.prototype.slice.call(arguments);
     if (query.length === 0) {
+      return Promise.reject(new Error('no query'));
+    } else if (query.length === 1) {
       query = query[0];
     } else {
       query = mysql.format(query[0], query.slice(1));
@@ -26,6 +28,7 @@ class Connector {
     return pool.getConnectionAsync()
     .then((connection_) => {
       connection = connection_;
+      console.log('Execute query:', query);
       return connection.queryAsync(query);
     })
     .then((result) => {

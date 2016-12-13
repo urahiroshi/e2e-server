@@ -6,7 +6,7 @@ const Promise = require('bluebird');
 class Result {
   constructor({
     resultId, jobId, texts, htmls, screenshots, textsCount, htmlsCount,
-    createdAt
+    screenshotsCount, createdAt
   }) {
     Object.assign(this, {
       resultId,
@@ -16,7 +16,7 @@ class Result {
       screenshots,
       textsCount: (texts) ? texts.length : textsCount,
       htmlsCount: (htmls) ? htmls.length : htmlsCount,
-      screenshotsCount: (texts) ? screenshots.length : screenshotsCount
+      screenshotsCount: (screenshots) ? screenshots.length : screenshotsCount
     });
   }
 
@@ -95,7 +95,7 @@ class Result {
         ].map((param) => {
           if (param.count > 0) {
             return connector.query(
-              'select * from ? where result_id = ?', param.table, result.resultId
+              `select * from ${param.table} where result_id = ?`, result.resultId
             );
           } else {
             return [];
