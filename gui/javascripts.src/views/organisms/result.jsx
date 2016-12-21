@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react';
-import { Link } from 'react-router';
 
 import Heading from '../atoms/heading.jsx';
 import Table from '../organisms/table.jsx';
@@ -19,7 +18,7 @@ const style = {
 };
 
 const Result = ({ result }) => {
-  if (!result.resultId) { return <section></section>; }
+  if (!result.resultId) { return <section />; }
   const header = ['type', 'name', 'value'];
   const rows = [[]].concat(
     result.texts.map(text => ['text', text.name, text.txt]),

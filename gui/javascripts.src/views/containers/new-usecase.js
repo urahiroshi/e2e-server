@@ -2,11 +2,29 @@ import { connect } from 'react-redux';
 import NewUsecase from '../organisms/new-usecase.jsx';
 import { setNewUsecase } from '../../actions/new-usecase';
 import { addUsecaseStart } from '../../actions/usecases';
+import { API_STATE } from '../../consts';
 
-const mapStateToProps = (state) => ({
-  newUsecase: state.newUsecase,
-  isLoading: false,
-});
+const mapStateToProps = (state) => {
+  let message = null;
+  switch (state.api.addUsecase.state) {
+    case API_STATE.REQUESTED:
+      message = 'Sending Request...';
+      break;
+    case API_STATE.SUCCEEDED:
+      message = 'New usecase has been added.';
+      break;
+    case API_STATE.FAILED:
+      message = state.api.addUsecase.error;
+      break;
+    default:
+      break;
+  }
+  return {
+    newUsecase: state.newUsecase,
+    isLoading: false,
+    message,
+  };
+};
 
 const mapDispatchToProps = (dispatch) => ({
   onClickAddAction: (action, usecase) => {

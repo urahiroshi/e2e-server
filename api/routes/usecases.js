@@ -23,7 +23,7 @@ router.post('/', (req, res, next) => {
   usecase = new Usecase(req.body);
   usecase.save()
   .then((result) => {
-    res.status(201).end();
+    res.status(201).json(usecase.toJSON());
   })
   .catch(next);
 });

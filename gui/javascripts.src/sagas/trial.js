@@ -10,7 +10,7 @@ function* startTrial(action) {
   console.log('response:', response);
   if (response.status === 200) {
     // TODO: Add Trial
-    console.log(response.body);
+    console.log(response.data);
   }
 }
 

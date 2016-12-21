@@ -32,8 +32,8 @@ router.put('/:id', (req, res, next) => {
 router.post('/', (req, res, next) => {
   usecase = new Usecase(req.body);
   usecase.save()
-  .then((result) => {
-    res.status(201).end();
+  .then((createdUsecase) => {
+    res.status(201).json(createdUsecase);
   })
   .catch(next);
 });

@@ -56,6 +56,9 @@ class Usecase {
       result
       .exec()
       .then((res) => {
+        if (!this.id) {
+          this.id = id;
+        }
         console.log(res);
         return res;
       })

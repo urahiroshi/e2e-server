@@ -8,8 +8,10 @@ function* addUsecase(action) {
   const usecase = action.usecase;
   const response = yield call(Api.add, usecase);
   console.log('response:', response);
-  if (response.status === 200) {
-    yield put(Action.addUsecase(response.body));
+  if (response.status >= 200 && response.status < 300) {
+    yield put(Action.addUsecase(response.data));
+  } else {
+    yield put(Action.addUsecaseFailed('Adding new usecase has been failed.'));
   }
 }
 
