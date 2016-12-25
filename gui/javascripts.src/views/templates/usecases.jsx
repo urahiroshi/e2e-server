@@ -4,9 +4,9 @@ import UsecaseTable from '../organisms/table.jsx';
 import AddUsecaseButton from '../atoms/button.jsx';
 import NewUsecase from '../containers/new-usecase';
 import Modal from '../containers/modal';
+import { API_NAME } from '../../consts';
 
-const Usecases = ({ usecases, onClickShowModal }) => {
-  const newUsecaseModalName = 'newUsecaseModal';
+const Usecases = ({ usecases, onClickNewUsecaseButton }) => {
   const header = [
     'ID', 'Usecase', 'Create Date Time',
   ];
@@ -21,13 +21,11 @@ const Usecases = ({ usecases, onClickShowModal }) => {
     <div>
       <AddUsecaseButton
         label="Add"
-        onClick={
-          () => { onClickShowModal(newUsecaseModalName); }
-        }
+        onClick={onClickNewUsecaseButton}
       />
       <UsecaseTable header={header} rows={rows} />
       <Modal
-        name={newUsecaseModalName}
+        name={API_NAME.ADD_USECASE}
         title="New Usecase"
       >
         <NewUsecase />
@@ -38,7 +36,7 @@ const Usecases = ({ usecases, onClickShowModal }) => {
 
 Usecases.propTypes = {
   usecases: PropTypes.array.isRequired,
-  onClickShowModal: PropTypes.func.isRequired,
+  onClickNewUsecaseButton: PropTypes.func.isRequired,
 };
 
 export default Usecases;

@@ -1,13 +1,13 @@
+import { startCommand } from './command';
+import { API_NAME } from '../consts';
+
 export const SET_USECASES = 'SET_USECASES';
 export const SET_USECASE = 'SET_USECASE';
 export const ADD_USECASE = 'ADD_USECASE';
-export const ADD_USECASE_START = 'ADD_USECASE_START';
 export const MODIFY_USECASE_START = 'MODIFY_USECASE_START';
 export const MODIFY_USECASE = 'MODIFY_USECASE';
 export const DELETE_USECASE_START = 'DELETE_USECASE_START';
 export const DELETE_USECASE = 'DELETE_USECASE';
-export const ADD_USECASE_INITIALIZED = 'ADD_USECASE_INITIALIZED';
-export const ADD_USECASE_FAILED = 'ADD_USECASE_FAILED';
 
 export const setUsecases = (usecases) => ({
   type: SET_USECASES,
@@ -24,19 +24,9 @@ export const addUsecase = (usecase) => ({
   usecase,
 });
 
-export const addUsecaseInitialized = () => ({
-  type: ADD_USECASE_INITIALIZED,
-});
-
-export const addUsecaseStart = (usecase) => ({
-  type: ADD_USECASE_START,
-  usecase,
-});
-
-export const addUsecaseFailed = (error) => ({
-  type: ADD_USECASE_FAILED,
-  error,
-});
+export const startAddUsecaseCommand = (usecase) => {
+  return startCommand(API_NAME.ADD_USECASE, { usecase });
+};
 
 export const modifyUsecaseStart = (usecase, newUsecase) => ({
   type: MODIFY_USECASE_START,

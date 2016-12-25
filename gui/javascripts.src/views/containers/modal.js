@@ -1,14 +1,38 @@
 import { connect } from 'react-redux';
 import Modal from '../templates/modal.jsx';
-import { hideModal } from '../../actions/modal';
+import { endCommand } from '../../actions/command';
+import { COMMAND_STATE } from '../../consts';
 
 const mapStateToProps = (state) => ({
-  modalState: state.modal,
+  isVisible: (actionName) => {
+    if (!state.command[actionName]) { return false; }
+    const commandState = state.command[actionName].state;
+    return (
+      commandState === COMMAND_STATE.PREPARED ||
+      commandState === COMMAND_STATE.REQUESTED ||
+      commandState === COMMAND_STATE.SUCCEEDED ||
+      commandState === COMMAND_STATE.FAILED
+    );
+  },
+  getContent: (actionName) => {
+    if (!state.command[actionName]) { return null; }
+    const commandState = state.command[actionName].state;
+    switch (commandState) {
+      case COMMAND_STATE.REQUESTED:
+        return 'Sending request ...';
+      case COMMAND_STATE.SUCCEEDED:
+        return 'Success to send request.';
+      case COMMAND_STATE.FAILED:
+        return 'Fail to send request.';
+      default:
+        return null;
+    }
+  },
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  hideModal: (name) => {
-    dispatch(hideModal(name));
+  onClickCloseButton: (actionName) => {
+    dispatch(endCommand(actionName));
   },
 });
 

@@ -11,13 +11,11 @@ const NewUsecase = ({
   usecase,
   newUsecase,
   isLoading,
-  message,
   onClickAddAction,
   onClickDeleteAction,
   onClickSendUsecase,
 }) => {
   if (isLoading) return <div />;
-  if (message) return <div>{ message }</div>;
   const header = ['Order', 'Selector', 'Type', 'param', 'Add/Delete'];
   let newSelector;
   let newType = 'click';
@@ -105,7 +103,6 @@ NewUsecase.propTypes = {
   usecase: PropTypes.object,
   newUsecase: PropTypes.object.isRequired,
   isLoading: PropTypes.bool.isRequired,
-  message: PropTypes.string,
   onClickAddAction: PropTypes.func.isRequired,
   onClickDeleteAction: PropTypes.func.isRequired,
   onClickSendUsecase: PropTypes.func.isRequired,

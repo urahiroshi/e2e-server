@@ -1,6 +1,10 @@
-export const API_STATE = {
-  INITIALIZED: 'INITIALIZED',
+export const COMMAND_STATE = {
+  PREPARED: 'PREPARED',
   REQUESTED: 'REQUESTED',
   SUCCEEDED: 'SUCCEEDED',
   FAILED: 'FAILED',
+};
+
+export const API_NAME = {
+  ADD_USECASE: 'ADD_USECASE',
 };

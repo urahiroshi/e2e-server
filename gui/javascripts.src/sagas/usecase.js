@@ -4,17 +4,6 @@ import { fork, call, put } from 'redux-saga/effects';
 import Api from '../apis/usecase';
 import * as Action from '../actions/usecases';
 
-function* addUsecase(action) {
-  const usecase = action.usecase;
-  const response = yield call(Api.add, usecase);
-  console.log('response:', response);
-  if (response.status >= 200 && response.status < 300) {
-    yield put(Action.addUsecase(response.data));
-  } else {
-    yield put(Action.addUsecaseFailed('Adding new usecase has been failed.'));
-  }
-}
-
 function* modifyUsecase(action) {
   const usecase = action.usecase;
   const newUsecase = action.newUsecase;
@@ -36,7 +25,6 @@ function* deleteUsecase(action) {
 }
 
 export default function* () {
-  yield fork(takeEvery, Action.ADD_USECASE_START, addUsecase);
   yield fork(takeEvery, Action.MODIFY_USECASE_START, modifyUsecase);
   yield fork(takeEvery, Action.DELETE_USECASE_START, deleteUsecase);
 }

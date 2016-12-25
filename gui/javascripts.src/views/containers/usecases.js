@@ -1,14 +1,15 @@
 import { connect } from 'react-redux';
 import Usecases from '../templates/usecases.jsx';
-import { showModal } from '../../actions/modal';
+import { prepareCommand } from '../../actions/command';
+import { API_NAME } from '../../consts';
 
 const mapStateToProps = (state) => ({
   usecases: state.usecases,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onClickShowModal: (name) => {
-    dispatch(showModal(name));
+  onClickNewUsecaseButton: () => {
+    dispatch(prepareCommand(API_NAME.ADD_USECASE));
   },
 });
 

@@ -1,12 +1,19 @@
 import React, { PropTypes } from 'react';
 
-const Modal = ({ name, title, onClose, children, modalState, hideModal }) => {
-  if (modalState.name !== name) {
+const Modal = ({
+  name,
+  title,
+  onClose,
+  children,
+  isVisible,
+  getContent,
+  onClickCloseButton,
+}) => {
+  if (!isVisible(name)) {
     return <div style={{ display: 'none' }} />;
   }
-  const displayStyle = modalState.isVisible ? 'block' : 'none';
   return (
-    <div className="modal" style={{ display: displayStyle }}>
+    <div className="modal" style={{ display: 'block' }}>
       <div className="modal-dialog modal-lg">
         <div className="modal-content">
           <div className="modal-header">
@@ -16,8 +23,8 @@ const Modal = ({ name, title, onClose, children, modalState, hideModal }) => {
               aria-label="Close"
               onClick={
                 () => {
-                  hideModal(name);
-                  if (onClose) { onClose(); }
+                  onClickCloseButton(name);
+                  if (onClose) { onClose(name); }
                 }
               }
             >
@@ -26,7 +33,7 @@ const Modal = ({ name, title, onClose, children, modalState, hideModal }) => {
             <h3 className="modal-title">{title}</h3>
           </div>
           <div className="modal-body">
-            {children}
+            {getContent(name) || children}
           </div>
         </div>
       </div>
@@ -39,8 +46,9 @@ Modal.propTypes = {
   title: PropTypes.string.isRequired,
   onClose: PropTypes.func,
   children: PropTypes.element.isRequired,
-  modalState: PropTypes.object.isRequired,
-  hideModal: PropTypes.func.isRequired,
+  isVisible: PropTypes.func.isRequired,
+  getContent: PropTypes.func.isRequired,
+  onClickCloseButton: PropTypes.func.isRequired,
 };
 
 export default Modal;

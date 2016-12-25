@@ -6,7 +6,7 @@ import modal from './modal';
 import trials from './trials';
 import trial from './trial';
 import result from './result';
-import api from './api';
+import command from './command';
 
 export default combineReducers({
   usecases,
@@ -16,5 +16,5 @@ export default combineReducers({
   trials,
   trial,
   result,
-  api,
+  command,
 });
