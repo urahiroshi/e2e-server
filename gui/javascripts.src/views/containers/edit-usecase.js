@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import NewUsecase from '../organisms/new-usecase.jsx';
 import { setNewUsecase } from '../../actions/new-usecase';
-import { modifyUsecaseStart } from '../../actions/usecases';
+import { startModifyUsecaseCommand } from '../../actions/usecases';
 
 const mapStateToProps = (state) => ({
   usecase: state.usecase,
@@ -33,7 +33,7 @@ const mapDispatchToProps = (dispatch) => ({
       console.log('NO ACTIONS');
       return;
     }
-    dispatch(modifyUsecaseStart(usecase, newUsecase));
+    dispatch(startModifyUsecaseCommand(usecase, newUsecase));
   },
 });
 

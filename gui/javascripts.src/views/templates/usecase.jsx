@@ -5,13 +5,13 @@ import EditUsecase from '../containers/edit-usecase';
 import DeleteUsecase from '../containers/delete-usecase';
 import Modal from '../containers/modal';
 import Trials from '../containers/trials';
+import { API_NAME } from '../../consts';
 
 const Usecase = ({
   usecase,
-  onClickShowModal,
+  onClickEditButton,
+  onClickDeleteButton,
 }) => {
-  const editUsecaseModalName = 'editUsecaseModal';
-  const deleteUsecaseModalName = 'deleteUsecaseModal';
   const keyValues = {
     Id: usecase.id,
     Name: usecase.name,
@@ -32,18 +32,14 @@ const Usecase = ({
     <div>
       <Parameters
         keyValues={keyValues}
-        onClickEdit={
-          () => { onClickShowModal(editUsecaseModalName); }
-        }
-        onClickDelete={
-          () => { onClickShowModal(deleteUsecaseModalName); }
-        }
+        onClickEdit={onClickEditButton}
+        onClickDelete={onClickDeleteButton}
       />
       <Trials />
-      <Modal name={editUsecaseModalName} title="Edit Usecase">
+      <Modal name={API_NAME.MODIFY_USECASE} title="Edit Usecase">
         <EditUsecase />
       </Modal>
-      <Modal name={deleteUsecaseModalName} title="Delete Usecase">
+      <Modal name={API_NAME.DELETE_USECASE} title="Delete Usecase">
         <DeleteUsecase />
       </Modal>
     </div>
@@ -52,7 +48,8 @@ const Usecase = ({
 
 Usecase.propTypes = {
   usecase: PropTypes.object.isRequired,
-  onClickShowModal: PropTypes.func.isRequired,
+  onClickEditButton: PropTypes.func.isRequired,
+  onClickDeleteButton: PropTypes.func.isRequired,
 };
 
 export default Usecase;

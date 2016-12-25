@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import DeleteUsecase from '../organisms/delete-usecase.jsx';
-import { deleteUsecaseStart } from '../../actions/usecases';
+import { startDeleteUsecaseCommand } from '../../actions/usecases';
 
 const mapStateToProps = (state) => ({
   usecase: state.usecase,
@@ -9,7 +9,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   onClickDeleteUsecase: (usecase) => {
-    dispatch(deleteUsecaseStart(usecase));
+    dispatch(startDeleteUsecaseCommand(usecase));
   },
 });
 

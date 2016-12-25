@@ -1,14 +1,18 @@
 import { connect } from 'react-redux';
 import Usecase from '../templates/usecase.jsx';
-import { showModal } from '../../actions/modal';
+import { prepareCommand } from '../../actions/command';
+import { API_NAME } from '../../consts';
 
 const mapStateToProps = (state) => ({
   usecase: state.usecase,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onClickShowModal: (name) => {
-    dispatch(showModal(name));
+  onClickEditButton: () => {
+    dispatch(prepareCommand(API_NAME.MODIFY_USECASE));
+  },
+  onClickDeleteButton: () => {
+    dispatch(prepareCommand(API_NAME.DELETE_USECASE));
   },
 });
 
