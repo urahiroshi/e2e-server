@@ -4,6 +4,7 @@ import Heading from '../atoms/heading.jsx';
 import Button from '../atoms/button.jsx';
 import Table from '../organisms/table.jsx';
 import Modal from '../containers/modal';
+import { API_NAME } from '../../consts';
 
 const style = {
   table: {},
@@ -19,27 +20,26 @@ const style = {
   },
 };
 
-const Trials = ({ trials, usecaseId, onClickShowModal, onClickStartTrial }) => {
+const Trials = ({ trials, usecaseId, prepareToStartCommand, startCommand }) => {
   const header = ['id', 'state', 'timestamp'];
   const rows = trials.map((trial) => [
     <a href={`/trials/${trial.id}`}>{trial.id}</a>,
     trial.state,
     (new Date(trial.timestamp)).toLocaleString(),
   ]);
-  const startTrialModalName = 'startTrialModal';
   return (
     <section>
       <Heading value="Trials" />
-      <Button label="Start Trial" onClick={onClickShowModal(startTrialModalName)} />
+      <Button label="Start Trial" onClick={prepareToStartCommand} />
       <Table header={header} style={style} rows={rows} />
-      <Modal name={startTrialModalName} title="Start Trial">
+      <Modal name={API_NAME.ADD_TRIAL} title="Start Trial">
         <div>
           <div>Start Trial, OK ?</div>
           <div>
             <Button
               label="Start"
               onClick={() => {
-                onClickStartTrial(usecaseId);
+                startCommand(usecaseId);
               }}
             />
           </div>
@@ -52,8 +52,8 @@ const Trials = ({ trials, usecaseId, onClickShowModal, onClickStartTrial }) => {
 Trials.propTypes = {
   trials: PropTypes.array.isRequired,
   usecaseId: PropTypes.string.isRequired,
-  onClickShowModal: PropTypes.func.isRequired,
-  onClickStartTrial: PropTypes.func.isRequired,
+  prepareToStartCommand: PropTypes.func.isRequired,
+  startCommand: PropTypes.func.isRequired,
 };
 
 export default Trials;

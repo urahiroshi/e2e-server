@@ -1,7 +1,8 @@
 import { connect } from 'react-redux';
 import Trials from '../organisms/trials.jsx';
-import { showModal } from '../../actions/modal';
-import { startTrial } from '../../actions/trials';
+import { prepareCommand } from '../../actions/command';
+import { startAddTrialCommand } from '../../actions/trials';
+import { API_NAME } from '../../consts';
 
 const mapStateToProps = (state) => ({
   trials: state.trials,
@@ -9,13 +10,11 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onClickShowModal: (name) => (
-    () => {
-      dispatch(showModal(name));
-    }
-  ),
-  onClickStartTrial: (usecaseId) => {
-    dispatch(startTrial(usecaseId));
+  prepareToStartCommand: () => {
+    dispatch(prepareCommand(API_NAME.ADD_TRIAL));
+  },
+  startCommand: (usecaseId) => {
+    dispatch(startAddTrialCommand(usecaseId));
   },
 });
 

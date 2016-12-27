@@ -1,6 +1,8 @@
+import { startCommand } from './command';
+import { API_NAME } from '../consts';
+
 export const SET_TRIALS = 'SET_TRIALS';
 export const RESET_TRIALS = 'RESET_TRIALS';
-export const START_TRIAL = 'START_TRIAL';
 export const SET_TRIAL = 'SET_TRIAL';
 export const RESET_TRIAL = 'RESET_TRIAL';
 
@@ -13,10 +15,9 @@ export const resetTrials = () => ({
   type: RESET_TRIALS,
 });
 
-export const startTrial = (usecaseId) => ({
-  type: START_TRIAL,
-  usecaseId,
-});
+export const startAddTrialCommand = (usecaseId) => (
+  startCommand(API_NAME.ADD_TRIAL, { usecaseId })
+);
 
 export const setTrial = (trial) => ({
   type: SET_TRIAL,
