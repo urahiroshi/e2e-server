@@ -14,53 +14,56 @@ function log () {
 }
 
 const actions = {
-  screenshot(nightmare, { param, resultParams }) {
-    if (!param || !resultParams) {
+  getScreenshot(nightmare, { name, resultParams }) {
+    if (!name || !resultParams) {
       return Promise.reject(new Error('invalid parameter'));
     }
     return nightmare.screenshot()
     .then((buf) => {
-      resultParams.screenshots[param] = buf;
+      resultParams.screenshots[name] = buf;
       return;
     });
   },
 
-  innerHTML(nightmare, { selector, param, resultParams }) {
-    if (!selector || !param || !resultParams) {
+  getHtml(nightmare, { selectors, name, resultParams }) {
+    if (!selectors || selectors.length === 0 || !name || !resultParams) {
       return Promise.reject(new Error('invalid parameter'));
     }
+    const selector = selectors[0];
     return nightmare.evaluate((selector) => {
       var elem = document.querySelector(selector);
       return elem ? elem.innerHTML : null;
     }, selector)
     .then((result) => {
-      log('innerHTML', result);
-      resultParams.innerHTMLs[param] = result;
+      log('getHtml', result);
+      resultParams.htmls[name] = result;
       return;
     });
   },
   
-  innerText(nightmare, { selector, param, resultParams }) {
-    if (!selector || !param || !resultParams) {
+  getText(nightmare, { selectors, name, resultParams }) {
+    if (!selectors || selectors.length === 0 || !name || !resultParams) {
       return Promise.reject(new Error('invalid parameter'));
     }
+    const selector = selectors[0];
     return nightmare.evaluate((selector) => {
       var elem = document.querySelector(selector);
       return elem ? elem.innerText : null;
     }, selector)
     .then((result) => {
-      log('innerText', result);
-      resultParams.innerTexts[param] = result;
+      log('getText', result);
+      resultParams.texts[name] = result;
       return;
     });
   }
 };
 
 ['click'].forEach((actionType) => {
-  actions[actionType] = (nightmare, { selector }) => {
-    if (!selector) {
+  actions[actionType] = (nightmare, { selectors }) => {
+    if (!selectors || selectors.length === 0) {
       return Promise.reject(new Error('invalid parameter'));
     }
+    const selector = selectors[0];
     return nightmare[actionType](selector)
     .then(() => {
       log('Finish', actionType, selector);
@@ -69,14 +72,17 @@ const actions = {
   }
 });
 
-['type', 'select'].forEach((actionType) => {
-  actions[actionType] = (nightmare, { selector, param }) => {
-    if (!selector || !param) {
+['input', 'select'].forEach((actionType) => {
+  actions[actionType] = (nightmare, { selectors, value }) => {
+    if (!selectors || selectors.length === 0 || !value) {
       return Promise.reject(new Error('invalid parameter'));
     }
-    return nightmare[actionType](selector, param)
+    const selector = selectors[0];
+    console.log('type:', actionType, 'selector:', selector);
+    const nightmareAction = (actionType === 'input') ? 'type' : actionType;
+    return nightmare[nightmareAction](selector, value)
     .then(() => {
-      log('Finish', actionType, selector, param);
+      log('Finish', actionType, selector, value);
       return;
     });
   }
@@ -91,8 +97,8 @@ function trial (jobId, params, done) {
   var resultParams = {
     jobId,
     screenshots: {},
-    innerHTMLs: {},
-    innerTexts: {}
+    htmls: {},
+    texts: {}
   };
   log(params);
   const url = params.url;
@@ -104,8 +110,9 @@ function trial (jobId, params, done) {
     return promise.then(() => {
       if (hasError) return false;
       return actions[action.type](nightmare, {
-        selector: action.selector,
-        param: action.param,
+        selectors: action.selectors,
+        name: action.name,
+        value: action.value,
         resultParams: resultParams
       })
       .catch((error) => {

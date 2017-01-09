@@ -1,18 +1,33 @@
-const Connector = require('../connectors/redis');
+const Connector = require('../connectors/mysql');
 const Usecase = require('./usecase');
 const Helper = require('./helper');
 const Config = require('../config/config');
+const Base = require('./base');
 const _ = require('lodash');
 
 const Queue = require('bull');
 const trialQueue = Queue('trial');
 
-class Trial {
-  constructor({ usecaseId }) {
-    this.usecaseId = usecaseId;
+class Trial extends Base {
+  constructor(params) {
+    super();
+    this.set(params);
+  }
+
+  validateTypes() {
+    return {
+      usecaseId: Number.isInteger
+    }
+  }
+
+  validateRanges() {
+    return {
+      usecaseId: (value) => value > 0 && value < Math.pow(2, 32)
+    }
   }
 
   save() {
+    this.validateAll();
     return Usecase.find(this.usecaseId)
     .then((usecase) => {
       const data = Object.assign(usecase.toJSON(), {
@@ -20,16 +35,13 @@ class Trial {
       });
       const jobId = Helper.randomInt();
       const connector = new Connector();
-      return connector.multi()
-      .sadd('jobs', jobId)
-      .sadd(`${this.usecaseId}:jobs`, jobId)
-      .exec()
-      .then((res) => {
-        console.log(res);
+      return connector.query(
+        'insert into trials (job_id, usecase_id) values (?, ?)',
+        jobId, this.usecaseId
+      )
+      .then(() => {
+        console.log('add job', jobId);
         return trialQueue.add(data, { jobId: jobId });
-      })
-      .finally(() => {
-        connector.close();
       });
     });
   }
@@ -39,14 +51,11 @@ class Trial {
     .then((res) => {
       console.log('remove job', res);
       const connector = new Connector();
-      return connector.multi()
-      .srem('jobs', this.id)
-      .srem(`${this.usecaseId}:jobs`, this.id)
-      .exec()
-      .finally(() => {
-        connector.close();
-      })
-    })
+      return connector.query(
+        'delete from trials where job_id = ?',
+        this.id
+      );
+    });
   }
 
   toJSON() {
@@ -61,48 +70,59 @@ class Trial {
     return result;
   }
 
-  static _jobToTrial(job) {
-    const trial = new Trial({ usecaseId: job.data.usecaseId });
+  static _findJobAndConcat(trialRow) {
     // TODO: Consider performance by many jobs
-    return job.getState()
-    .then((state) => {
-      return Object.assign(
-        trial,
-        job.toJSON(),
-        { id: job.opts.jobId, state: state, job }
-      );
-    });
-  }
-
-  static find(id) {
-    return trialQueue.getJob(id)
+    const trial = Connector.camelCase(trialRow);
+    const jobId = trial.jobId;
+    console.log('getJob: jobId', jobId);
+    return trialQueue.getJob(jobId)
     .then((job) => {
       if (job && job.data) {
-        return Trial._jobToTrial(job);
+        return job.getState()
+        .then((state) => {
+          return Object.assign(
+            { id: jobId, createdAt: trial.createdAt },
+            job.toJSON(),
+            // TODO: Verify correctness to return job
+            { state, job }
+          );
+        });
       } else {
         return null;
       }
     });
   }
 
-  static findAll({ offset, length, usecaseId }) {
+  static find(id) {
     const connector = new Connector();
-    const key = usecaseId ? `${usecaseId}:jobs` : 'jobs';
-    return connector.smembers(key)
-    .then((ids) => {
-      let targetIds = ids.slice().reverse();
-      if (offset && length) {
-        targetIds = ids.slice(offset, offset + length);
-      } else if (length) {
-        targetIds = ids.slice(0, length);
-      } else if (offset) {
-        targetIds = ids.slice(offset);
-      }
-      console.log('trials', targetIds);
-      return Promise.all(targetIds.map(Trial.find))
-      .then((trials) => {
-        return trials.filter((trial) => !!trial);
-      });
+    return connector.query('select * from trials where job_id = ?', id)
+    .then((rows) => {
+      if (rows.length <= 0) { return null; }
+      return Trial._findJobAndConcat(rows[0]);
+    });
+  }
+
+  static findAll({ offset, length, usecaseId }) {
+    offset = offset || 0;
+    length = length || 1;
+    const connector = new Connector();
+    let query;
+    if (usecaseId) {
+      query = connector.query(
+        'select * from trials where usecase_id = ?\
+         order by created_at desc limit ? offset ?',
+        usecaseId, length, offset
+      )
+    } else {
+      query = connector.query(
+        'select * from trials\
+         order by created_at desc limit ? offset ?',
+        length, offset
+      )
+    }
+    return query.then((rows) => {
+      return Promise.all(rows.map(Trial._findJobAndConcat))
+      .then((trials) => trials.filter((trial) => !!trial));
     });
   }
 }

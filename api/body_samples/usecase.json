@@ -3,8 +3,8 @@
   "actions": [
     {
       "selector": "form[action*=\"/search\"] [name=p]",
-      "type": "type",
-      "param": "github nightmare",
+      "type": "input",
+      "value": "github nightmare",
       "timeout": 1000
     },
     {
@@ -13,18 +13,18 @@
       "timeout": 1000
     },
     {
-      "type": "screenshot",
-      "param": "finishView"
+      "type": "getScreenshot",
+      "name": "finishView"
     },
     {
       "selector": ".title",
-      "type": "innerHTML",
-      "param": "titleHTML"
+      "type": "getHtml",
+      "name": "titleHTML"
     },
     {
       "selector": ".title",
-      "type": "innerText",
-      "param": "titleText"
+      "type": "getText",
+      "name": "titleText"
     }
   ],
   "timeout": 3000

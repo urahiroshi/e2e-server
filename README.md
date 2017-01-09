@@ -20,16 +20,11 @@ POST /usecases
     "actions": [
         {
             "selector": "<String>",
-            "type": "", // "click" or "type" or "select" or "innerHTML" or "innerText" or "screenShort"
-            "param": "", // parameter for type/select or name of innerHTML/innerText/screenShot
-            "timeout": 1000 // timeout by next action (ms)
+            "type": "", // "click" or "input" or "select" or "getHtml" or "getText" or "getScreenshot"
+            "name": "", // name of getHtml / getText / getScreenshot
+            "value": "" // value of select / input
         }
     ],
-    "timeout": 3000,        // total timeout (ms)
-    "browser": {
-        "width": 800,
-        "height": 600
-    }
 }
 ```
 

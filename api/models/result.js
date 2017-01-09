@@ -1,14 +1,17 @@
 const Connector = require('../connectors/mysql');
 const Helper = require('./helper');
+const Base = require('./base');
 const crypto = require('crypto');
 const Promise = require('bluebird');
+const validator = require('validator');
 
-class Result {
+class Result extends Base {
   constructor({
     resultId, jobId, texts, htmls, screenshots, textsCount, htmlsCount,
     screenshotsCount, createdAt
   }) {
-    Object.assign(this, {
+    super();
+    this.set({
       resultId,
       jobId,
       texts,
@@ -20,11 +23,48 @@ class Result {
     });
   }
 
+  validateTypes() {
+    return {
+      jobId: Number.isInteger,
+      texts: (value) => (
+        value == undefined ||
+        (Array.isArray(value) && value.every((textObj) => (
+          Helper.isString(textObj.name) &&
+          Helper.isString(textObj.txt)
+        )))
+      ),
+      htmls: (value) => (
+        value == undefined ||
+        (Array.isArray(value) && value.every((htmlObj) => (
+          Helper.isString(htmlObj.name) &&
+          Helper.isString(htmlObj.html)
+        )))
+      ),
+      screenshots: (value) => (
+        value == undefined ||
+        (Array.isArray(value) && value.every((screenshotObj) => (
+          Helper.isString(screenshotObj.name) &&
+          validator.isBase64(screenshotObj.image)
+        )))
+      ),
+      textsCount: Number.isInteger,
+      htmlsCount: Number.isInteger,
+      screenshotsCount: Number.isInteger
+    }
+  }
+
+  validateRanges() {
+    return {
+      jobId: (value) => value > 0 && value < Math.pow(2, 32)
+    }
+  }
+
   save() {
     if (this.resultId) {
       return Promise.reject(new Error('Need to be new instance.'))
     }
     this.resultId = Helper.randomInt();
+    this.validateAll();
     const connector = new Connector();
     const transaction = connector.transaction();
     transaction.query(() => ['\
@@ -86,8 +126,9 @@ class Result {
     }
     return resultsQuery
     .then((rows) => {
+      if (rows.length === 0) { return []; }
       result = new Result(Connector.camelCase(rows[0]));
-      if (!deep) { return [[], [], []]; }
+      if (!deep) { return [result]; }
       return Promise.all([
           { count: result.textsCount, table: 'result_texts' },
           { count: result.htmlsCount, table: 'result_htmls' },
@@ -101,16 +142,15 @@ class Result {
             return [];
           }
         })
-      );
-    })
-    .then((values) => {
-      if (!deep) { return result; }
-      result.texts = values[0].map((textsRow) => Connector.camelCase(textsRow));
-      result.htmls = values[1].map((htmlsRow) => Connector.camelCase(htmlsRow));
-      result.screenshots = values[2].map((screenshotsRow) => (
-        { resultId: screenshotsRow.result_id, name: screenshotsRow.name }
-      ));
-      return result;
+      )
+      .then((values) => {
+        result.texts = values[0].map((textsRow) => Connector.camelCase(textsRow));
+        result.htmls = values[1].map((htmlsRow) => Connector.camelCase(htmlsRow));
+        result.screenshots = values[2].map((screenshotsRow) => (
+          { resultId: screenshotsRow.result_id, name: screenshotsRow.name }
+        ));
+        return [result];
+      });
     });
   }
 

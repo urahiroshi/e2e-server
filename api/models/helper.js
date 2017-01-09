@@ -6,6 +6,11 @@ const Helper = {
 
   randomInt() {
     return crypto.randomBytes(4).readUIntBE(0, 4);
+  },
+
+  isString(value, options = { nullable: false }) {
+    if (options.nullable && value == undefined) { return true; }
+    return typeof value === 'string';
   }
 };
 

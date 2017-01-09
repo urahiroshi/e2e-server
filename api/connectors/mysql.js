@@ -15,6 +15,11 @@ class Connector {
     console.trace(err);
   }
 
+  _log() {
+    const args = Array.prototype.slice.call(arguments);
+    console.log.apply(console, args);
+  }
+
   query() {
     let query = Array.prototype.slice.call(arguments);
     if (query.length === 0) {
@@ -28,30 +33,37 @@ class Connector {
     return pool.getConnectionAsync()
     .then((connection_) => {
       connection = connection_;
-      console.log('Execute query:', query);
+      this._log('Execute query:', query);
       return connection.queryAsync(query);
     })
     .then((result) => {
       connection.release();
+      this._log('Query result:', result);
       return result;
     })
-    .error(this._onError);
+    .catch(this._onError);
   }
 
   transaction() {
     let connection;
-    const promise = pool.getConnectionAsync()
+    let promise = pool.getConnectionAsync()
     .then((connection_) => {
       connection = connection_;
       return connection.beginTransactionAsync();
     });
     const transaction = {
-      query: (callback) => {
-        promise.then((result) => {
-          let query = callback(result);
+      query: (...args) => {
+        promise = promise.then((result) => {
+          let query;
+          if (typeof args[0] === 'function') {
+            query = args[0](result);
+          } else {
+            query = args;
+          }
           if (Array.isArray(query)) {
             query = mysql.format(query[0], query.slice(1));
           }
+          this._log('Execute transaction:', query);
           return connection.queryAsync(query);
         })
         return transaction;
@@ -59,12 +71,20 @@ class Connector {
 
       end: () => {
         return promise.then(() => {
+          this._log('Commit transaction');
           return connection.commitAsync();
         })
-        .error((err) => {
+        .catch((err) => {
+          this._onError(err);
+          this._log('Rollback transaction');
           return connection.rollbackAsync()
-          .then(() => { this._onError(err); })
-          .error(this._onError);
+          .then(() => {
+            throw err;
+          })
+          .catch((e) => {
+            this._onError(e);
+            throw e;
+          });
         });
       }
     };

@@ -3,7 +3,7 @@ const router = express.Router();
 const Result = require('../models/result');
 
 router.get('/', (req, res, next) => {
-  const jobId = req.query.jobId;
+  const jobId = Number(req.query.jobId);
   let promise;
   if (jobId) {
     promise = Result.find({ jobId, deep: true });
@@ -11,14 +11,14 @@ router.get('/', (req, res, next) => {
     promise = Result.findAll();
   }
   return promise
-  .then((resultOrResults) => {
-    res.json(resultOrResults);
+  .then((results) => {
+    res.json(results);
   })
   .catch(next);
 });
 
 router.delete('/:id', (req, res, next) => {
-  const resultId = req.params.id;
+  const resultId = Number(req.params.id);
   Result.find({ resultId, deep: false })
   .then((result) => {
     if (!result) { return; }
@@ -31,12 +31,16 @@ router.delete('/:id', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-  const result = new Result(req.body);
-  result.save()
-  .then(() => {
-    res.status(201).end();
-  })
-  .catch(next);
+  try {
+    const result = new Result(req.body);
+    result.save()
+    .then(() => {
+      res.status(201).end();
+    })
+    .catch(next);
+  } catch (error) {
+    next(error);
+  }
 });
 
 module.exports = router;

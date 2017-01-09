@@ -5,11 +5,11 @@ const HttpClient = require('./http-client');
 const config = require('../config');
 
 class Result {
-  constructor({ jobId, innerTexts, innerHTMLs, screenshots }) {
+  constructor({ jobId, texts, htmls, screenshots }) {
     this.params = {
       jobId,
-      innerTexts,
-      innerHTMLs,
+      texts,
+      htmls,
       screenshots
     };
   }
@@ -21,13 +21,13 @@ class Result {
       method: 'POST',
       body: {
         jobId: this.params.jobId,
-        texts: Object.keys(this.params.innerTexts).map((name) => ({
+        texts: Object.keys(this.params.texts).map((name) => ({
           name,
-          txt: this.params.innerTexts[name]
+          txt: this.params.texts[name]
         })),
-        htmls: Object.keys(this.params.innerHTMLs).map((name) => ({
+        htmls: Object.keys(this.params.htmls).map((name) => ({
           name,
-          html: this.params.innerHTMLs[name]
+          html: this.params.htmls[name]
         })),
         screenshots: Object.keys(this.params.screenshots).map((name) => ({
           name,
