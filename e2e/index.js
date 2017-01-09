@@ -30,7 +30,9 @@ const actions = {
       return Promise.reject(new Error('invalid parameter'));
     }
     const selector = selectors[0];
-    return nightmare.evaluate((selector) => {
+    return nightmare
+    .wait(selector)
+    .evaluate((selector) => {
       var elem = document.querySelector(selector);
       return elem ? elem.innerHTML : null;
     }, selector)
@@ -46,7 +48,9 @@ const actions = {
       return Promise.reject(new Error('invalid parameter'));
     }
     const selector = selectors[0];
-    return nightmare.evaluate((selector) => {
+    return nightmare
+    .wait(selector)
+    .evaluate((selector) => {
       var elem = document.querySelector(selector);
       return elem ? elem.innerText : null;
     }, selector)
@@ -64,7 +68,9 @@ const actions = {
       return Promise.reject(new Error('invalid parameter'));
     }
     const selector = selectors[0];
-    return nightmare[actionType](selector)
+    return nightmare
+    .wait(selector)
+    [actionType](selector)
     .then(() => {
       log('Finish', actionType, selector);
       return;
@@ -80,7 +86,9 @@ const actions = {
     const selector = selectors[0];
     console.log('type:', actionType, 'selector:', selector);
     const nightmareAction = (actionType === 'input') ? 'type' : actionType;
-    return nightmare[nightmareAction](selector, value)
+    return nightmare
+    .wait(selector)
+    [nightmareAction](selector, value)
     .then(() => {
       log('Finish', actionType, selector, value);
       return;
@@ -132,6 +140,7 @@ function trial (jobId, params, done) {
       done();
     });
   })
+  // TODO: send error information
   .catch((error) => {
     onError(error, done);
   });
