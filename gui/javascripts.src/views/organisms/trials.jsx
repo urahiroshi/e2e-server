@@ -21,6 +21,7 @@ const style = {
 };
 
 const Trials = ({ trials, usecaseId, prepareToStartCommand, startCommand }) => {
+  if (usecaseId == undefined) { return <section />; }
   const header = ['id', 'state', 'timestamp'];
   const rows = trials.map((trial) => [
     <a href={`/trials/${trial.id}`}>{trial.id}</a>,
@@ -51,7 +52,7 @@ const Trials = ({ trials, usecaseId, prepareToStartCommand, startCommand }) => {
 
 Trials.propTypes = {
   trials: PropTypes.array.isRequired,
-  usecaseId: PropTypes.string.isRequired,
+  usecaseId: PropTypes.number,
   prepareToStartCommand: PropTypes.func.isRequired,
   startCommand: PropTypes.func.isRequired,
 };

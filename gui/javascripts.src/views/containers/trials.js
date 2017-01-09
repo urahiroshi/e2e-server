@@ -6,7 +6,7 @@ import { API_NAME } from '../../consts';
 
 const mapStateToProps = (state) => ({
   trials: state.trials,
-  usecaseId: state.usecase.id || '',
+  usecaseId: state.usecase.id,
 });
 
 const mapDispatchToProps = (dispatch) => ({

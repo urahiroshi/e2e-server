@@ -11,7 +11,7 @@ router.get('/', (req, res, next) => {
 });
 
 router.get('/:id', (req, res, next) => {
-  const id = req.params.id;
+  const id = Number(req.params.id);
   Usecase.find(id)
   .then((usecase) => {
     res.json(usecase.toJSON());
@@ -21,7 +21,7 @@ router.get('/:id', (req, res, next) => {
 
 router.put('/:id', (req, res, next) => {
   usecase = new Usecase(req.body);
-  usecase.id = req.params.id;
+  usecase.id = Number(req.params.id);
   usecase.save()
   .then((result) => {
     res.json(usecase.toJSON());
@@ -39,7 +39,7 @@ router.post('/', (req, res, next) => {
 });
 
 router.delete('/:id', (req, res, next) => {
-  const id = req.params.id;
+  const id = Number(req.params.id);
   Usecase.find(id)
   .then((usecase) => {
     return usecase.delete();

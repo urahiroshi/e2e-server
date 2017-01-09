@@ -12,19 +12,20 @@ const Trial = ({
     State: trial.state,
     Timestamp: (new Date(trial.timestamp)).toLocaleString(),
     Usecase: (
-      <a href={`/usecases/${trial.usecaseId}`}>
-      {`${trial.usecaseId} (${trial.data.name})`}
+      <a href={`/usecases/${trial.data.usecaseId}`}>
+      {`${trial.data.usecaseId} (${trial.data.name})`}
       </a>
     ),
     URL: trial.data.url,
     Actions: {
-      header: ['Order', 'Selector', 'Type', 'Param'],
+      header: ['Order', 'Selector', 'Type', 'Name', 'Value'],
       rows: trial.data.actions.map((action, index) => (
         [
           index + 1,
-          action.selector,
+          action.selectors[0],
           action.type,
-          action.param,
+          action.name,
+          action.value,
         ]
       )),
     },

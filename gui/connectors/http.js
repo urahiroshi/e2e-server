@@ -10,7 +10,7 @@ class Connector {
   }
 
   _retryRequest(options, resolve, reject, retryCount) {
-    const RETRY_MAX = 2;
+    const RETRY_MAX = 0;
     const RETRY_INTERVAL_MS = 3000;
     if (retryCount <= RETRY_MAX) {
       setTimeout(

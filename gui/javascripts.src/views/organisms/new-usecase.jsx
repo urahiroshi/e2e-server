@@ -40,11 +40,11 @@ const NewUsecase = ({
       onChange={(value) => { newType = value; }}
       selections={{
         click: 'click',
-        type: 'type',
+        input: 'input',
         select: 'select',
-        innerHTML: 'innerHTML',
-        innerText: 'innerText',
-        screenshot: 'screenshot',
+        getHtml: 'getHtml',
+        getText: 'getText',
+        getScreenshot: 'getScreenshot',
       }}
       selected={newType}
     />,

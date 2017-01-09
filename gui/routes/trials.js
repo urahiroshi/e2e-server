@@ -3,7 +3,7 @@ const router = express.Router();
 const Trial = require('../models/trial');
 
 router.get('/:id', (req, res, next) => {
-  const id = req.params.id;
+  const id = Number(req.params.id);
   Trial.find(id)
   .then((trial) => {
     res.json(trial);
@@ -14,7 +14,7 @@ router.get('/:id', (req, res, next) => {
 router.get('/', (req, res, next) => {
   const offset = req.query.offset ? Number(req.query.offset) : 0;
   const length = Number(req.query.length);
-  const usecaseId = req.query.usecaseId;
+  const usecaseId = Number(req.query.usecaseId);
   const errors = [];
   if (!Number.isInteger(offset)) {
     errors.push('`offset` needs to be Integer.');
@@ -37,7 +37,7 @@ router.get('/', (req, res, next) => {
 });
 
 router.delete('/:id', (req, res, next) => {
-  const id = req.params.id;
+  const id = Number(req.params.id);
   Trial.find(id)
   .then((trial) => {
     if (!trial) {

@@ -12,16 +12,13 @@ class Usecase {
     this.name = '';
     this.url = '';
     this.actions = [];
-    this.timeout = 0;
-    this.validation = [];
-    this.browser = {};
   }
 
   set(params) {
     [
-      'name', 'url', 'actions', 'timeout', 'validation', 'browser'
+      'id', 'name', 'url', 'actions', 'createdAt'
     ].forEach((key) => {
-      if (params[key]) {
+      if (params[key] != undefined) {
         this[key] = params[key];
       }
     });
@@ -50,9 +47,7 @@ class Usecase {
       name: this.name,
       url: this.url,
       actions: this.actions,
-      timeout: this.timeout,
-      validation: this.validation,
-      browser: this.browser
+      createdAt: this.createdAt
     };
   }
 
