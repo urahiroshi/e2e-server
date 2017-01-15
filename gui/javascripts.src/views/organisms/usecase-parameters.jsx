@@ -2,8 +2,9 @@ import React, { PropTypes } from 'react';
 
 import Button from '../atoms/button.jsx';
 import Action from '../atoms/action.jsx';
+import ActionResult from '../atoms/action-result.jsx';
 
-const UsecaseParameters = ({ url, actions, onClickEdit, onClickDelete }) =>
+const UsecaseParameters = ({ url, actions, result, onClickEdit, onClickDelete }) =>
   <div>
     <ul>
       <li>
@@ -14,7 +15,10 @@ const UsecaseParameters = ({ url, actions, onClickEdit, onClickDelete }) =>
         <ol>
           {
             actions.map((action, i) =>
-              <li key={i}><Action action={action} /></li>
+              <li key={i}>
+                <Action action={action} />
+                <ActionResult result={result} type={action.type} name={action.name} />
+              </li>
             )
           }
         </ol>
@@ -31,6 +35,7 @@ const UsecaseParameters = ({ url, actions, onClickEdit, onClickDelete }) =>
 UsecaseParameters.propTypes = {
   url: PropTypes.string.isRequired,
   actions: PropTypes.array.isRequired,
+  result: PropTypes.object,
   onClickEdit: PropTypes.func,
   onClickDelete: PropTypes.func,
 };

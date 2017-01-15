@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 
 const Action = ({ action }) => {
-  let explanation;
+  const nodes = [];
   let selector;
   // TODO: Add escape!
   if (action.selectors) {
@@ -9,23 +9,23 @@ const Action = ({ action }) => {
   }
   switch (action.type) {
     case 'click':
-      explanation = `${action.type} to ${selector}`;
+      nodes.push(`${action.type} to ${selector}`);
       break;
     case 'input':
     case 'select':
-      explanation = `${action.type} ${action.value} to ${selector}`;
+      nodes.push(`${action.type} ${action.value} to ${selector}`);
       break;
     case 'getHtml':
     case 'getText':
-      explanation = `${action.type} labeled by ${action.name} from ${selector}`;
+      nodes.push(`${action.type} labeled by ${action.name} from ${selector}`);
       break;
     case 'getScreenshot':
-      explanation = `${action.type} labeled by ${action.name}`;
+      nodes.push(`${action.type} labeled by ${action.name}`);
       break;
     default:
       break;
   }
-  return <span>{explanation}</span>;
+  return React.createElement('div', null, ...nodes);
 };
 
 Action.propTypes = {
