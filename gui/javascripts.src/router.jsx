@@ -49,24 +49,6 @@ const AppRouterComponent = ({
   return <Router history={browserHistory} routes={routes} />;
 };
 
-// TODO: Modify ui and remove this method.
-function convertAction(usecase) {
-  const actions = usecase.actions.map((action) => {
-    const converted = { type: action.type };
-    if (['getText', 'getHtml', 'getScreenshot'].indexOf(action.type) >= 0) {
-      converted.param = action.name;
-    }
-    if (['input', 'select'].indexOf(action.type) >= 0) {
-      converted.param = action.value;
-    }
-    if (action.type !== 'getScreenshot') {
-      converted.selector = action.selectors[0];
-    }
-    return converted;
-  });
-  return Object.assign({}, usecase, { actions });
-}
-
 AppRouterComponent.propTypes = {
   onEnterUsecases: PropTypes.func.isRequired,
   onLeaveUsecases: PropTypes.func.isRequired,
@@ -79,7 +61,7 @@ AppRouterComponent.propTypes = {
 const mapDispatchToProps = (dispatch) => ({
   onEnterUsecases: () => {
     axios.get('/api/usecases').then((response) => {
-      dispatch(setUsecases(response.data.map(convertAction)));
+      dispatch(setUsecases(response.data));
     });
   },
   onLeaveUsecases: () => {
@@ -87,8 +69,8 @@ const mapDispatchToProps = (dispatch) => ({
   },
   onEnterUsecase: ({ params }) => {
     axios.get(`/api/usecases/${params.id}`).then((response) => {
-      dispatch(setUsecase(convertAction(response.data)));
-      dispatch(setNewUsecase(convertAction(response.data)));
+      dispatch(setUsecase(response.data));
+      dispatch(setNewUsecase(response.data));
     });
     axios.get(`/api/trials?usecaseId=${params.id}&length=10`).then((response) => {
       dispatch(setTrials(response.data));

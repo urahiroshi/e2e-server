@@ -1,9 +1,10 @@
 import React, { PropTypes } from 'react';
 
+import Action from '../atoms/action.jsx';
 import Button from '../atoms/button.jsx';
 import TextBox from '../atoms/text-box.jsx';
-import ComboBox from '../atoms/combo-box.jsx';
 import Heading from '../atoms/heading.jsx';
+import ActionInput from '../molecules/action-input.jsx';
 import VerticalRow from '../molecules/vertical-row.jsx';
 import Table from '../organisms/table.jsx';
 
@@ -16,16 +17,10 @@ const NewUsecase = ({
   onClickSendUsecase,
 }) => {
   if (isLoading) return <div />;
-  const header = ['Order', 'Selector', 'Type', 'param', 'Add/Delete'];
-  let newSelector;
-  let newType = 'click';
-  let newParam;
   const tempUsecase = Object.assign({}, newUsecase);
   const rows = newUsecase.actions.map((action, i) => [
     i + 1,
-    action.selector,
-    action.type,
-    action.param,
+    <Action action={action} />,
     <Button
       label="Delete"
       onClick={() => {
@@ -33,56 +28,46 @@ const NewUsecase = ({
       }}
     />,
   ]);
+  const newAction = {};
   rows.push([
     newUsecase.actions.length + 1,
-    <TextBox onChange={(value) => { newSelector = value; }} />,
-    <ComboBox
-      onChange={(value) => { newType = value; }}
-      selections={{
-        click: 'click',
-        input: 'input',
-        select: 'select',
-        getHtml: 'getHtml',
-        getText: 'getText',
-        getScreenshot: 'getScreenshot',
+    <ActionInput
+      onChange={(actionParam) => {
+        Object.assign(newAction, actionParam);
       }}
-      selected={newType}
     />,
-    <TextBox onChange={(value) => { newParam = value; }} />,
     <Button
       label="Add"
       onClick={() => {
-        onClickAddAction(
-          {
-            selector: newSelector,
-            type: newType,
-            param: newParam,
-          },
-          tempUsecase
-        );
+        onClickAddAction(newAction, tempUsecase);
       }}
     />,
   ]);
+  const colStyles = [
+    {},
+    { width: '700px' },
+    {},
+  ];
   return (
     <div>
       <div>
         <Heading value="Parameters" />
         <table>
-          <tbody>
-            <VerticalRow name="Name">
+          <tbody className="form-inline">
+            <VerticalRow name="Name:">
               <TextBox
                 defaultValue={tempUsecase.name}
                 onChange={(value) => { tempUsecase.name = value; }}
               />
             </VerticalRow>
-            <VerticalRow name="URL">
+            <VerticalRow name="URL:">
               <TextBox
                 defaultValue={tempUsecase.url}
                 onChange={(value) => { tempUsecase.url = value; }}
               />
             </VerticalRow>
-            <VerticalRow name="Actions">
-              <Table header={header} rows={rows} />
+            <VerticalRow name="Actions:">
+              <Table rows={rows} colStyles={colStyles} />
             </VerticalRow>
           </tbody>
         </table>

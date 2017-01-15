@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 
-import Parameters from '../organisms/parameters.jsx';
+import Heading from '../atoms/heading.jsx';
+import UsecaseParameters from '../organisms/usecase-parameters.jsx';
 import EditUsecase from '../containers/edit-usecase';
 import DeleteUsecase from '../containers/delete-usecase';
 import Modal from '../containers/modal';
@@ -12,26 +13,15 @@ const Usecase = ({
   onClickEditButton,
   onClickDeleteButton,
 }) => {
-  const keyValues = {
-    Id: usecase.id,
-    Name: usecase.name,
-    URL: usecase.url,
-    Actions: usecase.actions ? {
-      header: ['Order', 'Selector', 'Type', 'Param'],
-      rows: usecase.actions.map((action, index) => (
-        [
-          index + 1,
-          action.selector,
-          action.type,
-          action.param,
-        ]
-      )),
-    } : undefined,
-  };
+  if (!usecase.name) { return <div />; }
+  // TODO: Add Heading to created at time
+  // TODO; Check actions ordered by action.order value
   return (
     <div>
-      <Parameters
-        keyValues={keyValues}
+      <Heading value={`${usecase.name}`} />
+      <UsecaseParameters
+        url={usecase.url}
+        actions={usecase.actions}
         onClickEdit={onClickEditButton}
         onClickDelete={onClickDeleteButton}
       />
