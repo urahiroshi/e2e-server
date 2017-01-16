@@ -14,11 +14,11 @@ const Usecase = ({
   onClickDeleteButton,
 }) => {
   if (!usecase.name) { return <div />; }
-  // TODO: Add Heading to created at time
-  // TODO; Check actions ordered by action.order value
+  // TODO: Check actions ordered by action.order value
+  const timestamp = (new Date(usecase.createdAt)).toLocaleString();
   return (
     <div>
-      <Heading value={`${usecase.name}`} />
+      <Heading value={`${usecase.name} created at ${timestamp}`} />
       <UsecaseParameters
         url={usecase.url}
         actions={usecase.actions}

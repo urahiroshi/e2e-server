@@ -26,7 +26,8 @@ class Usecase extends Base {
       id: this.id,
       name: this.name,
       url: this.url,
-      actions: this.actions
+      actions: this.actions,
+      createdAt: this.createdAt
     };
   }
 

@@ -14,7 +14,7 @@ const Usecases = ({ usecases, onClickNewUsecaseButton }) => {
     [
       <Link to={`/usecases/${usecase.id}`}>{usecase.id}</Link>,
       usecase.name,
-      usecase.createDt,
+      (new Date(usecase.createdAt)).toLocaleString(),
     ]
   );
   return (
