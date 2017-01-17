@@ -40,6 +40,8 @@
             "error",
             "always"
         ],
-        "import/extensions": 2
+        "import/extensions": 2,
+        "eqeqeq": ["warn", "always"],
+        "import/prefer-default-export": ["warn", "always"]
     }
 }
