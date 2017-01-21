@@ -3,6 +3,8 @@ import { Link } from 'react-router';
 import AddUsecaseButton from '../atoms/button.jsx';
 import Usecase from '../containers/usecase';
 import NewUsecase from '../containers/new-usecase';
+import EditUsecase from '../containers/edit-usecase';
+import DeleteUsecase from '../containers/delete-usecase';
 import Modal from '../containers/modal';
 import { API_NAME } from '../../consts';
 
@@ -23,11 +25,14 @@ const Usecases = ({ usecases, selectedUsecaseId, onClickNewUsecaseButton }) => (
           )
         }
       </ul>
-      <Modal
-        name={API_NAME.ADD_USECASE}
-        title="New Usecase"
-      >
+      <Modal name={API_NAME.ADD_USECASE} title="New Usecase">
         <NewUsecase />
+      </Modal>
+      <Modal name={API_NAME.MODIFY_USECASE} title="Edit Usecase">
+        <EditUsecase />
+      </Modal>
+      <Modal name={API_NAME.DELETE_USECASE} title="Delete Usecase">
+        <DeleteUsecase />
       </Modal>
     </div>
     {

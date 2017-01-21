@@ -2,7 +2,7 @@ import { call, put } from 'redux-saga/effects';
 
 import { successCommand, failCommand } from '../../actions/command';
 import { addUsecase, modifyUsecase, deleteUsecase } from '../../actions/usecases';
-import { setUsecase } from '../../actions/usecase';
+import { setUsecase, resetUsecase } from '../../actions/usecase';
 import Api from '../../apis/usecase';
 
 export function* addUsecaseSaga(name, { usecase }) {
@@ -35,6 +35,7 @@ export function* deleteUsecaseSaga(name, { usecase }) {
     const response = yield call(Api.delete, usecase);
     console.log('response:', response);
     yield put(deleteUsecase(usecase));
+    yield put(resetUsecase());
     yield put(successCommand(name));
   } catch (e) {
     console.log('Delete usecase request failed:', e);

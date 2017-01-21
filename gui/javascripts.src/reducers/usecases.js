@@ -13,7 +13,7 @@ const usecases = (state = [], action) => {
       return state.concat([action.usecase]);
     case MODIFY_USECASE:
       return state.map((usecase) => {
-        if (usecase.key === action.usecase.key) {
+        if (usecase.id === action.usecase.id) {
           return action.usecase;
         }
         return usecase;

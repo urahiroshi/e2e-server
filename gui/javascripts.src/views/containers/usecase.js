@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import Usecase from '../templates/usecase.jsx';
 import { prepareCommand } from '../../actions/command';
+import { setNewUsecase } from '../../actions/new-usecase';
 import { API_NAME } from '../../consts';
 
 const mapStateToProps = (state) => ({
@@ -8,7 +9,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onClickEditButton: () => {
+  onClickEditButton: (usecase) => {
+    dispatch(setNewUsecase(usecase));
     dispatch(prepareCommand(API_NAME.MODIFY_USECASE));
   },
   onClickDeleteButton: () => {

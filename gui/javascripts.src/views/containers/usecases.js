@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import Usecases from '../templates/usecases.jsx';
 import { prepareCommand } from '../../actions/command';
+import { resetNewUsecase } from '../../actions/new-usecase';
 import { API_NAME } from '../../consts';
 
 const mapStateToProps = (state) => ({
@@ -10,6 +11,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   onClickNewUsecaseButton: () => {
+    dispatch(resetNewUsecase());
     dispatch(prepareCommand(API_NAME.ADD_USECASE));
   },
 });
