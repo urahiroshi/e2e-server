@@ -5,11 +5,9 @@ import { connect } from 'react-redux';
 
 import Usecases from './views/containers/usecases';
 import Usecase from './views/containers/usecase';
-import Trial from './views/containers/trial';
 import { setUsecases, setUsecase } from './actions/usecases';
 import { setNewUsecase, resetNewUsecase } from './actions/new-usecase';
-import { setTrials, setTrial, resetTrial } from './actions/trials';
-import { setResult, resetResult } from './actions/results';
+import { setTrials, setTrial, resetTrial, setResult } from './actions/trials';
 
 const AppRouterComponent = ({
   onEnterUsecases,
@@ -39,8 +37,8 @@ const AppRouterComponent = ({
         onLeave: onLeaveUsecase,
       },
       {
-        path: 'trials/:id',
-        component: Trial,
+        path: 'usecases/:usecaseId/trials/:trialId',
+        component: Usecase,
         onEnter: onEnterTrial,
         onLeave: onLeaveTrial,
       },
@@ -58,38 +56,62 @@ AppRouterComponent.propTypes = {
   onLeaveTrial: PropTypes.func.isRequired,
 };
 
+const getUsecases = ({ dispatch }) => {
+  axios.get('/api/usecases').then((response) => {
+    dispatch(setUsecases(response.data));
+  });
+};
+
+const getUsecase = ({ dispatch, usecaseId }) => {
+  axios.get(`/api/usecases/${usecaseId}`).then((response) => {
+    dispatch(setUsecase(response.data));
+    dispatch(setNewUsecase(response.data));
+  });
+};
+
+const getTrials = ({ dispatch, usecaseId, length, selectedTrialId }) => {
+  axios.get(`/api/trials?usecaseId=${usecaseId}&length=${length}`).then(
+    (response) => {
+      const trials = response.data;
+      dispatch(setTrials(trials));
+      if (selectedTrialId) {
+        const selectedTrial = trials.find((trial) => trial.id === selectedTrialId);
+        if (selectedTrial) { dispatch(setTrial(selectedTrial)); }
+      }
+    }
+  );
+};
+
+const getResult = ({ dispatch, trialId }) => {
+  axios.get(`/api/results?jobId=${trialId}`).then((response) => {
+    dispatch(setResult({ trialId, result: response.data[0] }));
+  });
+};
+
 const mapDispatchToProps = (dispatch) => ({
   onEnterUsecases: () => {
-    axios.get('/api/usecases').then((response) => {
-      dispatch(setUsecases(response.data));
-    });
+    getUsecases({ dispatch });
   },
   onLeaveUsecases: () => {
     dispatch(resetNewUsecase());
   },
   onEnterUsecase: ({ params }) => {
-    axios.get(`/api/usecases/${params.id}`).then((response) => {
-      dispatch(setUsecase(response.data));
-      dispatch(setNewUsecase(response.data));
-    });
-    axios.get(`/api/trials?usecaseId=${params.id}&length=10`).then((response) => {
-      dispatch(setTrials(response.data));
-    });
+    const usecaseId = Number(params.id);
+    getUsecase({ dispatch, usecaseId });
+    getTrials({ dispatch, usecaseId, length: 10 });
   },
   onLeaveUsecase: () => {
     dispatch(resetNewUsecase());
   },
   onEnterTrial: ({ params }) => {
-    axios.get(`/api/trials/${params.id}`).then((response) => {
-      dispatch(setTrial(response.data));
-    });
-    axios.get(`/api/results?jobId=${params.id}`).then((response) => {
-      dispatch(setResult(response.data[0]));
-    });
+    const usecaseId = Number(params.usecaseId);
+    const trialId = Number(params.trialId);
+    getUsecase({ dispatch, usecaseId });
+    getTrials({ dispatch, usecaseId, length: 10, selectedTrialId: trialId });
+    getResult({ dispatch, trialId });
   },
   onLeaveTrial: () => {
     dispatch(resetTrial());
-    dispatch(resetResult());
   },
 });
 

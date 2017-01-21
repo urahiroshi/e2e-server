@@ -2,10 +2,17 @@ import React, { PropTypes } from 'react';
 
 import Heading from '../atoms/heading.jsx';
 import Button from '../atoms/button.jsx';
+import Trial from '../templates/trial.jsx';
 import Modal from '../containers/modal';
 import { API_NAME } from '../../consts';
 
-const Trials = ({ trials, usecaseId, prepareToStartCommand, startCommand }) => {
+const Trials = ({
+  trials,
+  usecaseId,
+  selectedTrialId,
+  prepareToStartCommand,
+  startCommand,
+}) => {
   if (usecaseId == undefined) { return <section />; }
   return (
     <section>
@@ -15,9 +22,13 @@ const Trials = ({ trials, usecaseId, prepareToStartCommand, startCommand }) => {
         {
           trials.map((trial) =>
             <li key={trial.id}>
-              <a href={`/trials/${trial.id}`}>
-                {(new Date(trial.timestamp)).toLocaleString()} {trial.state}
-              </a>
+              {
+                (trial.id === selectedTrialId) ?
+                  <Trial trial={trial} selected /> :
+                  <a href={`/usecases/${usecaseId}/trials/${trial.id}`}>
+                    <Trial trial={trial} selected={false} />
+                  </a>
+              }
             </li>
           )
         }
@@ -42,6 +53,7 @@ const Trials = ({ trials, usecaseId, prepareToStartCommand, startCommand }) => {
 Trials.propTypes = {
   trials: PropTypes.array.isRequired,
   usecaseId: PropTypes.number,
+  selectedTrialId: PropTypes.number,
   prepareToStartCommand: PropTypes.func.isRequired,
   startCommand: PropTypes.func.isRequired,
 };
