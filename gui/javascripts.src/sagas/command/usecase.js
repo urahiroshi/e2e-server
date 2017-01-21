@@ -1,12 +1,8 @@
 import { call, put } from 'redux-saga/effects';
 
 import { successCommand, failCommand } from '../../actions/command';
-import {
-  addUsecase,
-  modifyUsecase,
-  setUsecase,
-  deleteUsecase,
-} from '../../actions/usecases';
+import { addUsecase, modifyUsecase, deleteUsecase } from '../../actions/usecases';
+import { setUsecase } from '../../actions/usecase';
 import Api from '../../apis/usecase';
 
 export function* addUsecaseSaga(name, { usecase }) {

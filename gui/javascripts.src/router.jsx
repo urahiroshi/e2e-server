@@ -4,8 +4,8 @@ import { Router, browserHistory } from 'react-router';
 import { connect } from 'react-redux';
 
 import Usecases from './views/containers/usecases';
-import Usecase from './views/containers/usecase';
-import { setUsecases, setUsecase } from './actions/usecases';
+import { setUsecases } from './actions/usecases';
+import { setUsecase } from './actions/usecase';
 import { setNewUsecase, resetNewUsecase } from './actions/new-usecase';
 import { setTrials, setTrial, resetTrial, setResult } from './actions/trials';
 
@@ -32,13 +32,13 @@ const AppRouterComponent = ({
       },
       {
         path: 'usecases/:id',
-        component: Usecase,
+        component: Usecases,
         onEnter: onEnterUsecase,
         onLeave: onLeaveUsecase,
       },
       {
         path: 'usecases/:usecaseId/trials/:trialId',
-        component: Usecase,
+        component: Usecases,
         onEnter: onEnterTrial,
         onLeave: onLeaveTrial,
       },
@@ -56,16 +56,19 @@ AppRouterComponent.propTypes = {
   onLeaveTrial: PropTypes.func.isRequired,
 };
 
-const getUsecases = ({ dispatch }) => {
+const getUsecases = ({ dispatch, selectedUsecaseId }) => {
   axios.get('/api/usecases').then((response) => {
-    dispatch(setUsecases(response.data));
-  });
-};
-
-const getUsecase = ({ dispatch, usecaseId }) => {
-  axios.get(`/api/usecases/${usecaseId}`).then((response) => {
-    dispatch(setUsecase(response.data));
-    dispatch(setNewUsecase(response.data));
+    const usecases = response.data;
+    dispatch(setUsecases(usecases));
+    if (selectedUsecaseId) {
+      const selectedUsecase = usecases.find(
+        (usecase) => usecase.id === selectedUsecaseId
+      );
+      if (selectedUsecase) {
+        dispatch(setUsecase(selectedUsecase));
+        dispatch(setNewUsecase(selectedUsecase));
+      }
+    }
   });
 };
 
@@ -97,7 +100,7 @@ const mapDispatchToProps = (dispatch) => ({
   },
   onEnterUsecase: ({ params }) => {
     const usecaseId = Number(params.id);
-    getUsecase({ dispatch, usecaseId });
+    getUsecases({ dispatch, selectedUsecaseId: usecaseId });
     getTrials({ dispatch, usecaseId, length: 10 });
   },
   onLeaveUsecase: () => {
@@ -106,7 +109,7 @@ const mapDispatchToProps = (dispatch) => ({
   onEnterTrial: ({ params }) => {
     const usecaseId = Number(params.usecaseId);
     const trialId = Number(params.trialId);
-    getUsecase({ dispatch, usecaseId });
+    getUsecases({ dispatch, selectedUsecaseId: usecaseId });
     getTrials({ dispatch, usecaseId, length: 10, selectedTrialId: trialId });
     getResult({ dispatch, trialId });
   },

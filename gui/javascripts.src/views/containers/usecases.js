@@ -5,6 +5,7 @@ import { API_NAME } from '../../consts';
 
 const mapStateToProps = (state) => ({
   usecases: state.usecases,
+  selectedUsecaseId: state.usecase.id,
 });
 
 const mapDispatchToProps = (dispatch) => ({
