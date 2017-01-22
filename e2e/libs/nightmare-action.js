@@ -38,23 +38,20 @@ const Action = {
     };
   },
 
-  getValue: function ({ selectors, fnGetValue, fnArgs }) {
-    const selectorsStr = JSON.stringify(selectors);
-    const fnArgsStr = (fnArgs && fnArgs.length > 0) ? JSON.stringify(fnArgs) : '';
-    const dummyFnStr = (function () { return true; }).toString();
-    return function (nightmare) {
-      return nightmare.wait(
-        evaluate, Query.toString(), selectorsStr, dummyFnStr, ''
-      )
-      .evaluate(
-        evaluate, Query.toString(), selectorsStr, fnGetValue.toString(), fnArgsStr
-      );
-    }
-  },
-
   execAfterFound: function ({ selectors, onFound, onFoundArgs }) {
     onFound = onFound || function () { return true; };
     return this.eval({ method: 'wait', selectors, fn: onFound, fnArgs: onFoundArgs });
+  },
+
+  getValue: function ({ selectors, fnGetValue, fnArgs }) {
+    return (nightmare) => {
+      this.execAfterFound({
+        selectors, onFound: function () { return true; }
+      })(nightmare);
+      return this.eval({
+        method: 'evaluate', selectors, fn: fnGetValue, fnArgs
+      })(nightmare);
+    };
   },
 
   click: function (selectors) {
