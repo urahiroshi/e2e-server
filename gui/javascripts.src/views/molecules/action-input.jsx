@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 
 import ComboBox from '../atoms/combo-box.jsx';
 import TextBox from '../atoms/text-box.jsx';
+import Selectors from '../molecules/selectors.jsx';
 
 class ActionInput extends React.Component {
   constructor(props) {
@@ -33,29 +34,26 @@ class ActionInput extends React.Component {
         selected={this.state.type}
       />
     );
-    const selectorsInput = (
-      <TextBox onChange={(value) => { onChange('selectors')([value]); }} />
-    );
     // TODO: Add escape!
     const children = [typeSelect];
     switch (this.state.type) {
       case 'click':
         children.push(
-          ' to ', selectorsInput
+          ' to ', <Selectors onChange={onChange('selectors')} />
         );
         break;
       case 'input':
       case 'select':
         children.push(
           ' ', <TextBox onChange={onChange('value')} />,
-          ' to ', selectorsInput
+          ' to ', <Selectors onChange={onChange('selectors')} />
         );
         break;
       case 'getHtml':
       case 'getText':
         children.push(
           ' labeled by ', <TextBox onChange={onChange('name')} />,
-          ' from ', selectorsInput
+          ' from ', <Selectors onChange={onChange('selectors')} />
         );
         break;
       case 'getScreenshot':
