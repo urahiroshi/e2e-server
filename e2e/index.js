@@ -4,7 +4,7 @@ const Nightmare = require('nightmare');
 const Promise = require('bluebird');
 const Result = require('./libs/result');
 const ScreenShot = require('./libs/screenshot');
-require('./libs/nightmare-extend');
+const Action = require('./libs/nightmare-action');
 
 function log () {
   console.log.apply(
@@ -29,13 +29,8 @@ const actions = {
     if (!selectors || selectors.length === 0 || !name || !resultParams) {
       return Promise.reject(new Error('invalid parameter'));
     }
-    const selector = selectors[0];
     return nightmare
-    .wait(selector)
-    .evaluate((selector) => {
-      var elem = document.querySelector(selector);
-      return elem ? elem.innerHTML : null;
-    }, selector)
+    .use(Action.getHtml(selectors))
     .then((result) => {
       log('getHtml', result);
       resultParams.htmls[name] = result;
@@ -47,13 +42,8 @@ const actions = {
     if (!selectors || selectors.length === 0 || !name || !resultParams) {
       return Promise.reject(new Error('invalid parameter'));
     }
-    const selector = selectors[0];
     return nightmare
-    .wait(selector)
-    .evaluate((selector) => {
-      var elem = document.querySelector(selector);
-      return elem ? elem.innerText : null;
-    }, selector)
+    .use(Action.getText(selectors))
     .then((result) => {
       log('getText', result);
       resultParams.texts[name] = result;
@@ -67,12 +57,10 @@ const actions = {
     if (!selectors || selectors.length === 0) {
       return Promise.reject(new Error('invalid parameter'));
     }
-    const selector = selectors[0];
     return nightmare
-    .wait(selector)
-    [actionType](selector)
+    .use(Action[actionType](selectors))
     .then(() => {
-      log('Finish', actionType, selector);
+      log('Finish', actionType, selectors);
       return;
     });
   }
@@ -83,14 +71,10 @@ const actions = {
     if (!selectors || selectors.length === 0 || !value) {
       return Promise.reject(new Error('invalid parameter'));
     }
-    const selector = selectors[0];
-    console.log('type:', actionType, 'selector:', selector);
-    const nightmareAction = (actionType === 'input') ? 'type' : actionType;
     return nightmare
-    .wait(selector)
-    [nightmareAction](selector, value)
+    .use(Action[actionType](selectors, value))
     .then(() => {
-      log('Finish', actionType, selector, value);
+      log('Finish', actionType, selectors, value);
       return;
     });
   }

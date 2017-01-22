@@ -30,7 +30,11 @@ class Connector {
 
   _request(options, resolve, reject, _retryCount) {
     _retryCount = _retryCount || 0;
-    this._log('request: ', JSON.stringify(options));
+    let optionsString = JSON.stringify(options);
+    if (optionsString.length > 1000) {
+      optionsString = optionsString.slice(0, 1000) + '...' ;
+    }
+    this._log('request: ', optionsString);
     request(options, (error, response, body) => {
       try {
         const RETRY_MAX = 2;
