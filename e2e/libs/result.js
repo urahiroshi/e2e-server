@@ -7,7 +7,7 @@ const config = require('../config');
 class Result {
   constructor({ jobId, texts, htmls, screenshots }) {
     this.params = {
-      jobId,
+      jobId: Number(jobId),
       texts,
       htmls,
       screenshots
