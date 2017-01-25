@@ -13,7 +13,7 @@
     "bull": "git://github.com/OptimalBits/bull.git",
     "fuzzy-query": "^0.1.3",
     "kue": "^0.11.1",
-    "nightmare": "^2.5.3",
+    "nightmare": "^2.9.1",
     "redis": "^2.6.2"
   }
 }
