@@ -6,11 +6,11 @@ const ActionResult = ({ result, type, name }) => {
   switch (type) {
     case 'getHtml':
       resultObj = result.htmls.find(html => html.name === name);
-      if (resultObj) { return <code>{resultObj.html}</code>; }
+      if (resultObj) { return <pre>{resultObj.html}</pre>; }
       break;
     case 'getText':
       resultObj = result.texts.find(text => text.name === name);
-      if (resultObj) { return <code>{resultObj.txt}</code>; }
+      if (resultObj) { return <pre>{resultObj.txt}</pre>; }
       break;
     case 'getScreenshot':
       resultObj = result.screenshots.find(screenshot => screenshot.name === name);

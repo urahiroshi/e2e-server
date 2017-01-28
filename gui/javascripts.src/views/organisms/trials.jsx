@@ -24,21 +24,23 @@ const Trials = ({
         {' Start Trial'}
       </button>
       <h3>Trials</h3>
-      <ul>
+      <div className="list-group">
         {
-          trials.map((trial) =>
-            <li key={trial.id}>
-              {
-                (trial.id === selectedTrialId) ?
-                  <Trial trial={trial} selected /> :
-                  <a href={`/usecases/${usecaseId}/trials/${trial.id}`}>
-                    <Trial trial={trial} selected={false} />
-                  </a>
-              }
-            </li>
-          )
+          trials.map((trial) => (
+            (trial.id === selectedTrialId) ?
+              <div className="list-group-item" key={trial.id}>
+                <Trial trial={trial} selected />
+              </div> :
+              <a
+                key={trial.id}
+                className="list-group-item"
+                href={`/usecases/${usecaseId}/trials/${trial.id}`}
+              >
+                <Trial trial={trial} selected={false} />
+              </a>
+          ))
         }
-      </ul>
+      </div>
       <Modal name={API_NAME.ADD_TRIAL} title="Start Trial">
         <div>
           <div>Start Trial, OK ?</div>

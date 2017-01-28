@@ -5,22 +5,26 @@ const Action = ({ action }) => {
   let selector;
   // TODO: Add escape!
   if (action.selectors) {
-    selector = `[${action.selectors.join(', ')}]`;
+    selector = action.selectors.map((s, i) => (
+      <code key={i}>{s}</code>
+    ));
   }
   switch (action.type) {
     case 'click':
-      nodes.push(`${action.type} to ${selector}`);
+      nodes.push(`${action.type} to `, selector);
       break;
     case 'input':
     case 'select':
-      nodes.push(`${action.type} ${action.value} to ${selector}`);
+      nodes.push(`${action.type} `, <kbd>{action.value}</kbd>, ' to ', selector);
       break;
     case 'getHtml':
     case 'getText':
-      nodes.push(`${action.type} labeled by ${action.name} from ${selector}`);
+      nodes.push(
+        `${action.type} labeled by `, <b>{action.name}</b>, ' from ', selector
+      );
       break;
     case 'getScreenshot':
-      nodes.push(`${action.type} labeled by ${action.name}`);
+      nodes.push(`${action.type} labeled by `, <b>{action.name}</b>);
       break;
     default:
       break;
