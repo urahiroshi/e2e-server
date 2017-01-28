@@ -17,7 +17,7 @@ const Usecase = ({
         <button
           className="btn btn-warning"
           onClick={() => { onClickEditButton(usecase); }}
-          style={{ 'margin-right': '10px', 'font-weight': 'bold' }}
+          style={{ marginRight: '10px', fontWeight: 'bold' }}
         >
           <span className="glyphicon glyphicon-edit" />
           {' Edit'}
@@ -25,13 +25,13 @@ const Usecase = ({
         <button
           className="btn btn-danger"
           onClick={onClickDeleteButton}
-          style={{ 'font-weight': 'bold' }}
+          style={{ fontWeight: 'bold' }}
         >
           <span className="glyphicon glyphicon-minus-sign" />
           {' Delete'}
         </button>
       </div>
-      <h2 style={{ 'padding-bottom': '10px' }}>
+      <h2 style={{ paddingBottom: '10px' }}>
         {usecase.name}<small>{` created at ${timestamp}`}</small>
       </h2>
       <UsecaseParameters

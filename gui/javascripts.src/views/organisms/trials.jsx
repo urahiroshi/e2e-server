@@ -18,7 +18,7 @@ const Trials = ({
       <button
         className="btn btn-primary"
         onClick={prepareToStartCommand}
-        style={{ 'font-weight': 'bold' }}
+        style={{ fontWeight: 'bold' }}
       >
         <span className="glyphicon glyphicon-play-circle" />
         {' Start Trial'}

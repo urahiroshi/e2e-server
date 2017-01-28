@@ -14,7 +14,7 @@ const Usecases = ({ usecases, selectedUsecaseId, onClickNewUsecaseButton }) => (
         <button
           className="btn btn-success"
           onClick={onClickNewUsecaseButton}
-          style={{ 'font-weight': 'bold' }}
+          style={{ fontWeight: 'bold' }}
         >
           <span className="glyphicon glyphicon-plus-sign" />
           {' Add'}
@@ -55,9 +55,9 @@ const Usecases = ({ usecases, selectedUsecaseId, onClickNewUsecaseButton }) => (
           className="col-md-8"
           style={{
             border: 'solid #337ab7 8px',
-            'border-radius': '20px/20px',
+            borderRadius: '20px/20px',
             padding: '30px',
-            'font-size': '16px',
+            fontSize: '16px',
           }}
         >
           <Usecase />
