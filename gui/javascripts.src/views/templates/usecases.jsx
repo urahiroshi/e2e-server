@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
+import Button from '../atoms/button.jsx';
 import Usecase from '../containers/usecase';
 import NewUsecase from '../containers/new-usecase';
 import EditUsecase from '../containers/edit-usecase';
@@ -10,15 +11,14 @@ import { API_NAME } from '../../consts';
 const Usecases = ({ usecases, selectedUsecaseId, onClickNewUsecaseButton }) => (
   <div className="row">
     <div className={(selectedUsecaseId) ? 'col-md-4' : 'col-md-12'} >
-      <div style={{ textAlign: 'right', paddingBottom: '10px' }}>
-        <button
+      <div style={{ paddingBottom: '10px' }}>
+        <Button
           className="btn btn-success"
           onClick={onClickNewUsecaseButton}
-          style={{ fontWeight: 'bold' }}
         >
           <span className="glyphicon glyphicon-plus-sign" />
           {' Add Usecase'}
-        </button>
+        </Button>
       </div>
       <div className="list-group">
         {

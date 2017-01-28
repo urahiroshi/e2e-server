@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import Usecase from '../templates/usecase.jsx';
 import { prepareCommand } from '../../actions/command';
 import { setNewUsecase } from '../../actions/new-usecase';
+import { startAddTrialCommand } from '../../actions/trials';
 import { API_NAME } from '../../consts';
 
 const mapStateToProps = (state) => ({
@@ -15,6 +16,12 @@ const mapDispatchToProps = (dispatch) => ({
   },
   onClickDeleteButton: () => {
     dispatch(prepareCommand(API_NAME.DELETE_USECASE));
+  },
+  prepareToStartCommand: () => {
+    dispatch(prepareCommand(API_NAME.ADD_TRIAL));
+  },
+  startCommand: (usecaseId) => {
+    dispatch(startAddTrialCommand(usecaseId));
   },
 });
 
