@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
 
-import Heading from '../atoms/heading.jsx';
 import Button from '../atoms/button.jsx';
 import Trial from '../templates/trial.jsx';
 import Modal from '../containers/modal';
@@ -16,8 +15,15 @@ const Trials = ({
   if (usecaseId == undefined) { return <section />; }
   return (
     <section>
-      <Heading value="Trials" />
-      <Button label="Start Trial" onClick={prepareToStartCommand} />
+      <button
+        className="btn btn-primary"
+        onClick={prepareToStartCommand}
+        style={{ 'font-weight': 'bold' }}
+      >
+        <span className="glyphicon glyphicon-play-circle" />
+        {' Start Trial'}
+      </button>
+      <h3>Trials</h3>
       <ul>
         {
           trials.map((trial) =>

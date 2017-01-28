@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
 
-import Heading from '../atoms/heading.jsx';
 import UsecaseParameters from '../organisms/usecase-parameters.jsx';
 import Trials from '../containers/trials';
 
@@ -14,12 +13,30 @@ const Usecase = ({
   const timestamp = (new Date(usecase.createdAt)).toLocaleString();
   return (
     <div>
-      <Heading value={`${usecase.name} created at ${timestamp}`} />
+      <div>
+        <button
+          className="btn btn-warning"
+          onClick={() => { onClickEditButton(usecase); }}
+          style={{ 'margin-right': '10px', 'font-weight': 'bold' }}
+        >
+          <span className="glyphicon glyphicon-edit" />
+          {' Edit'}
+        </button>
+        <button
+          className="btn btn-danger"
+          onClick={onClickDeleteButton}
+          style={{ 'font-weight': 'bold' }}
+        >
+          <span className="glyphicon glyphicon-minus-sign" />
+          {' Delete'}
+        </button>
+      </div>
+      <h2 style={{ 'padding-bottom': '10px' }}>
+        {usecase.name}<small>{` created at ${timestamp}`}</small>
+      </h2>
       <UsecaseParameters
         url={usecase.url}
         actions={usecase.actions}
-        onClickEdit={() => { onClickEditButton(usecase); }}
-        onClickDelete={onClickDeleteButton}
       />
       <Trials />
     </div>
