@@ -17,8 +17,12 @@ const ActionResult = ({ result, type, name }) => {
       if (resultObj) {
         return (
           <div>
-            <a href={`/images/results/${result.resultId}/screenshots/${resultObj.name}.png`}>
-            Image
+            <a
+              href={`/images/results/${result.resultId}/screenshots/${resultObj.name}.png`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {'\u27A1 Show Image'}
             </a>
           </div>
         );
