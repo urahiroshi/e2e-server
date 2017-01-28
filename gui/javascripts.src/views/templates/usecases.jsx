@@ -10,7 +10,7 @@ import { API_NAME } from '../../consts';
 const Usecases = ({ usecases, selectedUsecaseId, onClickNewUsecaseButton }) => (
   <div className="row">
     <div className={(selectedUsecaseId) ? 'col-md-4' : 'col-md-12'} >
-      <div style={{ 'text-align': 'right', 'padding-bottom': '10px' }}>
+      <div style={{ textAlign: 'right', paddingBottom: '10px' }}>
         <button
           className="btn btn-success"
           onClick={onClickNewUsecaseButton}

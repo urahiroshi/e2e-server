@@ -14,15 +14,15 @@ const DeleteUsecase = ({
   return (
     <div>
       <div>
-        Remove {usecase.id}{usecase.name ? `(${usecase.name})` : ''} ?
+        Delete <b>{usecase.name}</b> ?
       </div>
       <div style={buttonStyle}>
         <Button
-          label="OK"
+          className="btn btn-danger"
           onClick={() => {
             onClickDeleteUsecase(usecase);
           }}
-        />
+        >Delete</Button>
       </div>
     </div>
   );

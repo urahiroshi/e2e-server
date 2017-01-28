@@ -3,7 +3,6 @@ import React, { PropTypes } from 'react';
 import Action from '../atoms/action.jsx';
 import Button from '../atoms/button.jsx';
 import TextBox from '../atoms/text-box.jsx';
-import Heading from '../atoms/heading.jsx';
 import ActionInput from '../molecules/action-input.jsx';
 import VerticalRow from '../molecules/vertical-row.jsx';
 import Table from '../organisms/table.jsx';
@@ -22,11 +21,10 @@ const NewUsecase = ({
     i + 1,
     <Action action={action} />,
     <Button
-      label="Delete"
       onClick={() => {
         onClickDeleteAction(i, tempUsecase);
       }}
-    />,
+    >Delete</Button>,
   ]);
   const newAction = {};
   rows.push([
@@ -37,11 +35,10 @@ const NewUsecase = ({
       }}
     />,
     <Button
-      label="Add"
       onClick={() => {
         onClickAddAction(newAction, tempUsecase);
       }}
-    />,
+    >Add</Button>,
   ]);
   const colStyles = [
     {},
@@ -51,19 +48,20 @@ const NewUsecase = ({
   return (
     <div>
       <div>
-        <Heading value="Parameters" />
-        <table>
+        <table style={{ fontSize: '16px' }}>
           <tbody className="form-inline">
             <VerticalRow name="Name:">
               <TextBox
                 defaultValue={tempUsecase.name}
                 onChange={(value) => { tempUsecase.name = value; }}
+                placeHolder="name"
               />
             </VerticalRow>
             <VerticalRow name="URL:">
               <TextBox
                 defaultValue={tempUsecase.url}
                 onChange={(value) => { tempUsecase.url = value; }}
+                placeHolder="url"
               />
             </VerticalRow>
             <VerticalRow name="Actions:">
@@ -74,11 +72,11 @@ const NewUsecase = ({
       </div>
       <div>
         <Button
-          label="Send"
+          className="btn btn-primary"
           onClick={() => {
             onClickSendUsecase(tempUsecase, usecase);
           }}
-        />
+        >Send</Button>
       </div>
     </div>
   );

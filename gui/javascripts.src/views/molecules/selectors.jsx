@@ -12,13 +12,18 @@ class Selectors extends React.Component {
     const selectors = this.state.selectors.slice();
     this.props.onChange(selectors);
     const selectorsInput = selectors.map((selector, i) =>
-      <div className="input-group" key={`${selector}-${i}`}>
+      <div
+        className="input-group"
+        key={`${selector}-${i}`}
+        style={{ marginRight: '5px' }}
+      >
         <TextBox
           defaultValue={selector}
           onChange={(value) => {
             selectors[i] = value;
             this.props.onChange(selectors);
           }}
+          placeHolder="selector"
         />
         <div
           className="input-group-addon"

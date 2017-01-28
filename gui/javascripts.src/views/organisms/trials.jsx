@@ -44,13 +44,13 @@ const Trials = ({
       <Modal name={API_NAME.ADD_TRIAL} title="Start Trial">
         <div>
           <div>Start Trial, OK ?</div>
-          <div>
+          <div style={{ marginTop: '20px' }}>
             <Button
-              label="Start"
+              className="btn btn-primary"
               onClick={() => {
                 startCommand(usecaseId);
               }}
-            />
+            >Start</Button>
           </div>
         </div>
       </Modal>
