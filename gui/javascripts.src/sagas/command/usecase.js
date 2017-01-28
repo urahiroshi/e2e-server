@@ -1,9 +1,31 @@
 import { call, put } from 'redux-saga/effects';
 
 import { successCommand, failCommand } from '../../actions/command';
-import { addUsecase, modifyUsecase, deleteUsecase } from '../../actions/usecases';
+import {
+  addUsecase, modifyUsecase, deleteUsecase, setUsecases,
+} from '../../actions/usecases';
 import { setUsecase, resetUsecase } from '../../actions/usecase';
 import Api from '../../apis/usecase';
+
+export function* getUsecasesSaga(name, { selectedUsecaseId }) {
+  try {
+    const response = yield call(Api.getList);
+    const usecases = response.data;
+    yield put(setUsecases(usecases));
+    if (selectedUsecaseId) {
+      const selectedUsecase = usecases.find(
+        (usecase) => usecase.id === selectedUsecaseId
+      );
+      if (selectedUsecase) {
+        yield put(setUsecase(selectedUsecase));
+      }
+    }
+    yield put(successCommand(name));
+  } catch (e) {
+    console.log('Get usecases request failed:', e);
+    yield put(failCommand(name, 'Get usecases has been failed.'));
+  }
+}
 
 export function* addUsecaseSaga(name, { usecase }) {
   try {

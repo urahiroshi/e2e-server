@@ -1,12 +1,12 @@
-import axios from 'axios';
 import React, { PropTypes } from 'react';
 import { Router, browserHistory } from 'react-router';
 import { connect } from 'react-redux';
 
 import Usecases from './views/containers/usecases';
-import { setUsecases } from './actions/usecases';
-import { setUsecase } from './actions/usecase';
-import { setTrials, setTrial, resetTrial, setResult } from './actions/trials';
+import { startGetUsecasesCommand } from './actions/usecases';
+import {
+  resetTrial, startGetTrialsCommand, startGetResultCommand,
+} from './actions/trials';
 
 const AppRouterComponent = ({
   onEnterUsecases,
@@ -49,55 +49,21 @@ AppRouterComponent.propTypes = {
   onLeaveTrial: PropTypes.func.isRequired,
 };
 
-const getUsecases = ({ dispatch, selectedUsecaseId }) => {
-  axios.get('/api/usecases').then((response) => {
-    const usecases = response.data;
-    dispatch(setUsecases(usecases));
-    if (selectedUsecaseId) {
-      const selectedUsecase = usecases.find(
-        (usecase) => usecase.id === selectedUsecaseId
-      );
-      if (selectedUsecase) {
-        dispatch(setUsecase(selectedUsecase));
-      }
-    }
-  });
-};
-
-const getTrials = ({ dispatch, usecaseId, length, selectedTrialId }) => {
-  axios.get(`/api/trials?usecaseId=${usecaseId}&length=${length}`).then(
-    (response) => {
-      const trials = response.data;
-      dispatch(setTrials(trials));
-      if (selectedTrialId) {
-        const selectedTrial = trials.find((trial) => trial.id === selectedTrialId);
-        if (selectedTrial) { dispatch(setTrial(selectedTrial)); }
-      }
-    }
-  );
-};
-
-const getResult = ({ dispatch, trialId }) => {
-  axios.get(`/api/results?jobId=${trialId}`).then((response) => {
-    dispatch(setResult({ trialId, result: response.data[0] }));
-  });
-};
-
 const mapDispatchToProps = (dispatch) => ({
   onEnterUsecases: () => {
-    getUsecases({ dispatch });
+    dispatch(startGetUsecasesCommand());
   },
   onEnterUsecase: ({ params }) => {
     const usecaseId = Number(params.id);
-    getUsecases({ dispatch, selectedUsecaseId: usecaseId });
-    getTrials({ dispatch, usecaseId, length: 10 });
+    dispatch(startGetUsecasesCommand(usecaseId));
+    dispatch(startGetTrialsCommand(usecaseId, 10));
   },
   onEnterTrial: ({ params }) => {
     const usecaseId = Number(params.usecaseId);
     const trialId = Number(params.trialId);
-    getUsecases({ dispatch, selectedUsecaseId: usecaseId });
-    getTrials({ dispatch, usecaseId, length: 10, selectedTrialId: trialId });
-    getResult({ dispatch, trialId });
+    dispatch(startGetUsecasesCommand(usecaseId));
+    dispatch(startGetTrialsCommand(usecaseId, 10, trialId));
+    dispatch(startGetResultCommand(trialId));
   },
   onLeaveTrial: () => {
     dispatch(resetTrial());

@@ -16,6 +16,10 @@ export const resetTrials = () => ({
   type: RESET_TRIALS,
 });
 
+export const startGetTrialsCommand = (usecaseId, length, trialId) => (
+  startCommand(API_NAME.GET_TRIALS, { usecaseId, length, selectedTrialId: trialId })
+);
+
 export const startAddTrialCommand = (usecaseId) => (
   startCommand(API_NAME.ADD_TRIAL, { usecaseId })
 );
@@ -28,6 +32,10 @@ export const setTrial = (trial) => ({
 export const resetTrial = () => ({
   type: RESET_TRIAL,
 });
+
+export const startGetResultCommand = (trialId) => (
+  startCommand(API_NAME.GET_RESULT, { trialId })
+);
 
 export const setResult = ({ trialId, result }) => ({
   type: SET_RESULT,

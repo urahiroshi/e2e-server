@@ -16,6 +16,10 @@ export const addUsecase = (usecase) => ({
   usecase,
 });
 
+export const startGetUsecasesCommand = (usecaseId) => (
+  startCommand(API_NAME.GET_USECASES, { selectedUsecaseId: usecaseId })
+);
+
 export const startAddUsecaseCommand = (usecase) => (
   startCommand(API_NAME.ADD_USECASE, { usecase })
 );

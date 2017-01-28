@@ -3,14 +3,20 @@ import { fork } from 'redux-saga/effects';
 
 import { START_COMMAND } from '../../actions/command';
 import { API_NAME } from '../../consts';
-import { addUsecaseSaga, modifyUsecaseSaga, deleteUsecaseSaga } from './usecase';
-import { addTrialSaga } from './trial';
+import {
+  getUsecasesSaga, addUsecaseSaga, modifyUsecaseSaga, deleteUsecaseSaga,
+} from './usecase';
+import { getTrialsSaga, addTrialSaga } from './trial';
+import { getResultSaga } from './result';
 
 const sagaMap = {
+  [API_NAME.GET_USECASES]: getUsecasesSaga,
   [API_NAME.ADD_USECASE]: addUsecaseSaga,
   [API_NAME.MODIFY_USECASE]: modifyUsecaseSaga,
   [API_NAME.DELETE_USECASE]: deleteUsecaseSaga,
+  [API_NAME.GET_TRIALS]: getTrialsSaga,
   [API_NAME.ADD_TRIAL]: addTrialSaga,
+  [API_NAME.GET_RESULT]: getResultSaga,
 };
 
 function* startCommand(action) {
