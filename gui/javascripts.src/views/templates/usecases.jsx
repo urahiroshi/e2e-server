@@ -17,7 +17,7 @@ const Usecases = ({ usecases, selectedUsecaseId, onClickNewUsecaseButton }) => (
           style={{ fontWeight: 'bold' }}
         >
           <span className="glyphicon glyphicon-plus-sign" />
-          {' Add'}
+          {' Add Usecase'}
         </button>
       </div>
       <div className="list-group">
