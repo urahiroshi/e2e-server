@@ -42,6 +42,10 @@ class Trial extends Base {
       .then(() => {
         console.log('add job', jobId);
         return trialQueue.add(data, { jobId: jobId });
+      })
+      .then(() => {
+        this.id = jobId;
+        return this;
       });
     });
   }
@@ -59,15 +63,20 @@ class Trial extends Base {
   }
 
   toJSON() {
-    const result = { usecaseId: this.usecaseId };
+    const baseObject = { id: this.id, usecaseId: this.usecaseId }
     if (this.job) {
-      Object.assign(
-        result,
-        this.job.toJSON(),
-        { id: this.id, state: this.state }
+      return Object.assign(
+        baseObject,
+        {
+          createdAt: this.createdAt,
+          state: this.state,
+          job: this.job,
+          timestamp: this.job.timestamp,
+          usecase: this.job.data
+        }
       );
     }
-    return result;
+    return baseObject;
   }
 
   static _findJobAndConcat(trialRow) {
@@ -80,12 +89,16 @@ class Trial extends Base {
       if (job && job.data) {
         return job.getState()
         .then((state) => {
-          return Object.assign(
-            { id: jobId, createdAt: trial.createdAt },
-            job.toJSON(),
+          return {
+            id: jobId,
+            usecaseId: job.data.id,
+            createdAt: trial.createdAt,
             // TODO: Verify correctness to return job
-            { state, job }
-          );
+            state,
+            job,
+            timestamp: job.timestamp,
+            usecase: job.data
+          };
         });
       } else {
         return null;

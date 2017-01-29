@@ -3,7 +3,7 @@ import React, { PropTypes } from 'react';
 import UsecaseParameters from '../organisms/usecase-parameters.jsx';
 
 const Trial = ({ trial, result, selected }) => {
-  if (!trial.id) { return null; }
+  if (!trial.job) { return null; }
   const timestamp = (new Date(trial.timestamp)).toLocaleString();
   let icon = '';
   switch (trial.state) {
@@ -23,8 +23,8 @@ const Trial = ({ trial, result, selected }) => {
       <div>
         <div>{heading}</div>
         <UsecaseParameters
-          url={trial.data.url}
-          actions={trial.data.actions}
+          url={trial.usecase.url}
+          actions={trial.usecase.actions}
           result={result}
         />
       </div> :

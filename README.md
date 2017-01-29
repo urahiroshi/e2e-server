@@ -68,11 +68,14 @@ Usecase stores url and browser actions on this url.
 Trial stores informations and progress of each job executing usecase actions.
 This object inherit job object on [bull](https://github.com/OptimalBits/bull).
 
+- usecaseId (number, required): id of usecase to use trial 
 - id (number, readonly): identify number.
     This is generated when usecase is created.
 - createdAt (string, readonly): created date time.
     This is generated when usecase is created.
-- data (object, readonly): copy of usecase when trial created
+- timestamp: (number, readonly): updated date time.
+    This value is copy of job object.
+- usecase (object, readonly): copy of usecase when trial created
 - state (string): state of trial job
 - job (object): job object
 
@@ -216,7 +219,10 @@ which is created by getXXX actions on usecase.
 - Response 201 (application/json)
 
 ```json
-{}
+{
+    "id": 4238132527, 
+    "usecaseId": 1863214872
+}
 ```
 
 ### GET /trials?usecaseId=:usecaseId&offset=:offset&length=:length
@@ -230,60 +236,11 @@ which is created by getXXX actions on usecase.
 - Response 200 (application/json)
 
 ```json
+
 [
     {
-        "attempts": 1,
-        "attemptsMade": 0,
-        "createdAt": "2017-01-29T07:34:40.000Z",
-        "data": {
-            "actions": [
-                {
-                    "name": null,
-                    "selectors": [
-                        "form[action*=\"/search\"] [name=p]"
-                    ],
-                    "type": "input",
-                    "value": "github nightmare"
-                },
-                {
-                    "name": null,
-                    "selectors": [
-                        "form[action*=\"/search\"] [type=submit]"
-                    ],
-                    "type": "click",
-                    "value": null
-                },
-                {
-                    "name": "titleHTML",
-                    "selectors": [
-                        ".title"
-                    ],
-                    "type": "getHtml",
-                    "value": null
-                },
-                {
-                    "name": "titleText",
-                    "selectors": [
-                        ".title"
-                    ],
-                    "type": "getText",
-                    "value": null
-                },
-                {
-                    "name": "finishView2",
-                    "selectors": [],
-                    "type": "getScreenshot",
-                    "value": null
-                }
-            ],
-            "createdAt": "2017-01-08T02:17:32.000Z",
-            "id": 1863214872,
-            "name": "hogehoge",
-            "url": "http://yahoo.com",
-            "usecaseId": 1863214872
-        },
-        "delay": 0,
-        "id": 2351623262,
+        "createdAt": "2017-01-29T10:04:32.000Z",
+        "id": 4238132527,
         "job": {
             "attempts": 1,
             "attemptsMade": 0,
@@ -336,21 +293,63 @@ which is created by getXXX actions on usecase.
             },
             "delay": 0,
             "opts": {
-                "jobId": 2351623262
+                "jobId": 4238132527
             },
             "progress": 0,
             "returnvalue": null,
             "stacktrace": [],
-            "timestamp": 1485675280897
+            "timestamp": 1485684272903
         },
-        "opts": {
-            "jobId": 2351623262
-        },
-        "progress": 0,
-        "returnvalue": null,
-        "stacktrace": [],
         "state": "completed",
-        "timestamp": 1485675280897
+        "timestamp": 1485684272903,
+        "usecase": {
+            "actions": [
+                {
+                    "name": null,
+                    "selectors": [
+                        "form[action*=\"/search\"] [name=p]"
+                    ],
+                    "type": "input",
+                    "value": "github nightmare"
+                },
+                {
+                    "name": null,
+                    "selectors": [
+                        "form[action*=\"/search\"] [type=submit]"
+                    ],
+                    "type": "click",
+                    "value": null
+                },
+                {
+                    "name": "titleHTML",
+                    "selectors": [
+                        ".title"
+                    ],
+                    "type": "getHtml",
+                    "value": null
+                },
+                {
+                    "name": "titleText",
+                    "selectors": [
+                        ".title"
+                    ],
+                    "type": "getText",
+                    "value": null
+                },
+                {
+                    "name": "finishView2",
+                    "selectors": [],
+                    "type": "getScreenshot",
+                    "value": null
+                }
+            ],
+            "createdAt": "2017-01-08T02:17:32.000Z",
+            "id": 1863214872,
+            "name": "hogehoge",
+            "url": "http://yahoo.com",
+            "usecaseId": 1863214872
+        },
+        "usecaseId": 1863214872
     }
 ]
 ```

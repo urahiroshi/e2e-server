@@ -70,8 +70,8 @@ router.post('/', (req, res, next) => {
   try {
     trial = new Trial(req.body);
     trial.save()
-    .then((result) => {
-      res.status(201).json({id: result.id});
+    .then(() => {
+      res.status(201).json(trial.toJSON());
     })
     .catch(next);
   } catch (error) {
