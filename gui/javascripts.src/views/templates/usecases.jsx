@@ -33,7 +33,10 @@ const Usecases = ({ usecases, selectedUsecaseId, onClickNewUsecaseButton }) => (
             >
               <h4 className="list-group-item-heading">{usecase.name}</h4>
               <p className="list-group-item-text">
-                created at {(new Date(usecase.createdAt)).toLocaleString()}
+                {(usecase.createdAt) ?
+                  `created at ${(new Date(usecase.createdAt)).toLocaleString()}` :
+                  ''
+                }
               </p>
             </Link>
           )

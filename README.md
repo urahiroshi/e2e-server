@@ -171,7 +171,7 @@ which is created by getXXX actions on usecase.
             "name": "finishView", 
             "type": "getScreenshot"
         }
-    ], 
+    ],
     "createdAt": "2017-01-22T09:49:31.000Z",
     "id": 2343814817, 
     "name": "hogehoge", 
@@ -183,13 +183,65 @@ which is created by getXXX actions on usecase.
 
 - Response 200 (application/json)
 
-(Response body is list of `POST /usecases` response object)
+(list of `POST /usecases` response object with timestamp)
+
+```json
+
+[
+    {
+        "actions": [
+            {
+                "name": null,
+                "selectors": [
+                    "form[action*=\"/search\"] [name=p]"
+                ],
+                "type": "input",
+                "value": "github nightmare"
+            },
+            {
+                "name": null,
+                "selectors": [
+                    "form[action*=\"/search\"] [type=submit]"
+                ],
+                "type": "click",
+                "value": null
+            },
+            {
+                "name": "titleHTML",
+                "selectors": [
+                    ".title"
+                ],
+                "type": "getHtml",
+                "value": null
+            },
+            {
+                "name": "titleText",
+                "selectors": [
+                    ".title"
+                ],
+                "type": "getText",
+                "value": null
+            },
+            {
+                "name": "finishView2",
+                "selectors": [],
+                "type": "getScreenshot",
+                "value": null
+            }
+        ],
+        "createdAt": "2017-01-08T02:17:32.000Z",
+        "id": 1863214872,
+        "name": "hogehoge",
+        "url": "http://yahoo.com"
+    }
+]
+```
 
 ### GET /usecases/:id
 
 - Response 200 (application/json)
 
-(Response body is same as `POST /usecases`)
+(Response body is a member object of `GET /usecases`)
 
 ### PUT /usecases/:id
 
@@ -199,7 +251,7 @@ which is created by getXXX actions on usecase.
 
 - Response 200 (application/json)
 
-(Response body is same as `POST /usecases`)
+(Response body is same as `GET /usecases/:id`)
 
 ### DELETE /usecases/:id
 
