@@ -1,7 +1,7 @@
 import { call, put } from 'redux-saga/effects';
 
 import { successCommand, failCommand } from '../../actions/command';
-import { setResult } from '../../actions/trials';
+import { setResult } from '../../actions/result';
 import Api from '../../apis/result';
 
 export function* getResultSaga(name, { trialId }) {

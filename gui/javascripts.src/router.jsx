@@ -4,9 +4,8 @@ import { connect } from 'react-redux';
 
 import Usecases from './views/containers/usecases';
 import { startGetUsecasesCommand } from './actions/usecases';
-import {
-  resetTrial, startGetTrialsCommand, startGetResultCommand,
-} from './actions/trials';
+import { resetTrial, startGetTrialsCommand } from './actions/trials';
+import { startGetResultCommand } from './actions/result';
 
 const AppRouterComponent = ({
   onEnterUsecases,
