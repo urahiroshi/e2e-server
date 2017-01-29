@@ -146,9 +146,15 @@ class Result extends Base {
       .then((values) => {
         result.texts = values[0].map((textsRow) => Connector.camelCase(textsRow));
         result.htmls = values[1].map((htmlsRow) => Connector.camelCase(htmlsRow));
-        result.screenshots = values[2].map((screenshotsRow) => (
-          { resultId: screenshotsRow.result_id, name: screenshotsRow.name }
-        ));
+        result.screenshots = values[2].map((screenshotsRow) => {
+          const name = screenshotsRow.name;
+          const rowResultId = screenshotsRow.result_id;
+          return {
+            resultId: rowResultId,
+            name,
+            uri: `/screenshots?resultId=${rowResultId}&name=${name}`
+          };
+        });
         return [result];
       });
     });

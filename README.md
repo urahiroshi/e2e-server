@@ -94,6 +94,7 @@ which is created by getXXX actions on usecase.
     - txt: obtained text value
     - name: name of usecase action
 - screenshots (array(object)):
+    - uri: uri to get screenshot object
     - name: name of usecase action
 
 ## API Example
@@ -389,7 +390,8 @@ which is created by getXXX actions on usecase.
         "screenshots": [
             {
                 "name": "finishView2", 
-                "resultId": 1230023475
+                "resultId": 1230023475,
+                "uri": "/screenshots?resultId=1230023475&name=finishView2"
             }
         ], 
         "screenshotsCount": 1, 
