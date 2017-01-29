@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import { Link } from 'react-router';
 
 import Trial from '../templates/trial.jsx';
 
@@ -18,13 +19,13 @@ const Trials = ({
               <div className="list-group-item" key={trial.id}>
                 <Trial trial={trial} selected />
               </div> :
-              <a
+              <Link
                 key={trial.id}
                 className="list-group-item"
-                href={`/usecases/${usecaseId}/trials/${trial.id}`}
+                to={`/usecases/${usecaseId}/trials/${trial.id}`}
               >
                 <Trial trial={trial} selected={false} />
-              </a>
+              </Link>
           ))
         }
       </div>
