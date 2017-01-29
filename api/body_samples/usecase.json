@@ -1,31 +1,29 @@
 {
   "url": "http://yahoo.com",
+  "name": "hogehoge",
   "actions": [
     {
-      "selector": "form[action*=\"/search\"] [name=p]",
+      "selectors": ["form[action*=\"/search\"] [name=p]"],
       "type": "input",
-      "value": "github nightmare",
-      "timeout": 1000
+      "value": "github nightmare"
     },
     {
-      "selector": "form[action*=\"/search\"] [type=submit]",
-      "type": "click",
-      "timeout": 1000
+      "selectors": ["form[action*=\"/search\"] [type=submit]"],
+      "type": "click"
     },
     {
-      "type": "getScreenshot",
-      "name": "finishView"
-    },
-    {
-      "selector": ".title",
+      "selectors": [".title"],
       "type": "getHtml",
       "name": "titleHTML"
     },
     {
-      "selector": ".title",
+      "selectors": [".title"],
       "type": "getText",
       "name": "titleText"
+    },
+    {
+      "type": "getScreenshot",
+      "name": "finishView"
     }
-  ],
-  "timeout": 3000
+  ]
 }
