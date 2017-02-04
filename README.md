@@ -282,60 +282,6 @@ which is created by getXXX actions on usecase.
     {
         "createdAt": "2017-01-29T10:04:32.000Z",
         "id": 4238132527,
-        "job": {
-            "attempts": 1,
-            "attemptsMade": 0,
-            "data": {
-                "actions": [
-                    {
-                        "selectors": [
-                            "form[action*=\"/search\"] [name=p]"
-                        ],
-                        "type": "input",
-                        "value": "github nightmare"
-                    },
-                    {
-                        "selectors": [
-                            "form[action*=\"/search\"] [type=submit]"
-                        ],
-                        "type": "click",
-                        "value": null
-                    },
-                    {
-                        "selectors": [
-                            ".title"
-                        ],
-                        "type": "getHtml",
-                        "value": null
-                    },
-                    {
-                        "selectors": [
-                            ".title"
-                        ],
-                        "type": "getText",
-                        "value": null
-                    },
-                    {
-                        "selectors": [],
-                        "type": "getScreenshot",
-                        "value": null
-                    }
-                ],
-                "createdAt": "2017-01-08T02:17:32.000Z",
-                "id": 1863214872,
-                "name": "hogehoge",
-                "url": "http://yahoo.com",
-                "usecaseId": 1863214872
-            },
-            "delay": 0,
-            "opts": {
-                "jobId": 4238132527
-            },
-            "progress": 0,
-            "returnvalue": null,
-            "stacktrace": [],
-            "timestamp": 1485684272903
-        },
         "state": "completed",
         "timestamp": 1485684272903,
         "usecase": {

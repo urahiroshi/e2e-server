@@ -3,7 +3,7 @@ import React, { PropTypes } from 'react';
 import UsecaseParameters from '../organisms/usecase-parameters.jsx';
 
 const Trial = ({ trial, results, selected }) => {
-  if (!trial.job) { return null; }
+  if (!trial.state) { return null; }
   const timestamp = (new Date(trial.timestamp)).toLocaleString();
   let icon = '';
   switch (trial.state) {

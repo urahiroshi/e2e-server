@@ -103,7 +103,6 @@ class Trial extends Base {
         {
           createdAt: this.createdAt,
           state: this.state,
-          job: this.job,
           timestamp: this.job.timestamp,
           usecase: this.job.data
         }
@@ -128,7 +127,6 @@ class Trial extends Base {
             createdAt: trial.createdAt,
             // TODO: Verify correctness to return job
             state,
-            job,
             timestamp: job.timestamp,
             usecase: job.data
           };
