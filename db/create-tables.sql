@@ -11,7 +11,6 @@ CREATE TABLE IF NOT EXISTS usecases (
 CREATE TABLE IF NOT EXISTS actions (
   action_id INT UNSIGNED NOT NULL,
   type VARCHAR(15) NOT NULL,
-  name VARCHAR(127),
   value VARCHAR(255),
   PRIMARY KEY (action_id)
 ) ENGINE InnoDB;
@@ -41,11 +40,10 @@ CREATE TABLE IF NOT EXISTS trials (
 ) ENGINE InnoDB;
 
 CREATE TABLE IF NOT EXISTS results (
-  result_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  result_id INT UNSIGNED NOT NULL,
   job_id INT UNSIGNED NOT NULL,
-  screenshots_count TINYINT UNSIGNED NOT NULL,
-  texts_count TINYINT UNSIGNED NOT NULL,
-  htmls_count TINYINT UNSIGNED NOT NULL,
+  action_type VARCHAR(15) NOT NULL,
+  action_order TINYINT UNSIGNED NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (job_id) REFERENCES trials(job_id),
   PRIMARY KEY (result_id)
@@ -53,24 +51,21 @@ CREATE TABLE IF NOT EXISTS results (
 
 CREATE TABLE IF NOT EXISTS result_texts (
   result_id INT UNSIGNED NOT NULL,
-  name VARCHAR(63) NOT NULL,
   txt TEXT NOT NULL,
   FOREIGN KEY (result_id) REFERENCES results(result_id),
-  PRIMARY KEY (result_id, name)
+  PRIMARY KEY (result_id)
 ) ENGINE InnoDB;
 
 CREATE TABLE IF NOT EXISTS result_htmls (
   result_id INT UNSIGNED NOT NULL,
-  name VARCHAR(63) NOT NULL,
   html TEXT NOT NULL,
   FOREIGN KEY(result_id) REFERENCES results(result_id),
-  PRIMARY KEY (result_id, name)
+  PRIMARY KEY (result_id)
 ) ENGINE InnoDB;
 
 CREATE TABLE IF NOT EXISTS result_screenshots (
   result_id INT UNSIGNED NOT NULL,
-  name VARCHAR(63) NOT NULL,
   image BLOB NOT NULL,
   FOREIGN KEY(result_id) REFERENCES results(result_id),
-  PRIMARY KEY (result_id, name)
+  PRIMARY KEY (result_id)
 ) ENGINE InnoDB;

@@ -3,8 +3,9 @@ const Usecase = require('./usecase');
 const Helper = require('./helper');
 const Config = require('../config/config');
 const Base = require('./base');
-const _ = require('lodash');
+const Result = require('./result');
 
+const _ = require('lodash');
 const Queue = require('bull');
 const trialQueue = Queue('trial');
 
@@ -54,11 +55,43 @@ class Trial extends Base {
     return this.job.remove()
     .then((res) => {
       console.log('remove job', res);
-      const connector = new Connector();
-      return connector.query(
-        'delete from trials where job_id = ?',
-        this.id
-      );
+      return Result.find({ jobId: this.id })
+      .then((results) => {
+        const connector = new Connector();
+        const transaction = connector.transaction();
+        results.forEach((result) => {
+          switch (result.actionType) {
+            case 'getText':
+              transaction.query(() => [
+                'delete from result_texts where result_id = ?',
+                result.resultId
+              ]);
+              break;
+            case 'getHtml':
+              transaction.query(() => [
+                'delete from result_htmls where result_id = ?',
+                result.resultId
+              ]);
+              break;
+            case 'getScreenshot':
+              transaction.query(() => [
+                'delete from result_screenshots where result_id = ?',
+                result.resultId
+              ]);
+              break;
+            default:
+              break;
+          }
+          transaction.query(() => [
+            'delete from results where result_id = ?',
+            result.resultId
+          ]);
+        });
+        return transaction.query(() => [
+          'delete from trials where job_id = ?',
+          this.id
+        ]).end();
+      });
     });
   }
 

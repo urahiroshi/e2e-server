@@ -6,12 +6,11 @@ class Screenshot {
     return Config.api.baseUrl + '/screenshots';
   }
 
-  static find({ resultId, name }) {
+  static find({ resultId }) {
     const connector = new Connector();
     const encodedResultId = encodeURIComponent(resultId);
-    const encodedName = encodeURIComponent(name);
     return connector.request({
-      uri: `${Screenshot._baseUrl()}?resultId=${encodedResultId}&name=${encodedName}`,
+      uri: `${Screenshot._baseUrl()}/${encodedResultId}`,
     });
   }
 }

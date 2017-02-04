@@ -7,7 +7,7 @@ const Trials = ({
   trials,
   usecaseId,
   selectedTrialId,
-  result,
+  results,
 }) => {
   if (usecaseId == undefined) { return <section />; }
   return (
@@ -17,13 +17,12 @@ const Trials = ({
         {
           trials.map((trial) => {
             if (trial.id === selectedTrialId) {
-              let selectedResult;
-              if (result && result.trialId === trial.id) {
-                selectedResult = result;
-              }
+              const selectedResults = results.filter((result) => (
+                result.jobId === selectedTrialId
+              ));
               return (
                 <div className="list-group-item" key={trial.id}>
-                  <Trial trial={trial} result={selectedResult} selected />
+                  <Trial trial={trial} results={selectedResults} selected />
                 </div>
               );
             }
@@ -47,7 +46,7 @@ Trials.propTypes = {
   trials: PropTypes.array.isRequired,
   usecaseId: PropTypes.number,
   selectedTrialId: PropTypes.number,
-  result: PropTypes.object,
+  results: PropTypes.array,
 };
 
 export default Trials;

@@ -1,5 +1,6 @@
 const Queue = require('bull');
-const queue = Queue('trial');
+const trialQueue = Queue('trial');
+const resultQueue = Queue('result');
 const Nightmare = require('nightmare');
 const Promise = require('bluebird');
 const Result = require('./libs/result');
@@ -14,39 +15,39 @@ function log () {
 }
 
 const actions = {
-  getScreenshot(nightmare, { name, resultParams }) {
-    if (!name || !resultParams) {
+  getScreenshot(nightmare, { result }) {
+    if (!result) {
       return Promise.reject(new Error('invalid parameter'));
     }
     return nightmare.screenshot()
     .then((buf) => {
-      resultParams.screenshots[name] = buf;
+      result.value = buf.toString('base64');
       return;
     });
   },
 
-  getHtml(nightmare, { selectors, name, resultParams }) {
-    if (!selectors || selectors.length === 0 || !name || !resultParams) {
+  getHtml(nightmare, { selectors, result }) {
+    if (!selectors || selectors.length === 0 || !result) {
       return Promise.reject(new Error('invalid parameter'));
     }
     return nightmare
     .use(Action.getHtml(selectors))
-    .then((result) => {
-      log('getHtml', result);
-      resultParams.htmls[name] = result;
+    .then((html) => {
+      log('getHtml', html);
+      result.value = html;
       return;
     });
   },
   
-  getText(nightmare, { selectors, name, resultParams }) {
-    if (!selectors || selectors.length === 0 || !name || !resultParams) {
+  getText(nightmare, { selectors, result }) {
+    if (!selectors || selectors.length === 0 || !result) {
       return Promise.reject(new Error('invalid parameter'));
     }
     return nightmare
     .use(Action.getText(selectors))
-    .then((result) => {
-      log('getText', result);
-      resultParams.texts[name] = result;
+    .then((text) => {
+      log('getText', text);
+      result.value = text;
       return;
     });
   }
@@ -86,26 +87,25 @@ function onError(error, done) {
 }
 
 function trial (jobId, params, done) {
-  var resultParams = {
-    jobId,
-    screenshots: {},
-    htmls: {},
-    texts: {}
-  };
   log(params);
   const url = params.url;
   const nightmare = Nightmare({show: true});
   nightmare.goto(url);
 
   let hasError = false;
-  const actionsPromise = params.actions.reduce((promise, action) => {
+  const actionsPromise = params.actions.reduce((promise, action, index) => {
     return promise.then(() => {
       if (hasError) return false;
+      const result = {
+        jobId, actionType: action.type, actionOrder: index + 1
+      };
       return actions[action.type](nightmare, {
         selectors: action.selectors,
-        name: action.name,
         value: action.value,
-        resultParams: resultParams
+        result
+      })
+      .then(() => {
+        resultQueue.add(result);
       })
       .catch((error) => {
         hasError = true;
@@ -118,9 +118,6 @@ function trial (jobId, params, done) {
   .then(() => {
     if (hasError) return false;
     return nightmare.end().then(() => {
-      resultParams.finished_at = (new Date()).getTime();
-      const result = new Result(resultParams)
-      result.save();
       done();
     });
   })
@@ -131,7 +128,7 @@ function trial (jobId, params, done) {
 }
 
 function process () {
-  queue.process((job, done) => {
+  trialQueue.process((job, done) => {
     try {
       log('job', job.jobId);
       trial(job.jobId, job.data, done);

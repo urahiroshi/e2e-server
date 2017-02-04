@@ -2,10 +2,9 @@ const express = require('express');
 const router = express.Router();
 const Screenshot = require('../models/screenshot');
 
-router.get('/results/:resultId/screenshots/:name.png', (req, res, next) => {
-  const resultId = Number(req.params.resultId);
-  const name = req.params.name;
-  Screenshot.find({ resultId, name })
+router.get('/screenshots/:id.png', (req, res, next) => {
+  const resultId = Number(req.params.id);
+  Screenshot.find({ resultId })
   .then((screenshot) => {
     const rawImage = new Buffer(screenshot.image, 'base64');
     res.set({

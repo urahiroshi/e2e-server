@@ -1,17 +1,17 @@
 import { call, put } from 'redux-saga/effects';
 
 import { successCommand, failCommand } from '../../actions/command';
-import { setResult } from '../../actions/result';
+import { setResults } from '../../actions/results';
 import Api from '../../apis/result';
 
-export function* getResultSaga(name, { trialId }) {
+export function* getResultsSaga(name, { trialId }) {
   try {
     const response = yield call(Api.getList, trialId);
-    const result = response.data[0];
-    yield put(setResult({ trialId, result }));
+    const results = response.data;
+    yield put(setResults({ trialId, results }));
     yield put(successCommand(name));
   } catch (e) {
-    console.log('Get usecases request failed:', e);
-    yield put(failCommand(name, 'Get usecases has been failed.'));
+    console.log('Get results request failed:', e);
+    yield put(failCommand(name, 'Get results has been failed.'));
   }
 }

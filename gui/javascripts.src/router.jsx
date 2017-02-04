@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import Usecases from './views/containers/usecases';
 import { startGetUsecasesCommand } from './actions/usecases';
 import { resetTrial, startGetTrialsCommand } from './actions/trials';
-import { startGetResultCommand } from './actions/result';
+import { startGetResultsCommand } from './actions/results';
 
 const AppRouterComponent = ({
   onEnterUsecases,
@@ -62,7 +62,7 @@ const mapDispatchToProps = (dispatch) => ({
     const trialId = Number(params.trialId);
     dispatch(startGetUsecasesCommand(usecaseId));
     dispatch(startGetTrialsCommand(usecaseId, 10, trialId));
-    dispatch(startGetResultCommand(trialId));
+    dispatch(startGetResultsCommand(trialId));
   },
   onLeaveTrial: () => {
     dispatch(resetTrial());

@@ -19,12 +19,10 @@ const Action = ({ action }) => {
       break;
     case 'getHtml':
     case 'getText':
-      nodes.push(
-        `${action.type} labeled by `, <b>{action.name}</b>, ' from ', selector
-      );
+      nodes.push(action.type, ' from ', selector);
       break;
     case 'getScreenshot':
-      nodes.push(`${action.type} labeled by `, <b>{action.name}</b>);
+      nodes.push(action.type);
       break;
     default:
       break;

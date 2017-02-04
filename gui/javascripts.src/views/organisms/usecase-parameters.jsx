@@ -3,7 +3,7 @@ import React, { PropTypes } from 'react';
 import Action from '../atoms/action.jsx';
 import ActionResult from '../atoms/action-result.jsx';
 
-const UsecaseParameters = ({ url, actions, result }) =>
+const UsecaseParameters = ({ url, actions, results }) =>
   <div>
     <ul>
       <li>
@@ -16,7 +16,10 @@ const UsecaseParameters = ({ url, actions, result }) =>
             actions.map((action, i) =>
               <li key={i}>
                 <Action action={action} />
-                <ActionResult result={result} type={action.type} name={action.name} />
+                <ActionResult
+                  result={results && results[i]}
+                  type={action.type}
+                />
               </li>
             )
           }
@@ -28,7 +31,7 @@ const UsecaseParameters = ({ url, actions, result }) =>
 UsecaseParameters.propTypes = {
   url: PropTypes.string.isRequired,
   actions: PropTypes.array.isRequired,
-  result: PropTypes.object,
+  results: PropTypes.array,
 };
 
 export default UsecaseParameters;

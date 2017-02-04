@@ -40,7 +40,6 @@ class Usecase extends Base {
         value.every((action) => (
           (action.selectors == undefined || Array.isArray(action.selectors)) &&
           Helper.isString(action.type) &&
-          Helper.isString(action.name, { nullable: true }) &&
           Helper.isString(action.value, { nullable: true })
         ))
       )
@@ -107,16 +106,10 @@ class Usecase extends Base {
     });
   }
 
-  static _isValidAction({selectors, type, name, value}) {
+  static _isValidAction({selectors, type, value}) {
     if (
       Usecase._isInputAction(type) &&
       !(value && validator.isLength(value, { min: 1, max: 255 }))
-    ) {
-      return false;
-    }
-    if (
-      Usecase._isNameAction(type) &&
-      !(name && validator.isLength(name, { min: 1, max: 127 }))
     ) {
       return false;
     }
@@ -146,11 +139,6 @@ class Usecase extends Base {
   static _isInputAction(type) {
     const inputActions = ['input', 'select'];
     return inputActions.includes(type);
-  }
-
-  static _isNameAction(type) {
-    const nameActions = ['getText', 'getHtml', 'getScreenshot'];
-    return nameActions.includes(type);
   }
 
   static _isSelectorAction(type) {
@@ -185,13 +173,10 @@ class Usecase extends Base {
     if (Usecase._isInputAction(action.type) && !action.value) {
       throw new Error('No Input', action);
     }
-    if (Usecase._isNameAction(action.type) && !action.name) {
-      throw new Error('No Name', action);
-    }
     const actionId = Helper.randomInt();
     transaction.query(
-      'insert into actions (action_id, type, name, value) values (?, ?, ?, ?)',
-      actionId, action.type, action.name || null, action.value || null
+      'insert into actions (action_id, type, value) values (?, ?, ?)',
+      actionId, action.type, action.value || null
     )
     .query(
       'insert into usecase_actions (usecase_id, action_order, action_id)\
@@ -223,7 +208,7 @@ class Usecase extends Base {
   static _findActions(connector, usecaseId) {
     return connector.query('\
       select usecase_actions.action_order, usecase_actions.action_id, \
-        actions.type, actions.name, actions.value \
+        actions.type, actions.value \
       from usecase_actions \
       inner join actions on usecase_actions.action_id = actions.action_id \
       where usecase_actions.usecase_id = ? \
@@ -242,7 +227,6 @@ class Usecase extends Base {
         .then((selectorRows) => {
           actions.push({
             type: row['type'],
-            name: row['name'],
             value: row['value'],
             selectors: selectorRows.map((selectorRow) => (
               selectorRow.selector

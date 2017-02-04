@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 
 import UsecaseParameters from '../organisms/usecase-parameters.jsx';
 
-const Trial = ({ trial, result, selected }) => {
+const Trial = ({ trial, results, selected }) => {
   if (!trial.job) { return null; }
   const timestamp = (new Date(trial.timestamp)).toLocaleString();
   let icon = '';
@@ -25,7 +25,7 @@ const Trial = ({ trial, result, selected }) => {
         <UsecaseParameters
           url={trial.usecase.url}
           actions={trial.usecase.actions}
-          result={result}
+          results={results}
         />
       </div> :
       <div>{heading}</div>
@@ -34,7 +34,7 @@ const Trial = ({ trial, result, selected }) => {
 
 Trial.propTypes = {
   trial: PropTypes.object.isRequired,
-  result: PropTypes.object,
+  results: PropTypes.array,
   selected: PropTypes.bool.isRequired,
 };
 

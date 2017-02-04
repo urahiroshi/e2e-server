@@ -7,7 +7,7 @@ import {
   getUsecasesSaga, addUsecaseSaga, modifyUsecaseSaga, deleteUsecaseSaga,
 } from './usecase';
 import { getTrialsSaga, addTrialSaga } from './trial';
-import { getResultSaga } from './result';
+import { getResultsSaga } from './result';
 
 const sagaMap = {
   [API_NAME.GET_USECASES]: getUsecasesSaga,
@@ -16,7 +16,7 @@ const sagaMap = {
   [API_NAME.DELETE_USECASE]: deleteUsecaseSaga,
   [API_NAME.GET_TRIALS]: getTrialsSaga,
   [API_NAME.ADD_TRIAL]: addTrialSaga,
-  [API_NAME.GET_RESULT]: getResultSaga,
+  [API_NAME.GET_RESULTS]: getResultsSaga,
 };
 
 function* startCommand(action) {

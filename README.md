@@ -119,17 +119,14 @@ which is created by getXXX actions on usecase.
     },
     {
       "selectors": [".title"],
-      "type": "getHtml",
-      "name": "titleHTML"
+      "type": "getHtml"
     },
     {
       "selectors": [".title"],
-      "type": "getText",
-      "name": "titleText"
+      "type": "getText"
     },
     {
-      "type": "getScreenshot",
-      "name": "finishView"
+      "type": "getScreenshot"
     }
   ]
 }
@@ -154,25 +151,21 @@ which is created by getXXX actions on usecase.
             "type": "click"
         }, 
         {
-            "name": "titleHTML", 
             "selectors": [
                 ".title"
             ], 
             "type": "getHtml"
         }, 
         {
-            "name": "titleText", 
             "selectors": [
                 ".title"
             ], 
             "type": "getText"
         }, 
         {
-            "name": "finishView", 
             "type": "getScreenshot"
         }
     ],
-    "createdAt": "2017-01-22T09:49:31.000Z",
     "id": 2343814817, 
     "name": "hogehoge", 
     "url": "http://yahoo.com"
@@ -183,7 +176,7 @@ which is created by getXXX actions on usecase.
 
 - Response 200 (application/json)
 
-(list of `POST /usecases` response object with timestamp)
+(list of `POST /usecases` response object with createdAt)
 
 ```json
 
@@ -191,7 +184,6 @@ which is created by getXXX actions on usecase.
     {
         "actions": [
             {
-                "name": null,
                 "selectors": [
                     "form[action*=\"/search\"] [name=p]"
                 ],
@@ -199,7 +191,6 @@ which is created by getXXX actions on usecase.
                 "value": "github nightmare"
             },
             {
-                "name": null,
                 "selectors": [
                     "form[action*=\"/search\"] [type=submit]"
                 ],
@@ -207,7 +198,6 @@ which is created by getXXX actions on usecase.
                 "value": null
             },
             {
-                "name": "titleHTML",
                 "selectors": [
                     ".title"
                 ],
@@ -215,7 +205,6 @@ which is created by getXXX actions on usecase.
                 "value": null
             },
             {
-                "name": "titleText",
                 "selectors": [
                     ".title"
                 ],
@@ -223,7 +212,6 @@ which is created by getXXX actions on usecase.
                 "value": null
             },
             {
-                "name": "finishView2",
                 "selectors": [],
                 "type": "getScreenshot",
                 "value": null
@@ -300,7 +288,6 @@ which is created by getXXX actions on usecase.
             "data": {
                 "actions": [
                     {
-                        "name": null,
                         "selectors": [
                             "form[action*=\"/search\"] [name=p]"
                         ],
@@ -308,7 +295,6 @@ which is created by getXXX actions on usecase.
                         "value": "github nightmare"
                     },
                     {
-                        "name": null,
                         "selectors": [
                             "form[action*=\"/search\"] [type=submit]"
                         ],
@@ -316,7 +302,6 @@ which is created by getXXX actions on usecase.
                         "value": null
                     },
                     {
-                        "name": "titleHTML",
                         "selectors": [
                             ".title"
                         ],
@@ -324,7 +309,6 @@ which is created by getXXX actions on usecase.
                         "value": null
                     },
                     {
-                        "name": "titleText",
                         "selectors": [
                             ".title"
                         ],
@@ -332,7 +316,6 @@ which is created by getXXX actions on usecase.
                         "value": null
                     },
                     {
-                        "name": "finishView2",
                         "selectors": [],
                         "type": "getScreenshot",
                         "value": null
@@ -358,7 +341,6 @@ which is created by getXXX actions on usecase.
         "usecase": {
             "actions": [
                 {
-                    "name": null,
                     "selectors": [
                         "form[action*=\"/search\"] [name=p]"
                     ],
@@ -366,7 +348,6 @@ which is created by getXXX actions on usecase.
                     "value": "github nightmare"
                 },
                 {
-                    "name": null,
                     "selectors": [
                         "form[action*=\"/search\"] [type=submit]"
                     ],
@@ -374,7 +355,6 @@ which is created by getXXX actions on usecase.
                     "value": null
                 },
                 {
-                    "name": "titleHTML",
                     "selectors": [
                         ".title"
                     ],
@@ -382,7 +362,6 @@ which is created by getXXX actions on usecase.
                     "value": null
                 },
                 {
-                    "name": "titleText",
                     "selectors": [
                         ".title"
                     ],
@@ -390,7 +369,6 @@ which is created by getXXX actions on usecase.
                     "value": null
                 },
                 {
-                    "name": "finishView2",
                     "selectors": [],
                     "type": "getScreenshot",
                     "value": null
@@ -429,54 +407,54 @@ which is created by getXXX actions on usecase.
 ```json
 [
     {
-        "htmls": [
-            {
-                "html": "<a class=\" fz-l ac-21th lh-24\" data-sb=\"/beacon/clk;_ylt=AwrTHR0Ym41YxQgAiBBXNyoA;_ylu=X3oDMTEyOGNucTZkBGNvbG8DZ3ExBHBvcwMxBHZ0aWQDQjI4MjNfMQRzZWMDc3I-\" href=\"https://github.com/segmentio/nightmare\" referrerpolicy=\"origin\" target=\"_blank\"><b>GitHub</b> - segmentio/<b>nightmare</b>: A high-level browser automation ...</a>", 
-                "name": "titleHTML", 
-                "resultId": 1230023475
-            }
-        ], 
-        "htmlsCount": 1, 
-        "jobId": 2351623262, 
-        "resultId": 1230023475, 
-        "screenshots": [
-            {
-                "name": "finishView2", 
-                "resultId": 1230023475,
-                "uri": "/screenshots?resultId=1230023475&name=finishView2"
-            }
-        ], 
-        "screenshotsCount": 1, 
-        "texts": [
-            {
-                "name": "titleText", 
-                "resultId": 1230023475, 
-                "txt": "GitHub - segmentio/nightmare: A high-level browser automation ..."
-            }
-        ], 
-        "textsCount": 1
+        "actionType": "input", 
+        "createdAt": "2017-02-04T07:16:34.000Z", 
+        "id": 594747449, 
+        "jobId": 1294938304
+    }, 
+    {
+        "actionType": "click", 
+        "createdAt": "2017-02-04T07:16:34.000Z", 
+        "id": 2795612685, 
+        "jobId": 1294938304
+    }, 
+    {
+        "actionType": "getHtml", 
+        "createdAt": "2017-02-04T07:16:35.000Z", 
+        "html": "<a class=\" ac-algo fz-l ac-21th lh-24\" data-sb=\"/beacon/clk;_ylt=AwrSbnHTf5VYZOcAT1JXNyoA;_ylu=X3oDMTByb2lvbXVuBGNvbG8DZ3ExBHBvcwMxBHZ0aWQDBHNlYwNzcg--\" href=\"https://github.com/segmentio/nightmare\" referrerpolicy=\"origin\" target=\"_blank\" data-b7c=\"58957fd3da311\"><b>GitHub</b> - segmentio/<b>nightmare</b>: A high-level browser automation ...</a>", 
+        "id": 921606434, 
+        "jobId": 1294938304
+    }, 
+    {
+        "actionType": "getText", 
+        "createdAt": "2017-02-04T07:16:35.000Z", 
+        "id": 3769942071, 
+        "jobId": 1294938304, 
+        "text": "GitHub - segmentio/nightmare: A high-level browser automation ..."
+    }, 
+    {
+        "actionType": "getScreenshot", 
+        "createdAt": "2017-02-04T07:16:36.000Z", 
+        "id": 1102802687, 
+        "jobId": 1294938304, 
+        "uri": "/screenshots/1102802687"
     }
 ]
 ```
 
-### DELETE /results/:id
+### DELETE /results?jobId=:jobId
 
 - response 204 (application/json)
 
 (No response body)
 
-### GET /screenshots?resultId=:resultId&name=:name
-
-- query parameters:
-    - resultId (string, required): id of result
-    - name (string, required): name of usecase action
+### GET /screenshots/:resultId
 
 - response 200 (application/json)
 
 ```json
 {
     "resultId": 1386605851,
-    "name": "finishView2",
     "image": "<base64 of screen shot png image>"
 }
 ```

@@ -52,15 +52,10 @@ class ActionInput extends React.Component {
       case 'getHtml':
       case 'getText':
         children.push(
-          ' labeled by ', <TextBox placeHolder="name" onChange={onChange('name')} />,
           ' from ', <Selectors onChange={onChange('selectors')} />
         );
         break;
       case 'getScreenshot':
-        children.push(
-          ' labeled by ', <TextBox placeHolder="name" onChange={onChange('name')} />
-        );
-        break;
       default:
         break;
     }

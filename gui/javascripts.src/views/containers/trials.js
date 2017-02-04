@@ -5,7 +5,7 @@ const mapStateToProps = (state) => ({
   trials: state.trials,
   usecaseId: state.usecase.id,
   selectedTrialId: (state.trial) ? state.trial.id : null,
-  result: state.result,
+  results: state.results,
 });
 
 const TrialsContainer = connect(
