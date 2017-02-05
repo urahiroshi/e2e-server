@@ -111,7 +111,8 @@ class Trial extends Base {
       createdAt: this.createdAt,
       state: this.state,
       updatedAt: this.updatedAt,
-      usecase: this.usecase
+      usecase: this.usecase,
+      error: this.error
     };
   }
 
@@ -123,7 +124,8 @@ class Trial extends Base {
       createdAt: trialObj.createdAt,
       state: trialObj.state,
       updatedAt: trialObj.updatedAt,
-      usecase: JSON.parse(trialObj.usecaseJson)
+      usecase: JSON.parse(trialObj.usecaseJson),
+      error: trialObj.error
     });
     if (trial.state !== 'unknown') { return Promise.resolve(trial); }
     console.log('getJob: trialId(jobId)', trial.id);

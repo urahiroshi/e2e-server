@@ -81,9 +81,15 @@ const actions = {
   }
 });
 
-function onError(error, done) {
+function onError(error, jobId, done) {
   log('ERROR', error);
   done(error);
+  resultQueue.add({
+    trialId: jobId,
+    actionType: 'failTrial',
+    state: 'failed',
+    error: error.message
+  });
 }
 
 function trial (jobId, params, done) {
@@ -109,7 +115,7 @@ function trial (jobId, params, done) {
       })
       .catch((error) => {
         hasError = true;
-        onError(error, done);
+        onError(error, jobId, done);
       });
     });
   }, Promise.resolve([]))
@@ -126,9 +132,8 @@ function trial (jobId, params, done) {
       done();
     });
   })
-  // TODO: send error information
   .catch((error) => {
-    onError(error, done);
+    onError(error, jobId, done);
   });
 }
 
@@ -138,7 +143,7 @@ function process () {
       log('job', job.jobId);
       trial(job.jobId, job.data, done);
     } catch (error) {
-      onError(error, done)
+      onError(error, job.jobId, done)
     }
   });
 }

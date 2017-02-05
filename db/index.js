@@ -58,6 +58,14 @@ function completeTrial ({ trialId, state, updatedAt }) {
   );
 }
 
+function failTrial ({ trialId, state, error, updatedAt }) {
+  const connector = new Connector();
+  return connector.query(
+    'update trials set state = ?, updated_at= ?, error = ? where trial_id = ?',
+    state, updatedAt, error, trialId
+  );
+}
+
 function onError(error, done) {
   console.log(error, error.stack);
   done(error);
@@ -74,6 +82,10 @@ function process () {
       let jobPromise;
       if (job.data.actionType === 'completeTrial') {
         jobPromise = completeTrial(Object.assign({}, job.data, {
+          updatedAt: new Date(job.timestamp)
+        }));
+      } else if (job.data.actionType === 'failTrial') {
+        jobPromise = failTrial(Object.assign({}, job.data, {
           updatedAt: new Date(job.timestamp)
         }));
       } else {

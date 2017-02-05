@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS trials (
   usecase_json TEXT NOT NULL,
   created_at TIMESTAMP NOT NULL,
   updated_at TIMESTAMP NOT NULL,
+  error VARCHAR(255),
   FOREIGN KEY (usecase_id) REFERENCES usecases(usecase_id),
   PRIMARY KEY (trial_id)
 ) ENGINE InnoDB;
