@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-const Action = ({ action }) => {
+const Action = ({ action, completed }) => {
   const nodes = [];
   let selector;
   // TODO: Add escape!
@@ -9,20 +9,23 @@ const Action = ({ action }) => {
       <code key={i}>{s}</code>
     ));
   }
+  const stateAndType = completed ? `\u2714 ${action.type}` : action.type;
   switch (action.type) {
     case 'click':
-      nodes.push(`${action.type} to `, selector);
+      nodes.push(`${stateAndType} to `, selector);
       break;
     case 'input':
     case 'select':
-      nodes.push(`${action.type} `, <kbd>{action.value}</kbd>, ' to ', selector);
+      nodes.push(
+        `${stateAndType} `, <kbd>{action.value}</kbd>, ' to ', selector
+      );
       break;
     case 'getHtml':
     case 'getText':
-      nodes.push(action.type, ' from ', selector);
+      nodes.push(stateAndType, ' from ', selector);
       break;
     case 'getScreenshot':
-      nodes.push(action.type);
+      nodes.push(stateAndType);
       break;
     default:
       break;
@@ -32,6 +35,7 @@ const Action = ({ action }) => {
 
 Action.propTypes = {
   action: PropTypes.object.isRequired,
+  completed: PropTypes.bool,
 };
 
 export default Action;

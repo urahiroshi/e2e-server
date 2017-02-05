@@ -13,15 +13,15 @@ const UsecaseParameters = ({ url, actions, results }) =>
         Actions:
         <ol>
           {
-            actions.map((action, i) =>
-              <li key={i}>
-                <Action action={action} />
-                <ActionResult
-                  result={results && results[i]}
-                  type={action.type}
-                />
-              </li>
-            )
+            actions.map((action, i) => {
+              const result = results && results[i];
+              return (
+                <li key={i}>
+                  <Action action={action} completed={!!result} />
+                  <ActionResult result={result} type={action.type} />
+                </li>
+              );
+            })
           }
         </ol>
       </li>

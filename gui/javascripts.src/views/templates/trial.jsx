@@ -22,6 +22,12 @@ const Trial = ({ trial, results, selected }) => {
     (selected) ?
       <div>
         <div>{heading}</div>
+        {
+          (trial.error && trial.error.length > 0) ?
+            <div className="alert alert-danger" role="alert">
+              {trial.error}
+            </div> : null
+        }
         <UsecaseParameters
           url={trial.usecase.url}
           actions={trial.usecase.actions}
