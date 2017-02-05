@@ -5,9 +5,9 @@ const HttpClient = require('./http-client');
 const config = require('../config');
 
 class Result {
-  constructor({ jobId, actionType, actionOrder }) {
+  constructor({ trialId, actionType, actionOrder }) {
     this.params = {
-      jobId: Number(jobId),
+      trialId: Number(trialId),
       actionType,
       actionOrder
     };

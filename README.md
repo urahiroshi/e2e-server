@@ -86,7 +86,7 @@ which is created by getXXX actions on usecase.
 
 - resultId (number, readonly): identify number.
     This is generated when usecase is created.
-- jobId (number, readonly): id of trial
+- trialId (number, readonly): id of trial
 - htmls (array(object)):
     - html (string) : obtained html value
     - name (string) : name of usecase action
@@ -283,7 +283,7 @@ which is created by getXXX actions on usecase.
         "createdAt": "2017-01-29T10:04:32.000Z",
         "id": 4238132527,
         "state": "completed",
-        "timestamp": 1485684272903,
+        "updatedAt": "2017-01-29T10:13:15.000Z",
         "usecase": {
             "actions": [
                 {
@@ -320,11 +320,8 @@ which is created by getXXX actions on usecase.
                     "value": null
                 }
             ],
-            "createdAt": "2017-01-08T02:17:32.000Z",
             "id": 1863214872,
-            "name": "hogehoge",
             "url": "http://yahoo.com",
-            "usecaseId": 1863214872
         },
         "usecaseId": 1863214872
     }
@@ -343,10 +340,10 @@ which is created by getXXX actions on usecase.
 
 (No response body)
 
-### GET /results?jobId=:jobId
+### GET /results?trialId=:trialId
 
 - query parameters:
-    - jobId: id of trial
+    - trialId: id of trial
 
 - response 200 (application/json)
 
@@ -356,39 +353,39 @@ which is created by getXXX actions on usecase.
         "actionType": "input", 
         "createdAt": "2017-02-04T07:16:34.000Z", 
         "id": 594747449, 
-        "jobId": 1294938304
+        "trialId": 1294938304
     }, 
     {
         "actionType": "click", 
         "createdAt": "2017-02-04T07:16:34.000Z", 
         "id": 2795612685, 
-        "jobId": 1294938304
+        "trialId": 1294938304
     }, 
     {
         "actionType": "getHtml", 
         "createdAt": "2017-02-04T07:16:35.000Z", 
         "html": "<a class=\" ac-algo fz-l ac-21th lh-24\" data-sb=\"/beacon/clk;_ylt=AwrSbnHTf5VYZOcAT1JXNyoA;_ylu=X3oDMTByb2lvbXVuBGNvbG8DZ3ExBHBvcwMxBHZ0aWQDBHNlYwNzcg--\" href=\"https://github.com/segmentio/nightmare\" referrerpolicy=\"origin\" target=\"_blank\" data-b7c=\"58957fd3da311\"><b>GitHub</b> - segmentio/<b>nightmare</b>: A high-level browser automation ...</a>", 
         "id": 921606434, 
-        "jobId": 1294938304
+        "trialId": 1294938304
     }, 
     {
         "actionType": "getText", 
         "createdAt": "2017-02-04T07:16:35.000Z", 
         "id": 3769942071, 
-        "jobId": 1294938304, 
+        "trialId": 1294938304, 
         "text": "GitHub - segmentio/nightmare: A high-level browser automation ..."
     }, 
     {
         "actionType": "getScreenshot", 
         "createdAt": "2017-02-04T07:16:36.000Z", 
         "id": 1102802687, 
-        "jobId": 1294938304, 
+        "trialId": 1294938304, 
         "uri": "/screenshots/1102802687"
     }
 ]
 ```
 
-### DELETE /results?jobId=:jobId
+### DELETE /results?trialId=:trialId
 
 - response 204 (application/json)
 

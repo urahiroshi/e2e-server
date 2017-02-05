@@ -7,16 +7,7 @@ router.get('/:id', (req, res, next) => {
   const id = Number(req.params.id);
   Trial.find(id)
   .then((trial) => {
-    res.json(trial);
-  })
-  .catch(next);
-});
-
-router.get('/:id/result', (req, res, next) => {
-  const id = Number(req.params.id);
-  Result.find(id)
-  .then((result) => {
-    res.json(result);
+    res.json(trial.toJSON());
   })
   .catch(next);
 });
@@ -40,8 +31,9 @@ router.get('/', (req, res, next) => {
   }
   Trial.findAll({ offset, length, usecaseId })
   .then((trials) => {
-    console.log('trials', trials);
-    res.json(trials);
+    const jsons = trials.map((trial) => trial.toJSON());
+    console.log('trials', jsons);
+    res.json(jsons);
   })
   .catch(next);
 });

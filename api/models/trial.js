@@ -31,21 +31,30 @@ class Trial extends Base {
     this.validateAll();
     return Usecase.find(this.usecaseId)
     .then((usecase) => {
-      const data = Object.assign(usecase.toJSON(), {
-        usecaseId: this.usecaseId
-      });
-      const jobId = Helper.randomInt();
+      let usecaseJson = usecase.toJSON();
+      usecaseJson = {
+        id: usecaseJson.id,
+        url: usecaseJson.url,
+        actions: usecaseJson.actions
+      };
+      const trialId = Helper.randomInt();
+      const state = 'unknown';
       const connector = new Connector();
-      return connector.query(
-        'insert into trials (job_id, usecase_id) values (?, ?)',
-        jobId, this.usecaseId
+      const now = new Date();
+      return connector.query('\
+        insert into trials \
+          (trial_id, usecase_id, state, usecase_json, created_at, updated_at) \
+          values (?, ?, ?, ?, ?, ?) \
+        ', trialId, this.usecaseId, state, JSON.stringify(usecaseJson), now, now
       )
       .then(() => {
-        console.log('add job', jobId);
-        return trialQueue.add(data, { jobId: jobId });
+        console.log('add job', trialId);
+        return trialQueue.add(usecaseJson, { jobId: trialId });
       })
       .then(() => {
-        this.id = jobId;
+        this.id = trialId;
+        this.state = state;
+        this.usecase = usecaseJson;
         return this;
       });
     });
@@ -55,7 +64,7 @@ class Trial extends Base {
     return this.job.remove()
     .then((res) => {
       console.log('remove job', res);
-      return Result.find({ jobId: this.id })
+      return Result.find({ trialId: this.id })
       .then((results) => {
         const connector = new Connector();
         const transaction = connector.transaction();
@@ -88,7 +97,7 @@ class Trial extends Base {
           ]);
         });
         return transaction.query(() => [
-          'delete from trials where job_id = ?',
+          'delete from trials where trial_id = ?',
           this.id
         ]).end();
       });
@@ -96,53 +105,46 @@ class Trial extends Base {
   }
 
   toJSON() {
-    const baseObject = { id: this.id, usecaseId: this.usecaseId }
-    if (this.job) {
-      return Object.assign(
-        baseObject,
-        {
-          createdAt: this.createdAt,
-          state: this.state,
-          timestamp: this.job.timestamp,
-          usecase: this.job.data
-        }
-      );
-    }
-    return baseObject;
+    return {
+      id: this.id,
+      usecaseId: this.usecaseId,
+      createdAt: this.createdAt,
+      state: this.state,
+      updatedAt: this.updatedAt,
+      usecase: this.usecase
+    };
   }
 
-  static _findJobAndConcat(trialRow) {
-    // TODO: Consider performance by many jobs
-    const trial = Connector.camelCase(trialRow);
-    const jobId = trial.jobId;
-    console.log('getJob: jobId', jobId);
-    return trialQueue.getJob(jobId)
+  static _construct(trialRow) {
+    const trialObj = Connector.camelCase(trialRow);
+    const trial = new Trial({
+      id: trialObj.trialId,
+      usecaseId: trialObj.usecaseId,
+      createdAt: trialObj.createdAt,
+      state: trialObj.state,
+      updatedAt: trialObj.updatedAt,
+      usecase: JSON.parse(trialObj.usecaseJson)
+    });
+    if (trial.state !== 'unknown') { return Promise.resolve(trial); }
+    console.log('getJob: trialId(jobId)', trial.id);
+    return trialQueue.getJob(trial.id)
     .then((job) => {
-      if (job && job.data) {
-        return job.getState()
-        .then((state) => {
-          return {
-            id: jobId,
-            usecaseId: job.data.id,
-            createdAt: trial.createdAt,
-            // TODO: Verify correctness to return job
-            state,
-            timestamp: job.timestamp,
-            usecase: job.data
-          };
-        });
-      } else {
-        return null;
-      }
+      if (!job || !job.data) { return trial; }
+      return job.getState()
+      .then((state) => {
+        trial.state = state;
+        trial.updatedAt = new Date(job.timestamp);
+        return trial;
+      });
     });
   }
 
   static find(id) {
     const connector = new Connector();
-    return connector.query('select * from trials where job_id = ?', id)
+    return connector.query('select * from trials where trial_id = ?', id)
     .then((rows) => {
       if (rows.length <= 0) { return null; }
-      return Trial._findJobAndConcat(rows[0]);
+      return Trial._construct(rows[0]);
     });
   }
 
@@ -165,8 +167,7 @@ class Trial extends Base {
       )
     }
     return query.then((rows) => {
-      return Promise.all(rows.map(Trial._findJobAndConcat))
-      .then((trials) => trials.filter((trial) => !!trial));
+      return Promise.all(rows.map(Trial._construct));
     });
   }
 }

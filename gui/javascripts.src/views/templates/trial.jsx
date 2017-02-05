@@ -4,7 +4,7 @@ import UsecaseParameters from '../organisms/usecase-parameters.jsx';
 
 const Trial = ({ trial, results, selected }) => {
   if (!trial.state) { return null; }
-  const timestamp = (new Date(trial.timestamp)).toLocaleString();
+  const updatedAt = (new Date(trial.updatedAt)).toLocaleString();
   let icon = '';
   switch (trial.state) {
     case 'completed':
@@ -17,7 +17,7 @@ const Trial = ({ trial, results, selected }) => {
       icon = '\u231b';
       break;
   }
-  const heading = `${icon} ${trial.state} at ${timestamp}`;
+  const heading = `${icon} ${trial.state} at ${updatedAt}`;
   return (
     (selected) ?
       <div>

@@ -12,15 +12,15 @@ function log() {
   console.log(...arguments);
 }
 
-function addJob ({ jobId, actionType, actionOrder, value }) {
+function addResult ({ trialId, actionType, actionOrder, value }) {
   const resultId = randomInt();
   const connector = new Connector();
   const transaction = connector.transaction();
   transaction.query(() => ['\
     insert into results \
-      (result_id, job_id, action_type, action_order) \
+      (result_id, trial_id, action_type, action_order) \
     values ( ?, ?, ?, ? )'
-    , resultId, jobId, actionType, actionOrder
+    , resultId, trialId, actionType, actionOrder
   ]);
   switch (actionType) {
     case 'getText':
@@ -50,6 +50,14 @@ function addJob ({ jobId, actionType, actionOrder, value }) {
   return transaction.end();
 }
 
+function completeTrial ({ trialId, state, updatedAt }) {
+  const connector = new Connector();
+  return connector.query(
+    'update trials set state = ?, updated_at= ? where trial_id = ?',
+    state, updatedAt, trialId
+  );
+}
+
 function onError(error, done) {
   console.log(error, error.stack);
   done(error);
@@ -63,8 +71,15 @@ function process () {
           job.data.value.slice(0, 128) + '...' : job.data.value
         )
       }));
-      addJob(job.data)
-      .then(() => {
+      let jobPromise;
+      if (job.data.actionType === 'completeTrial') {
+        jobPromise = completeTrial(Object.assign({}, job.data, {
+          updatedAt: new Date(job.timestamp)
+        }));
+      } else {
+        jobPromise = addResult(job.data)
+      }
+      jobPromise.then(() => {
         done();
       })
       .catch((error) => {

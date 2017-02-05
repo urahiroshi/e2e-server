@@ -33,19 +33,23 @@ CREATE TABLE IF NOT EXISTS action_selectors (
 ) ENGINE InnoDB;
 
 CREATE TABLE IF NOT EXISTS trials (
-  job_id INT UNSIGNED NOT NULL,
+  trial_id INT UNSIGNED NOT NULL,
   usecase_id INT UNSIGNED NOT NULL,
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (job_id)
+  state VARCHAR(15) NOT NULL,
+  usecase_json TEXT NOT NULL,
+  created_at TIMESTAMP NOT NULL,
+  updated_at TIMESTAMP NOT NULL,
+  FOREIGN KEY (usecase_id) REFERENCES usecases(usecase_id),
+  PRIMARY KEY (trial_id)
 ) ENGINE InnoDB;
 
 CREATE TABLE IF NOT EXISTS results (
   result_id INT UNSIGNED NOT NULL,
-  job_id INT UNSIGNED NOT NULL,
+  trial_id INT UNSIGNED NOT NULL,
   action_type VARCHAR(15) NOT NULL,
   action_order TINYINT UNSIGNED NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (job_id) REFERENCES trials(job_id),
+  FOREIGN KEY (trial_id) REFERENCES trials(trial_id),
   PRIMARY KEY (result_id)
 ) ENGINE InnoDB;
 

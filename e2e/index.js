@@ -97,7 +97,7 @@ function trial (jobId, params, done) {
     return promise.then(() => {
       if (hasError) return false;
       const result = {
-        jobId, actionType: action.type, actionOrder: index + 1
+        trialId: jobId, actionType: action.type, actionOrder: index + 1
       };
       return actions[action.type](nightmare, {
         selectors: action.selectors,
@@ -118,6 +118,11 @@ function trial (jobId, params, done) {
   .then(() => {
     if (hasError) return false;
     return nightmare.end().then(() => {
+      resultQueue.add({
+        trialId: jobId,
+        actionType: 'completeTrial',
+        state: 'completed'
+      });
       done();
     });
   })

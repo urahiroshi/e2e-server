@@ -4,7 +4,7 @@ const url = '/api/results';
 
 export default {
   getList: (trialId) => {
-    const getUrl = (trialId == undefined) ? url : `${url}?jobId=${trialId}`;
+    const getUrl = (trialId == undefined) ? url : `${url}?trialId=${trialId}`;
     return axios.get(getUrl);
   },
 };

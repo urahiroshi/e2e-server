@@ -6,11 +6,11 @@ class Result {
     return Config.api.baseUrl + '/results';
   }
 
-  static find({ jobId }) {
+  static find({ trialId }) {
     const connector = new Connector();
-    const encodedJobId = encodeURIComponent(jobId);
+    const encodedTrialId = encodeURIComponent(trialId);
     return connector.request({
-      uri: `${Result._baseUrl()}?jobId=${encodedJobId}`,
+      uri: `${Result._baseUrl()}?trialId=${encodedTrialId}`,
     });
   }
 }

@@ -18,7 +18,7 @@ const Trials = ({
           trials.map((trial) => {
             if (trial.id === selectedTrialId) {
               const selectedResults = results.filter((result) => (
-                result.jobId === selectedTrialId
+                result.trialId === selectedTrialId
               ));
               return (
                 <div className="list-group-item" key={trial.id}>

@@ -7,12 +7,12 @@ const validator = require('validator');
 
 class Result extends Base {
   constructor({
-    resultId, jobId, actionType, actionOrder, txt, html, image, createdAt
+    resultId, trialId, actionType, actionOrder, txt, html, image, createdAt
   }) {
     super();
     this.set({
       resultId,
-      jobId,
+      trialId,
       actionType,
       actionOrder,
       txt,
@@ -25,7 +25,7 @@ class Result extends Base {
   toJSON() {
     const result = {
       id: this.resultId,
-      jobId: this.jobId,
+      trialId: this.trialId,
       actionType: this.actionType,
       createdAt: this.createdAt
     };
@@ -46,7 +46,7 @@ class Result extends Base {
   }
 
   // TODO: return empty object if not found
-  static find({ jobId }) {
+  static find({ trialId }) {
     let result;
     const connector = new Connector();
     let resultsQuery;
@@ -61,9 +61,9 @@ class Result extends Base {
         left join result_screenshots \
           on (results.action_type='getScreenshot' and \
               results.result_id=result_screenshots.result_id) \
-        where job_id = ? \
+        where trial_id = ? \
         order by action_order \
-    ", jobId);
+    ", trialId);
     return resultsQuery
     .then((rows) => {
       return rows.map((row) => {
