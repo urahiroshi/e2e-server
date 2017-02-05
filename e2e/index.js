@@ -122,8 +122,8 @@ function trial (jobId, params, done) {
 
   actionsPromise
   .then(() => {
-    if (hasError) return false;
     return nightmare.end().then(() => {
+      if (hasError) { return false; }
       resultQueue.add({
         trialId: jobId,
         actionType: 'completeTrial',
