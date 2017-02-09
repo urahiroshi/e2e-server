@@ -23,6 +23,9 @@ const Action = ({ action, completed }) => {
     case 'getHtml':
     case 'getText':
       nodes.push(stateAndType, ' from ', selector);
+      if (action.variable) {
+        nodes.push(', set variable ', <b>{action.variable}</b>);
+      }
       break;
     case 'getScreenshot':
       nodes.push(stateAndType);

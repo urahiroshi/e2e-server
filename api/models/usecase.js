@@ -40,7 +40,8 @@ class Usecase extends Base {
         value.every((action) => (
           (action.selectors == undefined || Array.isArray(action.selectors)) &&
           Helper.isString(action.type) &&
-          Helper.isString(action.value, { nullable: true })
+          Helper.isString(action.value, { nullable: true }) &&
+          Helper.isString(action.variable, { nullable: true })
         ))
       )
     }
@@ -106,11 +107,13 @@ class Usecase extends Base {
     });
   }
 
-  static _isValidAction({selectors, type, value}) {
+  static _isValidAction({selectors, type, value, variable}) {
     if (
       Usecase._isInputAction(type) &&
       !(value && validator.isLength(value, { min: 1, max: 255 }))
     ) {
+      return false;
+    } else if (!Usecase._isInputAction(type) && value != null) {
       return false;
     }
     if (
@@ -126,6 +129,21 @@ class Usecase extends Base {
       )
     ) {
       return false;
+    } else if (
+      !Usecase._isSelectorAction(type) &&
+      selectors &&
+      selectors.length > 0
+    ) {
+      return false;
+    }
+    if (
+      Usecase._isVariableAction(type) &&
+      variable &&
+      !validator.isLength(variable, {min: 1, max: 63})
+    ) {
+      return false;
+    } else if (!Usecase._isVariableAction(type) && variable != null) {
+      return false;
     }
     return true;
   }
@@ -139,6 +157,11 @@ class Usecase extends Base {
   static _isInputAction(type) {
     const inputActions = ['input', 'select'];
     return inputActions.includes(type);
+  }
+
+  static _isVariableAction(type) {
+    const variableActions = ['getText', 'getHtml'];
+    return variableActions.includes(type);
   }
 
   static _isSelectorAction(type) {
@@ -175,8 +198,8 @@ class Usecase extends Base {
     }
     const actionId = Helper.randomInt();
     transaction.query(
-      'insert into actions (action_id, type, value) values (?, ?, ?)',
-      actionId, action.type, action.value || null
+      'insert into actions (action_id, type, value, variable) values (?, ?, ?, ?)',
+      actionId, action.type, action.value || null, action.variable || null
     )
     .query(
       'insert into usecase_actions (usecase_id, action_order, action_id)\
@@ -208,7 +231,7 @@ class Usecase extends Base {
   static _findActions(connector, usecaseId) {
     return connector.query('\
       select usecase_actions.action_order, usecase_actions.action_id, \
-        actions.type, actions.value \
+        actions.type, actions.value, actions.variable \
       from usecase_actions \
       inner join actions on usecase_actions.action_id = actions.action_id \
       where usecase_actions.usecase_id = ? \
@@ -228,6 +251,7 @@ class Usecase extends Base {
           actions.push({
             type: row['type'],
             value: row['value'],
+            variable: row['variable'],
             selectors: selectorRows.map((selectorRow) => (
               selectorRow.selector
             ))

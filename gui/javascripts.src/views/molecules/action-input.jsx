@@ -21,6 +21,9 @@ class ActionInput extends React.Component {
       <ComboBox
         onChange={(value) => {
           this.setState({ type: value });
+          onChange('selectors')(null);
+          onChange('value')(null);
+          onChange('variable')(null);
           onChange('type')(value);
         }}
         selections={{
@@ -52,7 +55,11 @@ class ActionInput extends React.Component {
       case 'getHtml':
       case 'getText':
         children.push(
-          ' from ', <Selectors onChange={onChange('selectors')} />
+          ' from ', <Selectors onChange={onChange('selectors')} />,
+          <br />,
+          ' ( set variable ',
+          <TextBox placeHolder="variable name" onChange={onChange('variable')} />,
+          ' )'
         );
         break;
       case 'getScreenshot':

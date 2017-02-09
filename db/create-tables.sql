@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS actions (
   action_id INT UNSIGNED NOT NULL,
   type VARCHAR(15) NOT NULL,
   value VARCHAR(255),
+  variable VARCHAR(63),
   PRIMARY KEY (action_id)
 ) ENGINE InnoDB;
 
