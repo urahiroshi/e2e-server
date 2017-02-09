@@ -13,6 +13,7 @@ function log() {
 }
 
 function addResult ({ trialId, actionType, actionOrder, value }) {
+  console.log('addResult', { trialId, actionType, actionOrder, value });
   const resultId = randomInt();
   const connector = new Connector();
   const transaction = connector.transaction();
@@ -89,7 +90,7 @@ function process () {
           updatedAt: new Date(job.timestamp)
         }));
       } else {
-        jobPromise = addResult(job.data)
+        jobPromise = addResult(job.data);
       }
       jobPromise.then(() => {
         done();

@@ -75,6 +75,11 @@ class Connector {
           this._log('Commit transaction');
           return connection.commitAsync();
         })
+        .then((err) => {
+          if (err) {
+            throw err;
+          }
+        })
         .catch((err) => {
           this._onError(err);
           this._log('Rollback transaction');
@@ -86,6 +91,9 @@ class Connector {
             this._onError(e);
             throw e;
           });
+        })
+        .finally(() => {
+          connection.release();
         });
       }
     };
