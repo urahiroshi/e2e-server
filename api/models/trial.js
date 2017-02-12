@@ -7,7 +7,8 @@ const Result = require('./result');
 
 const _ = require('lodash');
 const Queue = require('bull');
-const trialQueue = Queue('trial');
+
+const trialQueue = Queue('trial', Config.redis.port, Config.redis.host);
 
 class Trial extends Base {
   constructor(params) {

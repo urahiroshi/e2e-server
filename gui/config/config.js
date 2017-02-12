@@ -1,6 +1,8 @@
+const process = require('process');
+
 const Config = {
   api: {
-    baseUrl: 'http://localhost:3001'
+    baseUrl: process.env.E2E_API_SERVER || 'http://localhost:3001'
   }
 };
 

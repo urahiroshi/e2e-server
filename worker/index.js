@@ -1,8 +1,10 @@
 const crypto = require('crypto');
 const Queue = require('bull');
-const resultQueue = Queue('result');
 
+const Config = require('./config');
 const Connector = require('./libs/mysql');
+
+const resultQueue = Queue('result', Config.redis.port, Config.redis.host);
 
 function randomInt() {
   return crypto.randomBytes(4).readUIntBE(0, 4);

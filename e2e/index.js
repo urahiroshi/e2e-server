@@ -1,11 +1,12 @@
 const Queue = require('bull');
-const trialQueue = Queue('trial');
-const resultQueue = Queue('result');
 const Nightmare = require('nightmare');
 const Promise = require('bluebird');
-const Result = require('./libs/result');
 const ScreenShot = require('./libs/screenshot');
 const Action = require('./libs/nightmare-action');
+const Config = require('./config');
+
+const trialQueue = Queue('trial', Config.redis.port, Config.redis.host);
+const resultQueue = Queue('result', Config.redis.port, Config.redis.host);
 
 function log () {
   console.log.apply(
@@ -122,7 +123,7 @@ function replaceVariables (origin, context) {
 function trial (jobId, params, done) {
   log(params);
   const url = params.url;
-  const nightmare = Nightmare({show: true});
+  const nightmare = Nightmare({show: false});
   nightmare.goto(url);
 
   let hasError = false;

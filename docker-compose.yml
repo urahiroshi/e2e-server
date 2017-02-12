@@ -1,0 +1,46 @@
+version: '3'
+services:
+  redis:
+    image: redis
+  mysql:
+    build: ./mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: e2e_server
+  api:
+    build: ./api
+    ports:
+    - "3001:3001"
+    links:
+    - redis
+    - mysql
+    environment:
+      E2E_REDIS_HOST: redis
+      E2E_MYSQL_HOST: mysql
+      E2E_MYSQL_USER: root
+      E2E_MYSQL_PASSWORD: secret
+  gui:
+    build: ./gui
+    ports:
+    - "3000:3000"
+    links:
+    - api
+    environment:
+      E2E_API_SERVER: http://api:3001
+  e2e:
+    build: ./e2e
+    links:
+    - redis
+    environment:
+      E2E_REDIS_HOST: redis
+  worker:
+    build: ./worker
+    links:
+    - redis
+    - mysql
+    environment:
+      E2E_REDIS_HOST: redis
+      E2E_MYSQL_HOST: mysql
+      E2E_MYSQL_USER: root
+      E2E_MYSQL_PASSWORD: secret
+    
