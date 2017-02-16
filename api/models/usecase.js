@@ -33,11 +33,11 @@ class Usecase extends Base {
 
   validateTypes() {
     return {
-      name: Helper.isString,
-      url: validator.isURL,
+      name: (value) => !Helper.isString(value),
+      url: (value) => !validator.isURL(value),
       actions: (value) => (
-        Array.isArray(value) &&
-        value.every((action) => (
+        !Array.isArray(value) ||
+        !value.every((action) => (
           (action.selectors == undefined || Array.isArray(action.selectors)) &&
           Helper.isString(action.type) &&
           Helper.isString(action.value, { nullable: true }) &&
@@ -49,8 +49,25 @@ class Usecase extends Base {
 
   validateRanges() {
     return {
-      name: (value) => validator.isLength(value, {min: 0, max: 255}),
-      actions: (value) => value.every(Usecase._isValidAction)
+      name: (value) => (
+        !validator.isLength(value, {min: 0, max: 255}) &&
+        { name: `'${value}' is invaild length (valid length is between 0-255)` }
+      ),
+      actions: (value) => {
+        const actionsErrors = value.map((action, i) => {
+          const actionErrors = Usecase._validateAction(action);
+          if (actionErrors.length > 0) {
+            return { [`action[${i}]`]: Object.assign({}, ...actionErrors) };
+          } else {
+            return null;
+          }
+        })
+        .filter((error) => !!error);
+        if (actionsErrors.length > 0) {
+          return Object.assign({}, ...actionsErrors);
+        }
+        return;
+      }
     }
   }
 
@@ -107,14 +124,19 @@ class Usecase extends Base {
     });
   }
 
-  static _isValidAction({selectors, type, value, variable}) {
+  static _validateAction({selectors, type, value, variable}) {
+    const errors = [];
     if (
       Usecase._isInputAction(type) &&
       !(value && validator.isLength(value, { min: 1, max: 255 }))
     ) {
-      return false;
+      errors.push({
+        value: `'${value}' is invalid length (valid length is between 1 - 255)`
+      });
     } else if (!Usecase._isInputAction(type) && value != null) {
-      return false;
+      errors.push({
+        value: `'${value}' is set, but type '${type}' must have no value`
+      });
     }
     if (
       Usecase._isSelectorAction(type) &&
@@ -128,24 +150,44 @@ class Usecase extends Base {
         ))
       )
     ) {
-      return false;
+      errors.push({
+        selectors: (
+          `'${JSON.stringify(selectors)}' is invalid length` +
+          ' or one of selector has invalid length' +
+          ' (valid length is between 1 - 255)'
+        )
+      });
     } else if (
       !Usecase._isSelectorAction(type) &&
       selectors &&
       selectors.length > 0
     ) {
-      return false;
+      errors.push({
+        selectors: (
+          `'${JSON.stringify(selectors)}' is set,` +
+          ` but type '${type}' must have no selectors`
+        )
+      });
     }
     if (
       Usecase._isVariableAction(type) &&
       variable &&
       !validator.isLength(variable, {min: 1, max: 63})
     ) {
-      return false;
+      errors.push({
+        variable: (
+          `'${variable}' is invalid length` +
+          ' (valid length is between 1 - 63)'
+        )
+      })
     } else if (!Usecase._isVariableAction(type) && variable != null) {
-      return false;
+      errors.push({
+        variable: (
+          `'${variable}' is set, but type '${type}' must have no variable`
+        )
+      })
     }
-    return true;
+    return errors;
   }
 
   static getActionTypes() {

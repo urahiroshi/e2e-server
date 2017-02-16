@@ -18,13 +18,13 @@ class Trial extends Base {
 
   validateTypes() {
     return {
-      usecaseId: Number.isInteger
+      usecaseId: (value) => !Number.isInteger(value)
     }
   }
 
   validateRanges() {
     return {
-      usecaseId: (value) => value > 0 && value < Math.pow(2, 32)
+      usecaseId: (value) => value <= 0 || value >= Math.pow(2, 32)
     }
   }
 

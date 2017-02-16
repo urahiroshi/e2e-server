@@ -44,11 +44,13 @@ app.use(function(req, res, next) {
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
   console.error(err.stack);
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
+  if (err.statusCode) {
+    res.status(err.statusCode);
+    res.json({ errorType: err.errorType, errorDetail: err.errorDetail });
+  } else {
+    res.status(500);
+    res.json({ errorType: 'SystemError' });
+  }
 });
 
 

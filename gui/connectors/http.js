@@ -1,5 +1,6 @@
 const request = require('request');
 const _ = require('lodash');
+const HttpError = require('../errors/http-error');
 
 class Connector {
   _log() {
@@ -56,8 +57,16 @@ class Connector {
           this._log('server error: ', statusCode)
           this._retryRequest(options, resolve, reject, _retryCount);
         } else {
-          this._log('status code error: ', statusCode)
-          reject(statusCode);
+          this._log('client error: ', statusCode, body);
+          try {
+            const errorInfo = JSON.parse(body);
+            reject(new HttpError(
+              statusCode, errorInfo.errorType, errorInfo.errorDetail
+            ));
+          } catch (e) {
+            this._log('parse error: ', e)
+            reject(new HttpError(statusCode));
+          }
         }
       } catch (err) {
         reject(err);

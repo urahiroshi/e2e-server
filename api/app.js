@@ -45,11 +45,13 @@ app.use(function(req, res, next) {
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
   console.error(err.stack);
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
+  if (err.name === 'ValidationError') {
+    res.status(400);
+    res.json({ errorType: err.name, errorDetail: err.errors });
+  } else {
+    res.status(500);
+    res.json({ errorType: 'SystemError' });
+  }
 });
 
 

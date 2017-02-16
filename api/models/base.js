@@ -1,3 +1,5 @@
+const ValidationError = require('../errors/validation-error');
+
 class Base {
   validateTypes() {
     return {};
@@ -9,25 +11,33 @@ class Base {
 
   _validateValue(key, value) {
     if (this.validateTypes()[key] == undefined) { return; }
-    let isValid = this.validateTypes()[key](value);
-    if (!isValid) {
-      throw new TypeError(`${JSON.stringify(value)} is not valid type of ${key} !`);
+    let error = this.validateTypes()[key](value);
+    if (error) {
+      if (typeof error === 'object') { return error; }
+      return { [key]: `'${value}' is invalid type` };
     }
     if (this.validateRanges()[key] == undefined) { return; }
-    isValid = this.validateRanges()[key](value);
-    if (!isValid) {
-      throw new RangeError(`${JSON.stringify(value)} is not valid value of ${key} !`);
+    error = this.validateRanges()[key](value);
+    if (error) {
+      if (typeof error === 'object') { return error; }
+      return { [key]: `'${value}' is invalid range`}
     }
   }
 
   _setValue(key, value) {
     if (value != undefined) {
-      this._validateValue(key, value);
       this[key] = value;
     }
   }
 
   set(params) {
+    const errors = Object.keys(params).reduce((result, key) => {
+      const error = this._validateValue(key, params[key]);
+      return error ? Object.assign({}, result, error) : result;
+    }, {});
+    if (Object.keys(errors).length > 0) {
+      throw new ValidationError(errors);
+    }
     Object.keys(params).forEach((key) => {
       this._setValue(key, params[key]);
     });
@@ -35,9 +45,13 @@ class Base {
 
   validateAll() {
     const keys = Object.keys(this.validateTypes());
-    keys.forEach((key) => {
-      this._validateValue(key, this[key]);
-    });
+    const errors = keys.reduce((result, key) => {
+      const error = this._validateValue(key, this[key]);
+      return error ? Object.assign({}, result, error) : result;
+    }, {});
+    if (Object.keys(errors).length > 0) {
+      throw new ValidationError(errors);
+    }
   }
 }
 
