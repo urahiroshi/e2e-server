@@ -117,11 +117,12 @@ class Usecase extends Base {
     const connector = new Connector();
     return Usecase._deleteActions(connector, this.id)
     .then((transaction) => {
+      Usecase._deleteTrials(transaction, this.id);
       return transaction.query(
         'delete from usecases where usecase_id = ?', this.id
       )
       .end();
-    });
+    })
   }
 
   static _validateAction({selectors, type, value, variable}) {
@@ -232,6 +233,24 @@ class Usecase extends Base {
       });
       return transaction;
     })
+  }
+
+  static _deleteTrials(transaction, usecaseId) {
+    ['result_texts', 'result_htmls', 'result_screenshots'].forEach((table) => {
+      transaction.query(
+        `delete from ${table} where result_id in (` +
+        'select result_id from results where trial_id in (\
+          select trial_id from trials where usecase_id = ? \
+        ))', usecaseId
+      );
+    });
+    transaction.query(
+      'delete from results where trial_id in (\
+        select trial_id from trials where usecase_id = ? \
+      )', usecaseId
+    );
+    transaction.query('delete from trials where usecase_id = ?', usecaseId);
+    return transaction;
   }
 
   static _createAction(transaction, usecaseId, action, actionIndex) {
