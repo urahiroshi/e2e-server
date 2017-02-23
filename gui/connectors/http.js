@@ -89,7 +89,7 @@ class Connector {
       requestOptions.headers['Content-Type'] = requestOptions.headers['Content-Type'] || 'application/json';
       if (requestOptions.body && _.isObject(requestOptions.body)) {
         requestOptions.body = JSON.stringify(requestOptions.body);
-        requestOptions.headers['Content-Length'] = requestOptions.body.length;
+        requestOptions.headers['Content-Length'] = Buffer.from(requestOptions.body).length;
       }
       this._request(requestOptions, resolve, reject);
     });
