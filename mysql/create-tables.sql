@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS result_htmls (
 
 CREATE TABLE IF NOT EXISTS result_screenshots (
   result_id INT UNSIGNED NOT NULL,
-  image BLOB NOT NULL,
+  image MEDIUMBLOB NOT NULL,
   FOREIGN KEY(result_id) REFERENCES results(result_id),
   PRIMARY KEY (result_id)
 ) ENGINE InnoDB;
