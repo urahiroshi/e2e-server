@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-import UsecaseParameters from '../organisms/usecase-parameters.jsx';
+import UsecaseParameters from '../usecase/usecase-parameters.jsx';
 
 const Trial = ({ trial, results, selected }) => {
   if (!trial.state) { return null; }

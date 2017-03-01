@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-import Button from '../atoms/button.jsx';
+import Button from '../parts-atom/button.jsx';
 
 const DeleteUsecase = ({
   usecase,

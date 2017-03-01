@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import Usecase from '../templates/usecase.jsx';
+import Usecase from '../usecase/usecase.jsx';
 import { prepareCommand } from '../../actions/command';
 import { setNewUsecase } from '../../actions/new-usecase';
 import { startAddTrialCommand } from '../../actions/trials';

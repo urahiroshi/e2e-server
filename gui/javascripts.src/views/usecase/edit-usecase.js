@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import NewUsecase from '../organisms/new-usecase.jsx';
+import NewUsecase from '../usecase/new-usecase.jsx';
 import { setNewUsecase } from '../../actions/new-usecase';
 import { startModifyUsecaseCommand } from '../../actions/usecases';
 

@@ -1,11 +1,11 @@
 import React, { PropTypes } from 'react';
 
-import Action from '../atoms/action.jsx';
-import Button from '../atoms/button.jsx';
-import TextBox from '../atoms/text-box.jsx';
-import ActionInput from '../molecules/action-input.jsx';
-import VerticalRow from '../molecules/vertical-row.jsx';
-import Table from '../organisms/table.jsx';
+import Button from '../parts-atom/button.jsx';
+import TextBox from '../parts-atom/text-box.jsx';
+import VerticalRow from '../parts-molecule/vertical-row.jsx';
+import Table from '../parts-molecule/table.jsx';
+import Action from '../usecase/action.jsx';
+import ActionInput from '../usecase/action-input.jsx';
 
 const NewUsecase = ({
   usecase,

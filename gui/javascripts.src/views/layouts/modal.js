@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import Modal from '../templates/modal.jsx';
+import Modal from '../layouts/modal.jsx';
 import { endCommand } from '../../actions/command';
 import { COMMAND_STATE } from '../../consts';
 

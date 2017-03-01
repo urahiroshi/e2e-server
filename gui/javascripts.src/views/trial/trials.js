@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import Trials from '../organisms/trials.jsx';
+import Trials from '../trial/trials.jsx';
 
 const mapStateToProps = (state) => ({
   trials: state.trials,

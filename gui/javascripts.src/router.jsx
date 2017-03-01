@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import { Router, browserHistory } from 'react-router';
 import { connect } from 'react-redux';
 
-import Usecases from './views/containers/usecases';
+import Usecases from './views/usecase/usecases';
 import { startGetUsecasesCommand } from './actions/usecases';
 import { resetTrial, startGetTrialsCommand } from './actions/trials';
 import { startGetResultsCommand } from './actions/results';

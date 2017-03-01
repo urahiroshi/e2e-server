@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 
-import Row from '../molecules/row.jsx';
-import HeaderRow from '../molecules/header-row.jsx';
+import Row from '../parts-molecule/row.jsx';
+import HeaderRow from '../parts-molecule/header-row.jsx';
 
 const Table = ({ header, rows, style, colStyles }) =>
   <table className="table table-striped" style={style} >

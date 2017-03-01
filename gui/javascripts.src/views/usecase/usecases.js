@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import Usecases from '../templates/usecases.jsx';
+import Usecases from '../usecase/usecases.jsx';
 import { prepareCommand } from '../../actions/command';
 import { resetNewUsecase } from '../../actions/new-usecase';
 import { API_NAME } from '../../consts';

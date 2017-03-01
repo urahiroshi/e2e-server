@@ -1,11 +1,11 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
-import Button from '../atoms/button.jsx';
-import Usecase from '../containers/usecase';
-import NewUsecase from '../containers/new-usecase';
-import EditUsecase from '../containers/edit-usecase';
-import DeleteUsecase from '../containers/delete-usecase';
-import Modal from '../containers/modal';
+import Button from '../parts-atom/button.jsx';
+import Usecase from '../usecase/usecase';
+import NewUsecase from '../usecase/new-usecase';
+import EditUsecase from '../usecase/edit-usecase';
+import DeleteUsecase from '../usecase/delete-usecase';
+import Modal from '../layouts/modal';
 import { API_NAME } from '../../consts';
 
 const Usecases = ({ usecases, selectedUsecaseId, onClickNewUsecaseButton }) => (

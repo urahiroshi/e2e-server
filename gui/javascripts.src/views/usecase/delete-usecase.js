@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import DeleteUsecase from '../organisms/delete-usecase.jsx';
+import DeleteUsecase from '../usecase/delete-usecase.jsx';
 import { startDeleteUsecaseCommand } from '../../actions/usecases';
 
 const mapStateToProps = (state) => ({

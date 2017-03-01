@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react';
 
-import ComboBox from '../atoms/combo-box.jsx';
-import TextBox from '../atoms/text-box.jsx';
-import Selectors from '../molecules/selectors.jsx';
+import ComboBox from '../parts-atom/combo-box.jsx';
+import TextBox from '../parts-atom/text-box.jsx';
+import Selectors from '../parts-molecule/selectors.jsx';
 
 class ActionInput extends React.Component {
   constructor(props) {

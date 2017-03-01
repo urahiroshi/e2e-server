@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 
-import Trial from '../templates/trial.jsx';
+import Trial from '../trial/trial.jsx';
 
 const Trials = ({
   trials,

@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-import Table from '../organisms/table.jsx';
+import Table from '../parts-molecule/table.jsx';
 
 const ObjectTable = ({ objects, keys, style }) => {
   const header = [];

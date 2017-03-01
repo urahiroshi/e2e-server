@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-import TextBox from '../atoms/text-box.jsx';
+import TextBox from '../parts-atom/text-box.jsx';
 
 class Selectors extends React.Component {
   constructor(props) {

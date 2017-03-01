@@ -1,9 +1,9 @@
 import React, { PropTypes } from 'react';
 
-import Button from '../atoms/button.jsx';
-import UsecaseParameters from '../organisms/usecase-parameters.jsx';
-import Trials from '../containers/trials';
-import Modal from '../containers/modal';
+import Button from '../parts-atom/button.jsx';
+import UsecaseParameters from '../usecase/usecase-parameters.jsx';
+import Trials from '../trial/trials';
+import Modal from '../layouts/modal';
 import { API_NAME } from '../../consts';
 
 const Usecase = ({

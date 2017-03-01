@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 
-import Action from '../atoms/action.jsx';
-import ActionResult from '../atoms/action-result.jsx';
+import Action from '../usecase/action.jsx';
+import ActionResult from '../usecase/action-result.jsx';
 
 const UsecaseParameters = ({ url, actions, results }) =>
   <div>
