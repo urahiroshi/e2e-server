@@ -11,7 +11,12 @@ const initialState = {
 const newUsecase = (state = initialState, action) => {
   switch (action.type) {
     case SET_NEW_USECASE:
-      return Object.assign({}, state, action.usecase, { isLoading: false });
+      return Object.assign(
+        {}, state, action.usecase,
+        // prevent to copy object reference
+        { actions: action.usecase.actions.slice() },
+        { isLoading: false }
+      );
     case RESET_NEW_USECASE:
       return initialState;
     default:
