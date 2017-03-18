@@ -151,7 +151,10 @@ class NewUsecase extends React.Component {
                   onChange={(value) => { tempUsecase.name = value; }}
                   placeHolder="name"
                 />
-                { this.state.errors.name }
+                { this.state.errors.name ?
+                  <div className="error-text">{ this.state.errors.name }</div> :
+                  null
+                }
               </VerticalRow>
               <VerticalRow name="URL:">
                 <TextBox
@@ -159,7 +162,10 @@ class NewUsecase extends React.Component {
                   onChange={(value) => { tempUsecase.url = value; }}
                   placeHolder="url"
                 />
-                { this.state.errors.url }
+                { this.state.errors.url ?
+                  <div className="error-text">{ this.state.errors.url }</div> :
+                  null
+                }
               </VerticalRow>
               <VerticalRow name="Actions:">
                 <Table rows={rows} colStyles={colStyles} />
