@@ -7,24 +7,53 @@ import Selectors from '../parts-molecule/selectors.jsx';
 class ActionInput extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { type: 'click' };
-    this.props.onChange({ type: 'click' });
+    this.state = { type: props.action.type };
+  }
+
+  onChange(key) {
+    return (value) => {
+      this.props.onChange({ [key]: value });
+    };
+  }
+
+  selectors() {
+    return (
+      <Selectors
+        defaultValue={this.props.action.selectors}
+        onChange={this.onChange('selectors')}
+      />
+    );
+  }
+
+  value() {
+    return (
+      <TextBox
+        defaultValue={this.props.action.value}
+        placeHolder="value"
+        onChange={this.onChange('value')}
+      />
+    );
+  }
+
+  variable() {
+    return (
+      <TextBox
+        defaultValue={this.props.action.variable}
+        placeHolder="variable name"
+        onChange={this.onChange('variable')}
+      />
+    );
   }
 
   render() {
-    const onChange = (key) => (
-      (value) => {
-        this.props.onChange({ [key]: value });
-      }
-    );
     const typeSelect = (
       <ComboBox
         onChange={(value) => {
           this.setState({ type: value });
-          onChange('selectors')(null);
-          onChange('value')(null);
-          onChange('variable')(null);
-          onChange('type')(value);
+          this.onChange('selectors')(null);
+          this.onChange('value')(null);
+          this.onChange('variable')(null);
+          this.onChange('type')(value);
         }}
         selections={{
           click: 'click',
@@ -37,29 +66,26 @@ class ActionInput extends React.Component {
         selected={this.state.type}
       />
     );
-    // TODO: Add escape!
     const children = [typeSelect];
     switch (this.state.type) {
       case 'click':
         children.push(
-          ' to ', <Selectors onChange={onChange('selectors')} />
+          ' to ', this.selectors()
         );
         break;
       case 'input':
       case 'select':
         children.push(
-          ' ', <TextBox placeHolder="value" onChange={onChange('value')} />,
-          ' to ', <Selectors onChange={onChange('selectors')} />
+          ' ', this.value(),
+          ' to ', this.selectors()
         );
         break;
       case 'getHtml':
       case 'getText':
         children.push(
-          ' from ', <Selectors onChange={onChange('selectors')} />,
+          ' from ', this.selectors(),
           <br />,
-          ' ( set variable ',
-          <TextBox placeHolder="variable name" onChange={onChange('variable')} />,
-          ' )'
+          ' ( set variable ', this.variable(), ' )'
         );
         break;
       case 'getScreenshot':
@@ -72,6 +98,7 @@ class ActionInput extends React.Component {
 
 ActionInput.propTypes = {
   onChange: PropTypes.func.isRequired,
+  action: PropTypes.object,
 };
 
 export default ActionInput;

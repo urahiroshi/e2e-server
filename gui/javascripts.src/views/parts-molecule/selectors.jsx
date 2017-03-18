@@ -5,7 +5,7 @@ import TextBox from '../parts-atom/text-box.jsx';
 class Selectors extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { selectors: [''] };
+    this.state = { selectors: this.props.defaultValue || [''] };
   }
 
   render() {
@@ -52,6 +52,7 @@ class Selectors extends React.Component {
 
 Selectors.propTypes = {
   onChange: PropTypes.func.isRequired,
+  defaultValue: PropTypes.array,
 };
 
 export default Selectors;
