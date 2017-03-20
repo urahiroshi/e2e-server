@@ -11,17 +11,24 @@ import ActionInput from '../usecase/action-input.jsx';
 class NewUsecase extends React.Component {
   constructor(props) {
     super(props);
+    const originalActionIndexes = Object.keys(this.props.newUsecase.actions).map(
+      (action, index) => index
+    );
     this.state = {
       editableActions: [],
-      newActions: [],
       errors: {},
       tempUsecase: JSON.parse(JSON.stringify(this.props.newUsecase)),
+      originalActionIndexes,
     };
   }
 
   onCancel(action, actionIndex) {
+    const originalIndex = (
+      this.state.originalActionIndexes.map((index) => index)
+      .indexOf(actionIndex)
+    );
     this.state.tempUsecase.actions[actionIndex] = JSON.parse(
-      JSON.stringify(this.props.newUsecase.actions[actionIndex])
+      JSON.stringify(this.props.newUsecase.actions[originalIndex])
     );
     this.setState({
       editableActions: this.state.editableActions.filter(
@@ -43,7 +50,6 @@ class NewUsecase extends React.Component {
   addAction() {
     const actionIndex = this.state.tempUsecase.actions.length;
     this.setState({
-      newActions: this.state.newActions.concat([actionIndex]),
       editableActions: this.state.editableActions.concat([actionIndex]),
       tempUsecase: Object.assign(
         {},
@@ -72,9 +78,51 @@ class NewUsecase extends React.Component {
     });
   }
 
+  switchAction(indexBefore, indexAfter) {
+    const currentState = this.state.tempUsecase.actions[indexBefore];
+    const targetState = this.state.tempUsecase.actions[indexAfter];
+    this.state.tempUsecase.actions[indexAfter] = currentState;
+    this.state.tempUsecase.actions[indexBefore] = targetState;
+    const switchActionIndex = (index) => {
+      if (index === indexBefore) { return indexAfter; }
+      if (index === indexAfter) { return indexBefore; }
+      return index;
+    };
+    this.setState({
+      tempUsecase: this.state.tempUsecase,
+      editableActions: this.state.editableActions.map(switchActionIndex),
+      originalActionIndexes: this.state.originalActionIndexes.map(switchActionIndex),
+    });
+  }
+
+  toMoveCell(actionIndex) {
+    const arrowStyle = { cursor: 'pointer' };
+    return (
+      <div>
+        { (actionIndex > 0) ?
+          <div
+            onClick={() => { this.switchAction(actionIndex, actionIndex - 1); }}
+            style={arrowStyle}
+          >
+            ▲
+          </div> : <div>&nbsp;</div>
+        }
+        { (actionIndex < this.state.tempUsecase.actions.length - 1) ?
+          <div
+            onClick={() => { this.switchAction(actionIndex, actionIndex + 1); }}
+            style={arrowStyle}
+          >
+            ▼
+          </div> : <div>&nbsp;</div>
+        }
+      </div>
+    );
+  }
+
   toViewOnlyRow(action, actionIndex) {
     return [
       actionIndex + 1,
+      this.toMoveCell(actionIndex),
       <Action action={action} />,
       <Button
         onClick={() => {
@@ -92,15 +140,24 @@ class NewUsecase extends React.Component {
   }
 
   toEditableRow(action, actionIndex) {
-    const isCancelable = (this.state.newActions.indexOf(actionIndex) < 0);
+    const cancelableIndex = (
+      this.state.originalActionIndexes
+      .map((order) => order)
+      .indexOf(actionIndex)
+    );
+    const isCancelable = (cancelableIndex >= 0);
     const errors = (
       this.state.errors.actions && this.state.errors.actions[actionIndex]
     );
     return [
       actionIndex + 1,
+      this.toMoveCell(actionIndex),
       <div>
         <div>
           <ActionInput
+            // if key is not specified,
+            // this may not change when type of props is changed.
+            key={isCancelable ? cancelableIndex : undefined}
             action={action}
             onChange={(actionParam) => {
               Object.assign(action, actionParam);
@@ -136,8 +193,10 @@ class NewUsecase extends React.Component {
       return this.toViewOnlyRow(action, i);
     });
     const colStyles = [
+      { verticalAlign: 'middle' },
       {},
       { width: '700px' },
+      {},
       {},
     ];
     return (

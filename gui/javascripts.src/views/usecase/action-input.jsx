@@ -7,7 +7,12 @@ import Selectors from '../parts-molecule/selectors.jsx';
 class ActionInput extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { type: props.action.type };
+    this.state = { type: this.props.action.type };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ type: nextProps.action.type });
+    return true;
   }
 
   onChange(key) {
@@ -48,6 +53,9 @@ class ActionInput extends React.Component {
   render() {
     const typeSelect = (
       <ComboBox
+        // // if key is not specified,
+        // // this combo-box may not change when type of props is changed.
+        // key={this.props.action.type}
         onChange={(value) => {
           this.setState({ type: value });
           this.onChange('selectors')(null);
