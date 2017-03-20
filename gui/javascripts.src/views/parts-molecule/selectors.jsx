@@ -19,6 +19,7 @@ class Selectors extends React.Component {
       >
         <TextBox
           defaultValue={selector}
+          style={{ width: '280px' }}
           onChange={(value) => {
             selectors[i] = value;
             this.props.onChange(selectors);

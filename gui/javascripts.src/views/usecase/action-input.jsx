@@ -33,8 +33,22 @@ class ActionInput extends React.Component {
   value() {
     return (
       <TextBox
+        style={{ width: '300px' }}
         defaultValue={this.props.action.value}
         placeHolder="value"
+        onChange={this.onChange('value')}
+      />
+    );
+  }
+
+  multilineValue() {
+    return (
+      <textarea
+        className="form-control"
+        rows="2"
+        style={{ width: '300px' }}
+        defaultValue={this.props.action.value}
+        placeholder="value"
         onChange={this.onChange('value')}
       />
     );
@@ -53,9 +67,6 @@ class ActionInput extends React.Component {
   render() {
     const typeSelect = (
       <ComboBox
-        // // if key is not specified,
-        // // this combo-box may not change when type of props is changed.
-        // key={this.props.action.type}
         onChange={(value) => {
           this.setState({ type: value });
           this.onChange('selectors')(null);
@@ -84,7 +95,7 @@ class ActionInput extends React.Component {
       case 'input':
       case 'select':
         children.push(
-          ' ', this.value(),
+          ' ', (this.state.type === 'input') ? this.multilineValue() : this.value(),
           ' to ', this.selectors()
         );
         break;

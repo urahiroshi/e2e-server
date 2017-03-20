@@ -96,7 +96,7 @@ class NewUsecase extends React.Component {
   }
 
   toMoveCell(actionIndex) {
-    const arrowStyle = { cursor: 'pointer' };
+    const arrowStyle = { cursor: 'pointer', color: '#999999' };
     return (
       <div>
         { (actionIndex > 0) ?
