@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-import validateUsecase from '../../validators/usecase';
+import UsecaseValidator from '../../validators/usecase';
 import Button from '../parts-atom/button.jsx';
 import TextBox from '../parts-atom/text-box.jsx';
 import VerticalRow from '../parts-molecule/vertical-row.jsx';
@@ -39,9 +39,9 @@ class NewUsecase extends React.Component {
   }
 
   onSend(usecase) {
-    const errors = validateUsecase(usecase);
-    if (Object.keys(errors).length > 0) {
-      this.setState({ errors });
+    const usecaseValidator = new UsecaseValidator(usecase);
+    if (!usecaseValidator.isValid()) {
+      this.setState({ errors: usecaseValidator.errors });
       return;
     }
     this.props.onClickSendUsecase(usecase, this.props.usecase);
@@ -165,7 +165,11 @@ class NewUsecase extends React.Component {
           />
         </div>
         { (errors) ?
-          <div className="error-text">{ JSON.stringify(errors) }</div> : null
+          <div className="error-text">
+            { UsecaseValidator.flatten(errors).map(
+              (error, i) => <div key={i}>{error}</div>
+            ) }
+          </div> : null
         }
       </div>,
       ((isCancelable) ?
