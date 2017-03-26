@@ -41,7 +41,10 @@ class NewUsecase extends React.Component {
   onSend(usecase) {
     const usecaseValidator = new UsecaseValidator(usecase);
     if (!usecaseValidator.isValid()) {
-      this.setState({ errors: usecaseValidator.errors });
+      this.setState({
+        errors: usecaseValidator.errors,
+        tempUsecase: usecase,
+      });
       return;
     }
     this.props.onClickSendUsecase(usecase, this.props.usecase);

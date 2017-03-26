@@ -15,7 +15,9 @@ class ActionValidator extends BaseValidator {
     super();
     if (isSelectorAction(action.type)) {
       action.selectors.forEach((selector, i) => {
-        this.addError('selectors', i, 'not to be empty');
+        if (!selector || selector.trim().length === 0) {
+          this.addError('selectors', i, 'not to be empty');
+        }
       });
     }
     if (isInputAction(action.type)) {

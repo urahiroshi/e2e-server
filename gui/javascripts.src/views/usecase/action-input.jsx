@@ -49,7 +49,9 @@ class ActionInput extends React.Component {
         style={{ width: '300px' }}
         defaultValue={this.props.action.value}
         placeholder="value"
-        onChange={this.onChange('value')}
+        onChange={(event) => {
+          this.onChange('value')(event.target.value);
+        }}
       />
     );
   }
