@@ -1,24 +1,30 @@
-const Query = require('fuzzy-query');
+const FQ = require('fuzzy-query');
 
-var evaluate = function (QueryStr, selectorsStr, fnStr, fnArgsStr) {
+var evaluate = function (FQStr, selectorsStr, fnStr, fnArgsStr) {
   try {
-    console.debug(selectorsStr, fnArgsStr)
-    var selectors = JSON.parse(selectorsStr).map(function (selectorStr) {
-      return (
-        (/^\/.+\/$/.test(selectorStr)) ?
-          new RegExp(selectorStr.slice(1, -1)) :
-          selectorStr
-      );
-    });
+    console.debug(selectorsStr, fnArgsStr);
+    var replaceToRegExp = function (selector) {
+      if (/^\/.+\/$/.test(selector)) {
+        return new RegExp(selector.slice(1, -1));
+      }
+      if (typeof selector === 'object') {
+        return Object.keys(selector).reduce(function (result, key) {
+          result[key] = replaceToRegExp(selector[key])
+          return result;
+        }, {});
+      }
+      return selector;
+    }
+    var selectors = JSON.parse(selectorsStr).map(replaceToRegExp);
     var fnArgs = (fnArgsStr.length > 0) ? JSON.parse(fnArgsStr) : undefined;
-    var Query = eval('(' + QueryStr + ');');
-    var qElem = Query(selectors);
-    if (!qElem) { return false; }
-    return eval('(' + fnStr + ')(qElem, fnArgs);');
+    var FQ = eval('(' + FQStr + ');');
+    var fqElem = FQ(selectors);
+    if (!fqElem) { return false; }
+    return eval('(' + fnStr + ')(fqElem, fnArgs);');
   } catch (err) {
     err.message += ', ' + JSON.stringify(args);
-    console.error(err)
-    throw err
+    console.error(err);
+    throw err;
   }
 };
 
@@ -30,7 +36,7 @@ const Action = {
     return function (nightmare) {
       return nightmare[method](
         evaluate,
-        Query.toString(),
+        FQ.toString(),
         selectorsStr,
         fn.toString(),
         fnArgsStr
@@ -57,9 +63,9 @@ const Action = {
   click: function (selectors) {
     return this.execAfterFound({
       selectors,
-      onFound: function (qElem) {
+      onFound: function (fqElem) {
         try {
-          return qElem.click();
+          return fqElem.click();
         } catch (err) {
           console.warn(err);
           return false;
@@ -71,9 +77,9 @@ const Action = {
   select: function (selectors, value) {
     return this.execAfterFound({
       selectors,
-      onFound: function (qElem, args) {
+      onFound: function (fqElem, args) {
         try {
-          return qElem.select(args[0]);
+          return fqElem.select(args[0]);
         } catch (err) {
           console.warn(err);
           return false;
@@ -86,9 +92,9 @@ const Action = {
   input: function (selectors, value) {
     return this.execAfterFound({
       selectors,
-      onFound: function (qElem, args) {
+      onFound: function (fqElem, args) {
         try {
-          return qElem.type(args[0]);
+          return fqElem.type(args[0]);
         } catch (err) {
           console.warn(err);
           return false;
@@ -101,9 +107,9 @@ const Action = {
   getText: function (selectors) {
     return this.getValue({
       selectors,
-      fnGetValue: function (qElem) {
+      fnGetValue: function (fqElem) {
         try {
-          return qElem.text();
+          return fqElem.text();
         } catch (err) {
           console.warn(err);
           return null;
@@ -115,9 +121,9 @@ const Action = {
   getHtml: function (selectors) {
     return this.getValue({
       selectors,
-      fnGetValue: function (qElem) {
+      fnGetValue: function (fqElem) {
         try {
-          return qElem.element.innerHTML.trim();
+          return fqElem.element.innerHTML.trim();
         } catch (err) {
           console.warn(err);
           return null;

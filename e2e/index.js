@@ -123,7 +123,7 @@ function replaceVariables (origin, context) {
 function trial (jobId, params, done) {
   log(params);
   const url = params.url;
-  const nightmare = Nightmare({show: false});
+  const nightmare = Nightmare({ show: false, width: 1280, height: 960 });
   nightmare.goto(url);
 
   let hasError = false;
