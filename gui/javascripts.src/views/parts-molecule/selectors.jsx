@@ -8,6 +8,11 @@ class Selectors extends React.Component {
     this.state = { selectors: this.props.defaultValue || [''] };
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({ selectors: nextProps.defaultValue || [''] });
+    return true;
+  }
+
   render() {
     const selectors = this.state.selectors.slice();
     this.props.onChange(selectors);

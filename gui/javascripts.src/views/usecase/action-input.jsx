@@ -16,6 +16,13 @@ class ActionInput extends React.Component {
   }
 
   onChange(key) {
+    return (event) => {
+      const value = event.target.value;
+      this.props.onChange({ [key]: value });
+    };
+  }
+
+  onChangeValue(key) {
     return (value) => {
       this.props.onChange({ [key]: value });
     };
@@ -25,7 +32,7 @@ class ActionInput extends React.Component {
     return (
       <Selectors
         defaultValue={this.props.action.selectors}
-        onChange={this.onChange('selectors')}
+        onChange={this.onChangeValue('selectors')}
       />
     );
   }
@@ -36,7 +43,7 @@ class ActionInput extends React.Component {
         style={{ width: '300px' }}
         defaultValue={this.props.action.value}
         placeHolder="value"
-        onChange={this.onChange('value')}
+        onChange={this.onChangeValue('value')}
       />
     );
   }
@@ -49,9 +56,7 @@ class ActionInput extends React.Component {
         style={{ width: '300px' }}
         defaultValue={this.props.action.value}
         placeholder="value"
-        onChange={(event) => {
-          this.onChange('value')(event.target.value);
-        }}
+        onChange={this.onChange('value')}
       />
     );
   }
@@ -61,7 +66,7 @@ class ActionInput extends React.Component {
       <TextBox
         defaultValue={this.props.action.variable}
         placeHolder="variable name"
-        onChange={this.onChange('variable')}
+        onChange={this.onChangeValue('variable')}
       />
     );
   }
@@ -71,10 +76,10 @@ class ActionInput extends React.Component {
       <ComboBox
         onChange={(value) => {
           this.setState({ type: value });
-          this.onChange('selectors')(null);
-          this.onChange('value')(null);
-          this.onChange('variable')(null);
-          this.onChange('type')(value);
+          this.onChangeValue('selectors')(null);
+          this.onChangeValue('value')(null);
+          this.onChangeValue('variable')(null);
+          this.onChangeValue('type')(value);
         }}
         selections={{
           click: 'click',
