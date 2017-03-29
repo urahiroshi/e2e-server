@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import yaml from 'js-yaml';
 
 import UsecaseValidator from '../../validators/usecase';
 import Button from '../parts-atom/button.jsx';
@@ -7,6 +8,21 @@ import VerticalRow from '../parts-molecule/vertical-row.jsx';
 import Table from '../parts-molecule/table.jsx';
 import Action from '../usecase/action.jsx';
 import ActionInput from '../usecase/action-input.jsx';
+
+const yamlToObjectSelector = (usecase) => {
+  const copied = JSON.parse(JSON.stringify(usecase));
+  copied.actions = copied.actions.map((action) => (
+    Object.assign({}, action, {
+      selectors: action.selectors.map((selector) => {
+        if (/{.*}/.test(selector)) {
+          return yaml.safeLoad(selector);
+        }
+        return selector;
+      }),
+    })
+  ));
+  return copied;
+};
 
 class NewUsecase extends React.Component {
   constructor(props) {
@@ -47,7 +63,7 @@ class NewUsecase extends React.Component {
       });
       return;
     }
-    this.props.onClickSendUsecase(usecase, this.props.usecase);
+    this.props.onClickSendUsecase(yamlToObjectSelector(usecase), this.props.usecase);
   }
 
   addAction() {

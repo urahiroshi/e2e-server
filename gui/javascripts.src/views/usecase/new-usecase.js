@@ -24,16 +24,6 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(setNewUsecase(usecase));
   },
   onClickSendUsecase: (usecase) => {
-    if (!usecase.url) {
-      // TODO: Add Error Action
-      console.log('NO URL');
-      return;
-    }
-    if (!usecase.actions || usecase.actions.length === 0) {
-      // TODO: Add Error Action
-      console.log('NO ACTIONS');
-      return;
-    }
     dispatch(startAddUsecaseCommand(usecase));
   },
 });

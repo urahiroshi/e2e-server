@@ -28,9 +28,24 @@ var evaluate = function (FQStr, selectorsStr, fnStr, fnArgsStr) {
   }
 };
 
+const selectorsToString = function (selectors) {
+  // JSON string to Object
+  const selectorsObj = selectors.map((selector) => {
+    try {
+      return JSON.parse(selector);
+    } catch (err) {
+      if (err instanceof SyntaxError) {
+        return selector;
+      }
+      throw err;
+    }
+  });
+  return JSON.stringify(selectorsObj);
+}
+
 const Action = {
   eval: function ({ method, selectors, fn, fnArgs }) {
-    const selectorsStr = JSON.stringify(selectors);
+    const selectorsStr = selectorsToString(selectors);
     // strigify function or regExp for Electron
     const fnArgsStr = (fnArgs && fnArgs.length > 0) ? JSON.stringify(fnArgs) : '';
     return function (nightmare) {

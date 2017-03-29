@@ -21,6 +21,27 @@ class Usecase extends Base {
     this.actions = [];
   }
 
+  set(params) {
+    if (this.validateTypes().actions(params.actions)) {
+      // this will throw exception
+      super.set(params);
+      return;
+    }
+    // replace object selector to JSON string
+    super.set(Object.assign({}, params, {
+      actions: params.actions.map((action) => (
+        Object.assign({}, action, {
+          selectors: action.selectors.map((selector) => {
+            if (typeof selector === 'object') {
+              return JSON.stringify(selector);
+            }
+            return selector;
+          })
+        })
+      ))
+    }));
+  }
+
   toJSON() {
     return {
       id: this.id,

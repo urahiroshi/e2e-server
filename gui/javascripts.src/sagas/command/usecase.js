@@ -1,4 +1,5 @@
 import { call, put } from 'redux-saga/effects';
+import yaml from 'js-yaml';
 
 import { successCommand, failCommand } from '../../actions/command';
 import {
@@ -7,10 +8,32 @@ import {
 import { setUsecase, resetUsecase } from '../../actions/usecase';
 import Api from '../../apis/usecase';
 
+const objectSelectorToYaml = (usecase) => {
+  const copied = usecase;
+  copied.actions = copied.actions.map((action) => (
+    Object.assign({}, action, {
+      selectors: action.selectors.map((selector) => {
+        try {
+          const selectorObj = JSON.parse(selector);
+          return `{${
+            yaml.safeDump(selectorObj).replace(/\n/g, ', ').replace(/, $/, '')
+          }}`;
+        } catch (err) {
+          if (err instanceof SyntaxError) {
+            return selector;
+          }
+          throw err;
+        }
+      }),
+    })
+  ));
+  return copied;
+};
+
 export function* getUsecasesSaga(name, { selectedUsecaseId }) {
   try {
     const response = yield call(Api.getList);
-    const usecases = response.data;
+    const usecases = response.data.map(objectSelectorToYaml);
     yield put(setUsecases(usecases));
     if (selectedUsecaseId) {
       const selectedUsecase = usecases.find(
