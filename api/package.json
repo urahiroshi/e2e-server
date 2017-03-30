@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "e2e-server-api",
   "version": "0.0.0",
   "private": true,
   "scripts": {

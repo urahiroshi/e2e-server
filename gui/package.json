@@ -1,5 +1,5 @@
 {
-  "name": "gui",
+  "name": "e2e-server-gui",
   "version": "0.0.0",
   "private": true,
   "scripts": {
