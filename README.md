@@ -7,6 +7,12 @@ E2E-Server uses [Nightmare](https://github.com/segmentio/nightmare) for
 browser automation library , so E2E-Server may not use for cross browser testing now,
 but use for specification test or repeated browser operations.
 
+## Roadmap
+
+E2E-Server has aimed to use E2E test, but current codes is under development version,
+it is unstable and more features needed.
+So this project plans to make many breaking changes by first half of 2017.
+
 ## Getting Started (Web UI)
 
 1. start docker-compose
