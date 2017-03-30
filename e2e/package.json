@@ -1,13 +1,13 @@
 {
-  "name": "e2e",
-  "version": "1.0.0",
+  "name": "e2e-server-e2e",
+  "version": "0.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "bluebird": "^3.4.1",
     "bull": "git://github.com/OptimalBits/bull.git",

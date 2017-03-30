@@ -7,38 +7,15 @@ E2E-Server uses [Nightmare](https://github.com/segmentio/nightmare) for
 browser automation library , so E2E-Server may not use for cross browser testing now,
 but use for specification test or repeated browser operations.
 
-## Requirements
-
-- Node.js: ^6.9
-- MySQL: ^5.5
-- Redis: ^3.0
-- WebPack: ^1.13
-- Node Modules: Execute `npm install` in `api`, `e2e`, `gui` directories
-
 ## Getting Started (Web UI)
 
-1. Create Databases, Tables
+1. start docker-compose
 
 ```
-$ mysql -u admin_user < db/create-database.sql
-$ mysql -u admin_user < db/create-tables.sql
+$ docker-compose up
 ```
 
-2. Run servers
-
-```
-# in e2e directory
-$ node index.js
-
-# in api directory
-$ npm start
-
-# in api directory (need webpacking)
-$ webpack
-$ npm start
-```
-
-3. Access to http://localhost:3000
+2. Access to http://localhost:3000
 
 ## Data Structures
 
@@ -62,6 +39,8 @@ Usecase stores url and browser actions on this url.
     - selectors (array(string)): selectors for html element.
         This allows to use CSS selector format and [fuzzy-query](https://github.com/urahiroshi/fuzzy-query) selector format.
         it is required when type is one of "click", "input", "select", "getHtml", "getText"
+    - variable (string): variable name to use result by after actions.
+        it is optional parameter of "getHtml", "getText". 
 
 ### Trial (Object)
 
@@ -401,3 +380,7 @@ which is created by getXXX actions on usecase.
     "image": "<base64 of screen shot png image>"
 }
 ```
+
+## License
+
+MIT
