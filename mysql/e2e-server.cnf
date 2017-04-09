@@ -1,0 +1,36 @@
+[mysqld]
+max_allowed_packet=4M
+datadir = /var/lib/mysql
+tmpdir = /var/lib/mysql
+port = 3306
+socket = /tmp/mysql.sock
+max_connections = 1024
+character_set_server = utf8mb4
+table_open_cache = 4000
+table_definition_cache = 400
+key_buffer_size = 16M
+read_buffer_size = 256K
+read_rnd_buffer_size = 512K
+log_bin = mysql-bin
+binlog_format = MIXED
+max_binlog_size = 128M
+expire_logs_days = 15
+server_id = 1
+slow_query_log
+long_query_time = 3
+log_queries_not_using_indexes
+open_files_limit = 5500
+innodb_buffer_pool_size=768M
+innodb_additional_mem_pool_size = 16M
+innodb_file_per_table
+innodb_autoextend_increment = 64M
+innodb_log_files_in_group = 2
+innodb_log_file_size = 128M
+innodb_log_buffer_size = 16M
+innodb_flush_log_at_trx_commit = 1
+innodb_flush_method = O_DIRECT
+innodb_thread_concurrency = 16
+innodb_commit_concurrency = 10
+
+[client]
+default-character-set=utf8mb4
