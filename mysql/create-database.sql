@@ -1,1 +1,1 @@
-create database e2e_server character set utf8mb4;
+create database if not exists e2e_server character set utf8mb4;
