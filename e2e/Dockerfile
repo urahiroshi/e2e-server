@@ -43,7 +43,6 @@ ENV HOME /home/node
 
 # Install Application
 ADD package.json .
-ADD npm-shrinkwrap.json .
 RUN npm install
 ADD *.* ./
 ADD libs ./libs/

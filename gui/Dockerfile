@@ -8,7 +8,6 @@ ENV HOME /home/node
 # Prepare Application
 RUN npm install -g webpack
 ADD package.json .
-ADD npm-shrinkwrap.json .
 RUN npm install
 ADD . ./
 RUN webpack
