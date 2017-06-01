@@ -60,7 +60,7 @@ router.delete('/:id', (req, res, next) => {
 
 router.post('/', (req, res, next) => {
   try {
-    trial = new Trial(req.body);
+    const trial = new Trial(req.body);
     trial.save()
     .then(() => {
       res.status(201).json(trial.toJSON());
