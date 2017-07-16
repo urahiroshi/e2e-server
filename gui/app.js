@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
-var usecases = require('./routes/usecases');
+var projects = require('./routes/projects');
 var trials = require('./routes/trials');
 var results = require('./routes/results');
 var images = require('./routes/images');
@@ -25,7 +25,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/api/usecases', usecases);
+app.use('/api/projects', projects);
 app.use('/api/trials', trials);
 app.use('/api/results', results);
 app.use('/images', images);

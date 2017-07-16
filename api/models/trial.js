@@ -15,19 +15,11 @@ const trialQueue = Queue('trial', Config.redis.port, Config.redis.host);
 class Trial extends Base {
   constructor(params, options) {
     super();
-    this.initialize();
     if (options == undefined) { options = {}; }
     this.hasUsecasePath = options.hasUsecasePath || false;
     if (params) {
       this.set(params, options);
     }
-  }
-
-  initialize() {
-    this.usecase = {
-      url: '',
-      actions: []
-    };
   }
 
   set(params) {
@@ -54,13 +46,14 @@ class Trial extends Base {
   toJSON() {
     const json = {
       id: this.id,
-      url: this.url,
       actions: this.actions,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
       state: this.state,
     };
-    ['error', 'projectId', 'iterationNumber', 'usecasePath'].forEach((key) => {
+    [
+      'usecase', 'error', 'projectId', 'iterationNumber', 'usecasePath'
+    ].forEach((key) => {
       if (this[key] != undefined) { json[key] = this[key]; }
     });
     return json;

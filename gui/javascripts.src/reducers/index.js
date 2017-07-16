@@ -1,20 +1,16 @@
 import { combineReducers } from 'redux';
-import usecases from './usecases';
+import project from './project';
 import usecase from './usecase';
-import newUsecase from './new-usecase';
-import modal from './modal';
-import trials from './trials';
 import trial from './trial';
 import results from './results';
 import command from './command';
+import iteration from './iteration';
 
 export default combineReducers({
-  usecases,
+  project,
   usecase,
-  newUsecase,
-  modal,
-  trials,
   trial,
   results,
   command,
+  iteration,
 });

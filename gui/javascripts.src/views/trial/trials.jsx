@@ -1,28 +1,30 @@
 import React, { PropTypes } from 'react';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 
 import Trial from '../trial/trial.jsx';
 
 const Trials = ({
   trials,
-  usecaseId,
-  selectedTrialId,
+  selectedTrial,
+  projectId,
+  iterationNumber,
+  usecasePath,
   results,
 }) => {
-  if (usecaseId == undefined) { return <section />; }
+  if (!trials) { return <section />; }
   return (
     <section>
       <h3>Trials</h3>
       <div className="list-group">
         {
           trials.map((trial) => {
-            if (trial.id === selectedTrialId) {
-              const selectedResults = results.filter((result) => (
-                result.trialId === selectedTrialId
+            if (selectedTrial && selectedTrial.id === trial.id) {
+              const selectedResults = results && results.filter((result) => (
+                result.trialId === selectedTrial.id
               ));
               return (
                 <div className="list-group-item" key={trial.id}>
-                  <Trial trial={trial} results={selectedResults} selected />
+                  <Trial trial={selectedTrial} results={selectedResults} selected />
                 </div>
               );
             }
@@ -30,7 +32,10 @@ const Trials = ({
               <Link
                 key={trial.id}
                 className="list-group-item"
-                to={`/usecases/${usecaseId}/trials/${trial.id}`}
+                to={
+                  `/projects/${projectId}/iterations/${iterationNumber}` +
+                  `/usecases/${usecasePath}?trialId=${trial.id}`
+                }
               >
                 <Trial trial={trial} selected={false} />
               </Link>
@@ -43,9 +48,11 @@ const Trials = ({
 };
 
 Trials.propTypes = {
-  trials: PropTypes.array.isRequired,
-  usecaseId: PropTypes.number,
-  selectedTrialId: PropTypes.number,
+  trials: PropTypes.array,
+  selectedTrial: PropTypes.object,
+  projectId: PropTypes.number,
+  iterationNumber: PropTypes.number,
+  usecasePath: PropTypes.string,
   results: PropTypes.array,
 };
 

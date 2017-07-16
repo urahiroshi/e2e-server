@@ -9,27 +9,22 @@ import {
 import { COMMAND_STATE } from '../consts';
 
 const command = (state = {}, action) => {
+  const assign = (params) => (
+    Object.assign({}, state, {
+      [action.name]: Object.assign({ updatedAt: Date.now() }, params),
+    })
+  );
   switch (action.type) {
     case PREPARE_COMMAND:
-      return Object.assign({}, state, {
-        [action.name]: { state: COMMAND_STATE.PREPARED },
-      });
+      return assign({ state: COMMAND_STATE.PREPARED });
     case START_COMMAND:
-      return Object.assign({}, state, {
-        [action.name]: { state: COMMAND_STATE.REQUESTED },
-      });
+      return assign({ state: COMMAND_STATE.REQUESTED });
     case SUCCESS_COMMAND:
-      return Object.assign({}, state, {
-        [action.name]: { state: COMMAND_STATE.SUCCEEDED },
-      });
+      return assign({ state: COMMAND_STATE.SUCCEEDED, succeededAt: Date.now() });
     case FAIL_COMMAND:
-      return Object.assign({}, state, {
-        [action.name]: { state: COMMAND_STATE.FAILED, error: action.error },
-      });
+      return assign({ state: COMMAND_STATE.FAILED, error: action.error });
     case END_COMMAND:
-      return Object.assign({}, state, {
-        [action.name]: { state: null },
-      });
+      return assign({ state: null });
     default:
       return state;
   }

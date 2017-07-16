@@ -2,7 +2,7 @@ const Connector = require('../connectors/http');
 const Config = require('../config/config');
 const querystring = require('querystring');
 
-class Usecase {
+class Iteration {
   static _queryString(queries) {
     const noNullQueries = {};
     Object.keys(queries).forEach(queryKey => {
@@ -15,18 +15,20 @@ class Usecase {
     );
   }
 
-  static find(
-    { projectId, usecasePath, offset, lastIterationNumber, limit }
-  ) {
-    const queryString = Usecase._queryString({ offset, lastIterationNumber, limit });
+  static findAll({ projectId, offset, limit }) {
+    const connector = new Connector();
+    const queryString = Iteration._queryString({ offset, limit });
+    return connector.request({
+      uri: `${Config.api.baseUrl}/projects/${projectId}/iterations${queryString}`
+    });
+  }
+
+  static find(projectId, iterationNumber) {
     const connector = new Connector();
     return connector.request({
-      uri: (
-        `${Config.api.baseUrl}/projects/${projectId}` +
-        `/usecases/${usecasePath}${queryString}`
-      )
+      uri: `${Config.api.baseUrl}/projects/${projectId}/iterations/${iterationNumber}`
     });
   }
 }
 
-module.exports = Usecase;
+module.exports = Iteration;

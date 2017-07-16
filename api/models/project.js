@@ -43,6 +43,7 @@ class Project extends Base {
     .then((rows) => {
       if (rows.length <= 0) { throw new NotFoundError(); }
       Object.assign(project, Connector.camelCase(rows[0]));
+      project.id = projectId;
       return project;
     })
   }

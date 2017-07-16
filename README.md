@@ -176,12 +176,15 @@ Trials may be created repeatedly, one of each is called as "Iteration".
 
 - response 200 (application/json)
 
+(If this trial is created by usecase of project, parameter usecasePath exists.)
+
 ```json
 {
     "createdAt": "2017-01-29T10:04:32.000Z",
     "id": 4238132527,
     "state": "completed",
     "updatedAt": "2017-01-29T10:13:15.000Z",
+    "usecasePath": "path/to/usecase",
     "usecase": {
         "actions": [
             {
@@ -285,7 +288,7 @@ Trials may be created repeatedly, one of each is called as "Iteration".
         {
             "usecasePath": "path/to/usecase",
             "id": 2343814817, 
-            "usecasePath": {
+            "usecase": {
                 "url": "http://yahoo.com",
                 "actions": [
                     {

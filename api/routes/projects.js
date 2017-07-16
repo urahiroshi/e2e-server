@@ -48,18 +48,20 @@ router.get('/:id/iterations/:iterationNumber', (req, res, next) => {
 });
 
 router.get('/:id/usecases/*', (req, res, next) => {
-  let lastIterationNumber;
+  let lastIterationNumber = null;
+  let offset = null;
   if (req.query.lastIterationNumber) {
     lastIterationNumber = Number(req.query.lastIterationNumber);
+  } else {
+    offset = (req.query.offset == undefined) ? 0 : Number(req.query.offset);
   }
-  const offset = (req.query.offset == undefined) ? 0 : Number(req.query.offset);
   const limit = (req.query.limit == undefined) ? 10 : Number(req.query.limit);
   const usecasePath = req.params[0];
   const errors = [];
   if (lastIterationNumber != undefined && !Number.isInteger(lastIterationNumber)) {
     errors.push('`lastIterationNumber` needs to be Integer.');
   }
-  if (!Number.isInteger(offset)) {
+  if (offset != undefined && !Number.isInteger(offset)) {
     errors.push('`offset` needs to be Integer.');
   }
   if (!Number.isInteger(limit)) {
@@ -78,6 +80,10 @@ router.get('/:id/usecases/*', (req, res, next) => {
   const usecase = { usecasePath };
   Trial.findByUsecase({ projectId, usecasePath, offset, lastIterationNumber, limit })
   .then((trials) => {
+    if (trials.length === 0) {
+      res.status(404).json({ errors: ['no trials'] });
+      return;
+    }
     usecase.trials = trials.map((trial) => trial.toJSON());
     res.json(usecase);
   })
