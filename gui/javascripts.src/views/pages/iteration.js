@@ -11,13 +11,6 @@ const mapStateToProps = (state) => ({
     state.command[API_NAME.GET_ITERATION] &&
     state.command[API_NAME.GET_ITERATION].succeededAt
   ),
-  // project: state.project,
-  // projectNeedUpdate: !state.project,
-  // iteration: state.iteration,
-  // iterationNeedUpdate: (
-  //   !state.iteration ||
-  //   (Date.now() - state.command[API_NAME.GET_ITERATION].succeededAt > 30000)
-  // ),
 });
 
 const mapDispatchToProps = (dispatch) => ({
