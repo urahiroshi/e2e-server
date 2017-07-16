@@ -19,7 +19,6 @@ const mapStateToProps = (state) => ({
     state.command[API_NAME.GET_USECASE] &&
     state.command[API_NAME.GET_USECASE].succeededAt
   ),
-  // test
   currentTrialId: state.trial && state.trial.id,
   lastFetchTrialAt: (
     state.command[API_NAME.GET_TRIAL] &&
@@ -47,7 +46,6 @@ const mapDispatchToProps = (dispatch) => ({
       )
     );
   },
-  // test
   startGetTrial: (trialId) => {
     dispatch(startGetTrialCommand(trialId));
   },
