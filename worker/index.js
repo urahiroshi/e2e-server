@@ -4,7 +4,7 @@ const Queue = require('bull');
 const Config = require('./config');
 const Connector = require('./libs/mysql');
 
-const resultQueue = Queue('result', Config.redis.port, Config.redis.host);
+const resultQueue = Queue('result', { redis: Config.redis });
 
 function randomInt() {
   return crypto.randomBytes(4).readUIntBE(0, 4);

@@ -10,7 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "bluebird": "^3.4.1",
-    "bull": "git://github.com/OptimalBits/bull.git",
+    "bull": "^3.0.0-rc.4",
     "fuzzy-query": "^0.4.4",
     "kue": "^0.11.1",
     "nightmare": "^2.9.1",

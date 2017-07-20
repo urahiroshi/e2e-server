@@ -5,8 +5,8 @@ const ScreenShot = require('./libs/screenshot');
 const Action = require('./libs/nightmare-action');
 const Config = require('./config');
 
-const trialQueue = Queue('trial', Config.redis.port, Config.redis.host);
-const resultQueue = Queue('result', Config.redis.port, Config.redis.host);
+const trialQueue = Queue('trial', { redis: Config.redis });
+const resultQueue = Queue('result', { redis: Config.redis });
 
 function log () {
   console.log.apply(
@@ -172,10 +172,10 @@ function trial (jobId, params, done) {
 function process () {
   trialQueue.process((job, done) => {
     try {
-      log('job', job.jobId);
-      trial(job.jobId, job.data, done);
+      log('job', job.id);
+      trial(job.id, job.data, done);
     } catch (error) {
-      onError(error, job.jobId, done)
+      onError(error, job.id, done)
     }
   });
 }

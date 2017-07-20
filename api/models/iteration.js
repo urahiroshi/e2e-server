@@ -8,7 +8,7 @@ const Queue = require('bull');
 const Trial = require('./trial');
 const NotFoundError = require('../errors/not-found-error');
 const Config = require('../config/config');
-const trialQueue = Queue('trial', Config.redis.port, Config.redis.host);
+const trialQueue = Queue('trial', { redis: Config.redis });
 
 class Iteration extends Base {
   constructor(params, options) {

@@ -10,7 +10,7 @@ const validator = require('validator');
 const _ = require('lodash');
 const Queue = require('bull');
 
-const trialQueue = Queue('trial', Config.redis.port, Config.redis.host);
+const trialQueue = Queue('trial', { redis: Config.redis });
 
 class Trial extends Base {
   constructor(params, options) {
