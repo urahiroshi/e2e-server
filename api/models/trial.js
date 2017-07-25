@@ -272,7 +272,7 @@ class Trial extends Base {
     ['error', 'projectId', 'iterationNumber', 'usecasePath'].forEach((key) => {
       if (trialObj[key] != undefined) { trial[key] = trialObj[key]; }
     });
-    if (trial.state !== 'unknown') { return Promise.resolve(trial); }
+    if (trial.state !== 'Initialized') { return Promise.resolve(trial); }
     console.log('getJob: trialId(jobId)', trial.id);
     return trialQueue.getJob(trial.id)
     .then((job) => {
