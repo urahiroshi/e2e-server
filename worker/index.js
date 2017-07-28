@@ -14,16 +14,16 @@ function log() {
   console.log(...arguments);
 }
 
-function addResult ({ trialId, actionType, actionOrder, value }) {
+function addResult ({ trialId, actionType, actionOrder, value, now }) {
   console.log('addResult', { trialId, actionType, actionOrder, value });
   const resultId = randomInt();
   const connector = new Connector();
   const transaction = connector.transaction();
   transaction.query(() => ['\
     insert into results \
-      (result_id, trial_id, action_type, action_order) \
-    values ( ?, ?, ?, ? )'
-    , resultId, trialId, actionType, actionOrder
+      (result_id, trial_id, action_type, action_order, created_at) \
+    values ( ?, ?, ?, ?, ? )'
+    , resultId, trialId, actionType, actionOrder, now
   ]);
   switch (actionType) {
     case 'getText':
@@ -50,6 +50,9 @@ function addResult ({ trialId, actionType, actionOrder, value }) {
     default:
       break;
   }
+  transaction.query(() => [
+    'update trials set updated_at = ? where trial_id = ?', now, trialId
+  ]);
   return transaction.end();
 }
 
@@ -92,7 +95,9 @@ function process () {
           updatedAt: new Date(job.timestamp)
         }));
       } else {
-        jobPromise = addResult(job.data);
+        jobPromise = addResult(Object.assign({}, job.data, {
+          now: new Date(job.timestamp)
+        }));
       }
       jobPromise.then(() => {
         done();

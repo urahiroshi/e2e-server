@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS trials (
   trial_id INT UNSIGNED NOT NULL,
   state VARCHAR(15) NOT NULL,
   usecase_json MEDIUMTEXT NOT NULL,
-  created_at TIMESTAMP NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NOT NULL,
   error VARCHAR(255),
   PRIMARY KEY (trial_id)
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS results (
   trial_id INT UNSIGNED NOT NULL,
   action_type VARCHAR(15) NOT NULL,
   action_order TINYINT UNSIGNED NOT NULL,
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created_at TIMESTAMP NOT NULL,
   FOREIGN KEY (trial_id) REFERENCES trials(trial_id),
   PRIMARY KEY (result_id)
 ) ENGINE InnoDB;
