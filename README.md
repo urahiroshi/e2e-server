@@ -134,8 +134,8 @@ Trials may be created repeatedly, one of each is called as "Iteration".
 
 ```json
 {
-    "url": "http://yahoo.com",
     "usecase": {
+        "url": "http://yahoo.com",
         "actions": [
             {
                 "selectors": [
@@ -168,7 +168,7 @@ Trials may be created repeatedly, one of each is called as "Iteration".
         ]
     },
     "id": 2343814817,
-    "createdAt": "2017-01-29T10:04:32.000Z",
+    "state": "Initialized"
 }
 ```
 

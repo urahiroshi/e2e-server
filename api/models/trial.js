@@ -28,7 +28,10 @@ class Trial extends Base {
       super.set(params);
       return;
     }
-    super.set(Object.assign({}, params, {
+    Object.keys(params).forEach((key) => {
+      if (key !== 'usecase') { super.set({ [key]: params[key] }); }
+    })
+    super.set({ usecase: Object.assign({}, params.usecase, {
       actions: params.usecase.actions.map((action) => {
         if (!action.selectors) { return action; }
         return Object.assign({}, action, {
@@ -40,7 +43,7 @@ class Trial extends Base {
           })
         })
       })
-    }));
+    })});
   }
 
   toJSON() {
