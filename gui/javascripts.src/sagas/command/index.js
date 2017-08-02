@@ -3,19 +3,17 @@ import { fork } from 'redux-saga/effects';
 
 import { START_COMMAND } from '../../actions/command';
 import { API_NAME } from '../../consts';
-import {
-  getUsecasesSaga, addUsecaseSaga, modifyUsecaseSaga, deleteUsecaseSaga,
-} from './usecase';
-import { getTrialsSaga, addTrialSaga } from './trial';
+import { getProjectSaga } from './project';
+import { getIterationSaga } from './iteration';
+import { getUsecaseSaga } from './usecase';
+import { getTrialSaga } from './trial';
 import { getResultsSaga } from './result';
 
 const sagaMap = {
-  [API_NAME.GET_USECASES]: getUsecasesSaga,
-  [API_NAME.ADD_USECASE]: addUsecaseSaga,
-  [API_NAME.MODIFY_USECASE]: modifyUsecaseSaga,
-  [API_NAME.DELETE_USECASE]: deleteUsecaseSaga,
-  [API_NAME.GET_TRIALS]: getTrialsSaga,
-  [API_NAME.ADD_TRIAL]: addTrialSaga,
+  [API_NAME.GET_PROJECT]: getProjectSaga,
+  [API_NAME.GET_ITERATION]: getIterationSaga,
+  [API_NAME.GET_USECASE]: getUsecaseSaga,
+  [API_NAME.GET_TRIAL]: getTrialSaga,
   [API_NAME.GET_RESULTS]: getResultsSaga,
 };
 

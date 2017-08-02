@@ -5,11 +5,10 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var routes = require('./routes/index');
-var usecases = require('./routes/usecases');
 var trials = require('./routes/trials');
 var results = require('./routes/results');
 var screenshots = require('./routes/screenshots');
+var projects = require('./routes/projects');
 
 var app = express();
 
@@ -26,11 +25,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
-app.use('/usecases', usecases);
 app.use('/trials', trials);
 app.use('/results', results);
 app.use('/screenshots', screenshots);
+app.use('/projects', projects);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -48,6 +46,9 @@ app.use(function(err, req, res, next) {
   if (err.name === 'ValidationError') {
     res.status(400);
     res.json({ errorType: err.name, errorDetail: err.errors });
+  } else if (err.name === 'NotFoundError') {
+    res.status(404);
+    res.json({ errorType: 'NotFoundError' });
   } else {
     res.status(500);
     res.json({ errorType: 'SystemError' });

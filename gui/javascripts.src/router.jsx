@@ -1,72 +1,30 @@
-import React, { PropTypes } from 'react';
-import { Router, browserHistory } from 'react-router';
-import { connect } from 'react-redux';
+import React from 'react';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
-import Usecases from './views/usecase/usecases';
-import { startGetUsecasesCommand } from './actions/usecases';
-import { resetTrial, startGetTrialsCommand } from './actions/trials';
-import { startGetResultsCommand } from './actions/results';
+import IterationPage from './views/pages/iteration';
+import UsecasePage from './views/pages/usecase';
+import TrialPage from './views/pages/trial';
+import NotFoundPage from './views/pages/not-found.jsx';
 
-const AppRouterComponent = ({
-  onEnterUsecases,
-  onEnterUsecase,
-  onEnterTrial,
-  onLeaveTrial,
-}) => {
-  const routes = {
-    path: '/',
-    indexRoute: {
-      component: Usecases,
-      onEnter: onEnterUsecases,
-    },
-    childRoutes: [
-      {
-        path: 'usecases',
-        component: Usecases,
-        onEnter: onEnterUsecases,
-      },
-      {
-        path: 'usecases/:id',
-        component: Usecases,
-        onEnter: onEnterUsecase,
-      },
-      {
-        path: 'usecases/:usecaseId/trials/:trialId',
-        component: Usecases,
-        onEnter: onEnterTrial,
-        onLeave: onLeaveTrial,
-      },
-    ],
-  };
-  return <Router history={browserHistory} routes={routes} />;
-};
+const AppRouterComponent = () => (
+  <BrowserRouter>
+    <Switch>
+      <Route
+        exact
+        path="/projects/:projectId/iterations/:iterationNumber"
+        component={IterationPage}
+      />
+      <Route
+        path="/projects/:projectId/iterations/:iterationNumber/usecases/:usecasePath+"
+        component={UsecasePage}
+      />
+      <Route
+        path="/trials/:trialId"
+        component={TrialPage}
+      />
+      <Route component={NotFoundPage} />
+    </Switch>
+  </BrowserRouter>
+);
 
-AppRouterComponent.propTypes = {
-  onEnterUsecases: PropTypes.func.isRequired,
-  onEnterUsecase: PropTypes.func.isRequired,
-  onEnterTrial: PropTypes.func.isRequired,
-  onLeaveTrial: PropTypes.func.isRequired,
-};
-
-const mapDispatchToProps = (dispatch) => ({
-  onEnterUsecases: () => {
-    dispatch(startGetUsecasesCommand());
-  },
-  onEnterUsecase: ({ params }) => {
-    const usecaseId = Number(params.id);
-    dispatch(startGetUsecasesCommand(usecaseId));
-    dispatch(startGetTrialsCommand(usecaseId, 10));
-  },
-  onEnterTrial: ({ params }) => {
-    const usecaseId = Number(params.usecaseId);
-    const trialId = Number(params.trialId);
-    dispatch(startGetUsecasesCommand(usecaseId));
-    dispatch(startGetTrialsCommand(usecaseId, 10, trialId));
-    dispatch(startGetResultsCommand(trialId));
-  },
-  onLeaveTrial: () => {
-    dispatch(resetTrial());
-  },
-});
-
-export default connect(undefined, mapDispatchToProps)(AppRouterComponent);
+export default AppRouterComponent;

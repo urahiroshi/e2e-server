@@ -1,0 +1,32 @@
+{
+    "trials": [
+        {
+            "usecasePath": "samples/yahoo",
+            "usecase": {
+                "url": "http://yahoo.com",
+                "actions": [
+                    {
+                        "selectors": ["form[action*=\"/search\"] [name=p]"],
+                        "type": "input",
+                        "value": "github nightmare"
+                    },
+                    {
+                        "selectors": ["form[action*=\"/search\"] [type=submit]"],
+                        "type": "click"
+                    },
+                    {
+                        "selectors": [".title"],
+                        "type": "getHtml"
+                    },
+                    {
+                        "selectors": [".title"],
+                        "type": "getText"
+                    },
+                    {
+                        "type": "getScreenshot"
+                    }
+                ]
+            }
+        }
+    ]
+}

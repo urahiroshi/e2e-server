@@ -1,14 +1,11 @@
 import {
   SET_TRIAL,
-  RESET_TRIAL,
-} from '../actions/trials';
+} from '../actions/trial';
 
-const trial = (state = {}, action) => {
+const trial = (state = null, action) => {
   switch (action.type) {
     case SET_TRIAL:
       return action.trial;
-    case RESET_TRIAL:
-      return {};
     default:
       return state;
   }

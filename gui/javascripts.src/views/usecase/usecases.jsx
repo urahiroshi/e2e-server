@@ -1,78 +1,61 @@
 import React, { PropTypes } from 'react';
-import { Link } from 'react-router';
-import Button from '../parts-atom/button.jsx';
+import { Link } from 'react-router-dom';
 import Usecase from '../usecase/usecase';
-import NewUsecase from '../usecase/new-usecase';
-import EditUsecase from '../usecase/edit-usecase';
-import DeleteUsecase from '../usecase/delete-usecase';
-import Modal from '../layouts/modal';
-import { API_NAME } from '../../consts';
 
-const Usecases = ({ usecases, selectedUsecaseId, onClickNewUsecaseButton }) => (
-  <div className="row">
-    <div className={(selectedUsecaseId) ? 'col-md-4' : 'col-md-12'} >
-      <div style={{ paddingBottom: '10px' }}>
-        <Button
-          className="btn btn-success"
-          onClick={onClickNewUsecaseButton}
-        >
-          <span className="glyphicon glyphicon-plus-sign" />
-          {' Add Usecase'}
-        </Button>
-      </div>
-      <div className="list-group">
-        {
-          usecases.map((usecase) =>
-            <Link
-              key={usecase.id}
-              to={`/usecases/${usecase.id}`}
-              className={
-                (selectedUsecaseId === usecase.id) ?
-                  'list-group-item active' : 'list-group-item'
-              }
-            >
-              <h4 className="list-group-item-heading">{usecase.name}</h4>
-              <p className="list-group-item-text">
-                {(usecase.createdAt) ?
-                  `created at ${(new Date(usecase.createdAt)).toLocaleString()}` :
-                  ''
+const Usecases = ({ usecases, selectedUsecasePath, projectId, iterationNumber }) => {
+  if (!usecases) { return <div>Loading...</div>; }
+  return (
+    <div className="row">
+      <div className={(selectedUsecasePath) ? 'col-md-4' : 'col-md-12'} >
+        <div className="list-group">
+          {
+            usecases.map((usecase) =>
+              <Link
+                key={usecase.usecasePath}
+                to={
+                  `/projects/${projectId}/iterations/${iterationNumber}` +
+                  `/usecases/${usecase.usecasePath}`
                 }
-              </p>
-            </Link>
-          )
-        }
+                className={
+                  (selectedUsecasePath === usecase.usecasePath) ?
+                    'list-group-item active' : 'list-group-item'
+                }
+              >
+                <h4 className="list-group-item-heading">{usecase.usecasePath}</h4>
+                <p className="list-group-item-text">
+                  {(usecase.createdAt) ?
+                    `created at ${(new Date(usecase.createdAt)).toLocaleString()}` :
+                    ''
+                  }
+                </p>
+              </Link>
+            )
+          }
+        </div>
       </div>
-      <Modal name={API_NAME.ADD_USECASE} title="New Usecase">
-        <NewUsecase />
-      </Modal>
-      <Modal name={API_NAME.MODIFY_USECASE} title="Edit Usecase">
-        <EditUsecase />
-      </Modal>
-      <Modal name={API_NAME.DELETE_USECASE} title="Delete Usecase">
-        <DeleteUsecase />
-      </Modal>
+      {
+        (selectedUsecasePath) ?
+          <div
+            className="col-md-8"
+            style={{
+              border: 'solid #337ab7 8px',
+              borderRadius: '20px/20px',
+              padding: '30px',
+              fontSize: '16px',
+            }}
+          >
+            <Usecase />
+          </div> : null
+      }
     </div>
-    {
-      (selectedUsecaseId) ?
-        <div
-          className="col-md-8"
-          style={{
-            border: 'solid #337ab7 8px',
-            borderRadius: '20px/20px',
-            padding: '30px',
-            fontSize: '16px',
-          }}
-        >
-          <Usecase />
-        </div> : null
-    }
-  </div>
-);
+  );
+};
 
 Usecases.propTypes = {
-  usecases: PropTypes.array.isRequired,
-  selectedUsecaseId: PropTypes.number,
-  onClickNewUsecaseButton: PropTypes.func.isRequired,
+  usecases: PropTypes.array,
+  selectedUsecasePath: PropTypes.string,
+  projectId: PropTypes.number,
+  iterationNumber: PropTypes.number,
 };
 
 export default Usecases;

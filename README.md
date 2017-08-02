@@ -1,119 +1,195 @@
-E2E-Server
+e2e-server
 ==========
 
-E2E-Server provides REST APIs and Web UI to operate browser.
+e2e-server is browser automation system for specification test or repeated browser operations.
 
-E2E-Server uses [Nightmare](https://github.com/segmentio/nightmare) for
-browser automation library , so E2E-Server may not use for cross browser testing now,
-but use for specification test or repeated browser operations.
+There are some features to write browser operations.
+
+- e2e-server provides REST API to operate browser, and you can write operations with yaml by using [e2e-client](https://github.com/urahiroshi/e2e-client).
+- e2e-server uses [fuzzy-query](https://github.com/urahiroshi/fuzzy-query) to select element.
+- Each services used by e2e-server is written by Docker container, so you can increase browser automation services (named "e2e")
 
 ## Roadmap
 
 E2E-Server has aimed to use E2E test, but current codes is under development version,
 it is unstable and more features needed.
-So this project plans to make many breaking changes by first half of 2017.
 
-## Getting Started (Web UI)
+## Requirements
 
-1. start docker-compose
+- docker-compose
+- Node.js 8.0+ (for e2e-client)
+
+## Getting Started
+
+1. clone this repository and [e2e-client](https://github.com/urahiroshi/e2e-client).
+
+```bash
+$ git clone https://github.com/urahiroshi/e2e-server.git
+$ git clone https://github.com/urahiroshi/e2e-client.git
+```
+
+2. move to e2e-server directory, start services
 
 ```
 $ docker-compose up
 ```
 
-2. Access to http://localhost:3000
+3. move to e2e-client directory, initialize project
 
-## Data Structures
+```
+$ npm start
+```
 
-### Usecase (Object)
+4. to show status, access to http://localhost:3000/projects/<projectId>/iterations/1
+(projectId is shown in e2e-client console)
 
-Usecase stores url and browser actions on this url.
+## Resources
 
-- id (number, readonly): identify number.
-    This is generated when usecase is created.
-- createdAt (string, readonly): created date time.
-    This is generated when usecase is created.
-- url (string, required): URL connected by e2e-server
-- actions (array(object), required):
-    - type (string, required): action type which is one of
-        "click", "input", "select", "getHtml", "getText", "getScreenshot"
-    - name (string): name for getXXX action type.
-        it is required when type is one of "getHtml", "getText", "getScreenshot".
-    - value (string): value to input or select.
-        on select value, it allows to use regexp format.
-        it is required when type is one of "input", "select"
-    - selectors (array(string)): selectors for html element.
-        This allows to use CSS selector format and [fuzzy-query](https://github.com/urahiroshi/fuzzy-query) selector format.
-        it is required when type is one of "click", "input", "select", "getHtml", "getText"
-    - variable (string): variable name to use result by after actions.
-        it is optional parameter of "getHtml", "getText". 
+### Trial
 
-### Trial (Object)
+Trial stores usecase, project information and job status.
+If trial is posted, begin to operate browser.
 
-Trial stores informations and progress of each job executing usecase actions.
-This object inherit job object on [bull](https://github.com/OptimalBits/bull).
+key  | type | description
+--|---|--
+usecase  | Usecase Object | **REQUIRED**. Usecase of the trial.
+usecasePath | String | Path to track usecase. If it is a trial of Iteration, this value is required.
+id | Integer | READONLY. Unique id of the trial.
+state | String | READONLY. State of trial. It can be one of them: ['initialized', 'finished']
+createdAt | String | READONLY. String of datetime when trial is created.
+updatedAt | String | READONLY. String of datetime when trial is updated.
 
-- usecaseId (number, required): id of usecase to use trial 
-- id (number, readonly): identify number.
-    This is generated when usecase is created.
-- createdAt (string, readonly): created date time.
-    This is generated when usecase is created.
-- timestamp: (number, readonly): updated date time.
-    This value is copy of job object.
-- usecase (object, readonly): copy of usecase when trial created
-- state (string): state of trial job
-- job (object): job object
+#### Usecase (contained in Trial)
 
-### Result (Object)
+Usecase stores browser actions and parameters such as url.
 
-Result stores values obtained from trial,
-which is created by getXXX actions on usecase.
+key  | type  | description
+--|---|--
+url  | String  | **REQUIRED**. Url where actions are called.
+actions  | Array(Action Object)  | **REQUIRED**. Actions are executed in a sequential order.
 
-- resultId (number, readonly): identify number.
-    This is generated when usecase is created.
-- trialId (number, readonly): id of trial
-- htmls (array(object)):
-    - html (string) : obtained html value
-    - name (string) : name of usecase action
-- texts (array(object)):
-    - txt: obtained text value
-    - name: name of usecase action
-- screenshots (array(object)):
-    - uri: uri to get screenshot object
-    - name: name of usecase action
+#### Action (contained in Usecase)
+
+Action stores informations to operate browser.
+It has some data formats by specified type as shown below.
+
+##### click
+
+Click selected element.
+
+key  | type  | description
+--|---|--
+type  | String  | **REQUIRED**. 'click'.
+selectors  | Array(String)  | **REQUIRED**. fuzzy-query selectors for element to click.
+
+##### input, select
+
+Input or select specified value to selected element.
+
+key  | type  | description
+--|---|--
+type  | String  | **REQUIRED**. 'input' or 'select'.
+selectors  | Array(String)  |  **REQUIRED**. fuzzy-query selectors for element to input/select.
+value | String  | **REQUIRED**. Input value or select value (on select, it is interpreted by regular expression).
+
+##### getHtml, getText
+
+Get inner html or inner text of selected element.
+
+key  | type  | description
+--|---|--
+type  | String  | **REQUIRED**. 'getHtml' or 'getText'
+selectors  | Array(String)  |  **REQUIRED**. fuzzy-query selectors for element to get html or text.
+variable  | String  |  Variable name to be used by after actions. For example, if variable is 'foo', '${foo}' is replaced by result value (html or text) on parameter of after actions.
+
+##### getScreenshot
+
+Get screenshot of the current page.
+
+key  | type  | description
+--|---|--
+type  | String  | **REQUIRED**. 'getScreenshot'.
+
+### Result
+
+Result stores information of an executed action of trial.
+Result is returned by array, the order of this array correspond  to the order of actions.
+This resouce is READONLY.
+
+key  | type  | description
+--|---|--
+actionType  | String  | Type of the action.
+createdAt  | String  | Time when action is executed.
+id  | Integer  |  Unique id of the result.
+trialId  | Integer  |  Id of the trial.
+text  | String  |  If actionType is 'getText', this value shows the text.
+html  | String  |  If actionType is 'getHtml', this value shows the html.
+uri  | String  |  If actionType is 'getScreenshot', this value shows the uri of the screenshot.
+
+### Screenshot
+
+Screenshot stores a image gotten by getScreenshot action.
+This resource is READONLY.
+
+key  | type  | description
+--|---|--
+resultId  | Integer  | Id of corresponding result.
+image  | String  | Base64 encoded data of screenshot image (PNG).
+
+### Project
+
+Project stores properties of project, which is used for bunding some related usecases and tracking trials of the same usecase.
+
+key  | type  | description
+--|---|--
+id  | Integer  | READONLY. Unique id of the project.
+createdAt  | String  | READONLY. String of datetime when project is created.
+
+### Iteration
+
+Iteration stores array of trials these usecases are related in a project.
+If iteration is posted, these trials will be executed.
+
+key  | type  | description
+--|---|--
+iterationNumber  | Integer  | READONLY. Unique id of the iteraion in a project. This value is incremental.
+createdAt  | String  | READONLY. String of datetime when iteration is created.
+trials | Array(Trial Object) | **REQUIRED**. Array of trials.
+
 
 ## API Example
 
-### POST /usecases
+### POST /trials
 
 - Request (application/json)
 
 ```json
 {
-  "name": "hogehoge",
-  "url": "http://yahoo.com",
-  "actions": [
-    {
-      "selectors": ["form[action*=\"/search\"] [name=p]"],
-      "type": "input",
-      "value": "github nightmare"
-    },
-    {
-      "selectors": ["form[action*=\"/search\"] [type=submit]"],
-      "type": "click"
-    },
-    {
-      "selectors": [".title"],
-      "type": "getHtml"
-    },
-    {
-      "selectors": [".title"],
-      "type": "getText"
-    },
-    {
-      "type": "getScreenshot"
+    "usecase": {
+        "url": "http://yahoo.com",
+        "actions": [
+            {
+                "selectors": ["form[action*=\"/search\"] [name=p]"],
+                "type": "input",
+                "value": "github nightmare"
+            },
+            {
+                "selectors": ["form[action*=\"/search\"] [type=submit]"],
+                "type": "click"
+            },
+            {
+                "selectors": [".title"],
+                "type": "getHtml"
+            },
+            {
+                "selectors": [".title"],
+                "type": "getText"
+            },
+            {
+                "type": "getScreenshot"
+            }
+        ]
     }
-  ]
 }
 ```
 
@@ -121,52 +197,58 @@ which is created by getXXX actions on usecase.
 
 ```json
 {
-    "actions": [
-        {
-            "selectors": [
-                "form[action*=\"/search\"] [name=p]"
-            ], 
-            "type": "input", 
-            "value": "github nightmare"
-        }, 
-        {
-            "selectors": [
-                "form[action*=\"/search\"] [type=submit]"
-            ], 
-            "type": "click"
-        }, 
-        {
-            "selectors": [
-                ".title"
-            ], 
-            "type": "getHtml"
-        }, 
-        {
-            "selectors": [
-                ".title"
-            ], 
-            "type": "getText"
-        }, 
-        {
-            "type": "getScreenshot"
-        }
-    ],
-    "id": 2343814817, 
-    "name": "hogehoge", 
-    "url": "http://yahoo.com"
+    "usecase": {
+        "url": "http://yahoo.com",
+        "actions": [
+            {
+                "selectors": [
+                    "form[action*=\"/search\"] [name=p]"
+                ],
+                "type": "input",
+                "value": "github nightmare"
+            },
+            {
+                "selectors": [
+                    "form[action*=\"/search\"] [type=submit]"
+                ],
+                "type": "click"
+            },
+            {
+                "selectors": [
+                    ".title"
+                ],
+                "type": "getHtml"
+            },
+            {
+                "selectors": [
+                    ".title"
+                ],
+                "type": "getText"
+            },
+            {
+                "type": "getScreenshot"
+            }
+        ]
+    },
+    "id": 2343814817,
+    "state": "Initialized"
 }
 ```
 
-### GET /usecases
+### GET /trials/:id
 
-- Response 200 (application/json)
+- response 200 (application/json)
 
-(list of `POST /usecases` response object with createdAt)
+(If this trial is created by usecase of project, parameter usecasePath exists.)
 
 ```json
-
-[
-    {
+{
+    "createdAt": "2017-01-29T10:04:32.000Z",
+    "id": 4238132527,
+    "state": "completed",
+    "updatedAt": "2017-01-29T10:13:15.000Z",
+    "usecasePath": "path/to/usecase",
+    "usecase": {
         "actions": [
             {
                 "selectors": [
@@ -202,43 +284,60 @@ which is created by getXXX actions on usecase.
                 "value": null
             }
         ],
-        "createdAt": "2017-01-08T02:17:32.000Z",
-        "id": 1863214872,
-        "name": "hogehoge",
         "url": "http://yahoo.com"
     }
-]
+}
 ```
 
-### GET /usecases/:id
+### POST /projects
 
-- Response 200 (application/json)
+```json
+{}
+```
 
-(Response body is a member object of `GET /usecases`)
-
-### PUT /usecases/:id
-
-- Request (application/json)
-
-(Request body is same as `POST /usecases`)
-
-- Response 200 (application/json)
-
-(Response body is same as `GET /usecases/:id`)
-
-### DELETE /usecases/:id
-
-- Response 204
-
-(No response body)
-
-### POST /trials
-
-- Request (application/json)
+- Response 201 (application/json)
 
 ```json
 {
-    "usecaseId": 1863214872
+    "id": 2343814817,
+    "createdAt": "2017-01-29T10:04:32.000Z",
+}
+```
+
+### POST /projects/:projectId/iterations
+
+```json
+{
+    "trials": [
+        {
+            "usecasePath": "path/to/usecase",
+            "usecase": {
+                "url": "http://yahoo.com",
+                "actions": [
+                    {
+                        "selectors": ["form[action*=\"/search\"] [name=p]"],
+                        "type": "input",
+                        "value": "github nightmare"
+                    },
+                    {
+                        "selectors": ["form[action*=\"/search\"] [type=submit]"],
+                        "type": "click"
+                    },
+                    {
+                        "selectors": [".title"],
+                        "type": "getHtml"
+                    },
+                    {
+                        "selectors": [".title"],
+                        "type": "getText"
+                    },
+                    {
+                        "type": "getScreenshot"
+                    }
+                ]
+            }
+        }
+    ]
 }
 ```
 
@@ -246,84 +345,140 @@ which is created by getXXX actions on usecase.
 
 ```json
 {
-    "id": 4238132527, 
-    "usecaseId": 1863214872
+    "iterationNumber": 1,
+    "createdAt": "",
+    "trials": [
+        {
+            "usecasePath": "path/to/usecase",
+            "id": 2343814817,
+            "usecase": {
+                "url": "http://yahoo.com",
+                "actions": [
+                    {
+                        "selectors": ["form[action*=\"/search\"] [name=p]"],
+                        "type": "input",
+                        "value": "github nightmare"
+                    },
+                    {
+                        "selectors": ["form[action*=\"/search\"] [type=submit]"],
+                        "type": "click"
+                    },
+                    {
+                        "selectors": [".title"],
+                        "type": "getHtml"
+                    },
+                    {
+                        "selectors": [".title"],
+                        "type": "getText"
+                    },
+                    {
+                        "type": "getScreenshot"
+                    }
+                ]
+            }
+        }
+    ]
 }
 ```
 
-### GET /trials?usecaseId=:usecaseId&offset=:offset&length=:length
 
-- query parameters:
-    - usecaseId: id of usecase
-    - offset: offset of trial which is created by same usecase
-    (offset=0 is most recently trial)
-    - length: count of trials from offset
+### GET /projects/:projectId
+
+Get project iterators (it will get less than 10 iterators as default).
 
 - Response 200 (application/json)
 
 ```json
+{
+    "id": 2343814817,
+    "createdAt": "2017-01-29T10:04:32.000Z"
+}
+```
 
+### GET /projects/:projectId/iterations
+
+Get project iterations. (it will get less than 10 iterations as default).
+
+- Query Parameters
+    - offset: number from most recent iteration.
+      Default value is offset=0, it means most recent one.
+    - limit: max length of iterations which is older than offset. Default value is 10.
+
+```json
 [
-    {
-        "createdAt": "2017-01-29T10:04:32.000Z",
-        "id": 4238132527,
-        "state": "completed",
-        "updatedAt": "2017-01-29T10:13:15.000Z",
-        "usecase": {
-            "actions": [
-                {
-                    "selectors": [
-                        "form[action*=\"/search\"] [name=p]"
-                    ],
-                    "type": "input",
-                    "value": "github nightmare"
-                },
-                {
-                    "selectors": [
-                        "form[action*=\"/search\"] [type=submit]"
-                    ],
-                    "type": "click",
-                    "value": null
-                },
-                {
-                    "selectors": [
-                        ".title"
-                    ],
-                    "type": "getHtml",
-                    "value": null
-                },
-                {
-                    "selectors": [
-                        ".title"
-                    ],
-                    "type": "getText",
-                    "value": null
-                },
-                {
-                    "selectors": [],
-                    "type": "getScreenshot",
-                    "value": null
-                }
-            ],
-            "id": 1863214872,
-            "url": "http://yahoo.com",
+        {
+            "iterationNumber": 1,
+            "createdAt": ""
         },
-        "usecaseId": 1863214872
-    }
+        {
+            "iterationNumber": 2,
+            "createdAt": ""
+        }
 ]
 ```
 
-### GET /trials/:id
+### GET /projects/:projectId/iterations/:iterationNumber
 
-- response 200 (application/json)
+Get trials of the iterations.
 
-(Response body is same as a list member of `GET /trials`)
+- Response 200 (application/json)
 
-### DELETE /trials/:id
+```json
+{
+    "iterationNumber": 2,
+    "createdAt": "",
+    "trials": [
+        {
+            "usecasePath": "path/to/usecase",
+            "id": 2343814817,
+            "state": "Finished",
+            "createdAt": "",
+            "updatedAt": ""
+        },
+        {
+            "usecasePath": "path/to/usecase2",
+            "id": 109726492,
+            "state": "Running",
+            "createdAt": "",
+            "updatedAt": ""
+        }
+    ]
+}
+```
 
-- response 204 (application/json)
+### GET /projects/:projectId/usecases/:usecasePath
 
-(No response body)
+Get trials of the usecase (it will get less than 10 trials as default).
+
+- Query Parameters
+    - offset: number from most recent trial.
+      Default value (if offset and lastIterationNumber is undefined) is offset=0, it means most recent one.
+    - lastIterationNumber: first iterationNumber of the trial.
+    - limit: max length of trials which is older than offset. Default value is 10.
+
+- Response 200 (application/json)
+
+```json
+{
+    "usecasePath": "/path/to/usecase",
+    "trials": [
+        {
+            "iterationNumber": 1,
+            "id": 109726492,
+            "state": "Running",
+            "createdAt": "",
+            "updatedAt": ""
+        },
+        {
+            "iterationNumber": 2,
+            "id": 109726492,
+            "state": "Running",
+            "createdAt": "",
+            "updatedAt": ""
+        }
+    ]
+}
+```
 
 ### GET /results?trialId=:trialId
 
@@ -335,46 +490,40 @@ which is created by getXXX actions on usecase.
 ```json
 [
     {
-        "actionType": "input", 
-        "createdAt": "2017-02-04T07:16:34.000Z", 
-        "id": 594747449, 
+        "actionType": "input",
+        "createdAt": "2017-02-04T07:16:34.000Z",
+        "id": 594747449,
         "trialId": 1294938304
-    }, 
+    },
     {
-        "actionType": "click", 
-        "createdAt": "2017-02-04T07:16:34.000Z", 
-        "id": 2795612685, 
+        "actionType": "click",
+        "createdAt": "2017-02-04T07:16:34.000Z",
+        "id": 2795612685,
         "trialId": 1294938304
-    }, 
+    },
     {
-        "actionType": "getHtml", 
-        "createdAt": "2017-02-04T07:16:35.000Z", 
-        "html": "<a class=\" ac-algo fz-l ac-21th lh-24\" data-sb=\"/beacon/clk;_ylt=AwrSbnHTf5VYZOcAT1JXNyoA;_ylu=X3oDMTByb2lvbXVuBGNvbG8DZ3ExBHBvcwMxBHZ0aWQDBHNlYwNzcg--\" href=\"https://github.com/segmentio/nightmare\" referrerpolicy=\"origin\" target=\"_blank\" data-b7c=\"58957fd3da311\"><b>GitHub</b> - segmentio/<b>nightmare</b>: A high-level browser automation ...</a>", 
-        "id": 921606434, 
+        "actionType": "getHtml",
+        "createdAt": "2017-02-04T07:16:35.000Z",
+        "html": "<a class=\" ac-algo fz-l ac-21th lh-24\" data-sb=\"/beacon/clk;_ylt=AwrSbnHTf5VYZOcAT1JXNyoA;_ylu=X3oDMTByb2lvbXVuBGNvbG8DZ3ExBHBvcwMxBHZ0aWQDBHNlYwNzcg--\" href=\"https://github.com/segmentio/nightmare\" referrerpolicy=\"origin\" target=\"_blank\" data-b7c=\"58957fd3da311\"><b>GitHub</b> - segmentio/<b>nightmare</b>: A high-level browser automation ...</a>",
+        "id": 921606434,
         "trialId": 1294938304
-    }, 
+    },
     {
-        "actionType": "getText", 
-        "createdAt": "2017-02-04T07:16:35.000Z", 
-        "id": 3769942071, 
-        "trialId": 1294938304, 
+        "actionType": "getText",
+        "createdAt": "2017-02-04T07:16:35.000Z",
+        "id": 3769942071,
+        "trialId": 1294938304,
         "text": "GitHub - segmentio/nightmare: A high-level browser automation ..."
-    }, 
+    },
     {
-        "actionType": "getScreenshot", 
-        "createdAt": "2017-02-04T07:16:36.000Z", 
-        "id": 1102802687, 
-        "trialId": 1294938304, 
+        "actionType": "getScreenshot",
+        "createdAt": "2017-02-04T07:16:36.000Z",
+        "id": 1102802687,
+        "trialId": 1294938304,
         "uri": "/screenshots/1102802687"
     }
 ]
 ```
-
-### DELETE /results?trialId=:trialId
-
-- response 204 (application/json)
-
-(No response body)
 
 ### GET /screenshots/:resultId
 

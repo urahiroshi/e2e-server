@@ -1,10 +1,16 @@
 import axios from 'axios';
-
-const url = '/api/usecases';
+import querystring from 'querystring';
 
 export default {
-  getList: () => axios.get(url),
-  add: (usecase) => axios.post(url, usecase),
-  modify: (usecase, newUsecase) => axios.put(`${url}/${usecase.id}/`, newUsecase),
-  delete: (usecase) => axios.delete(`${url}/${usecase.id}/`),
+  get: ({ projectId, usecasePath, offset, lastIterationNumber, limit }) => {
+    const queries = { offset, lastIterationNumber, limit };
+    const noNullQueries = Object.keys(queries).reduce((next, key) => {
+      if (queries[key] != undefined) {
+        return Object.assign({}, next, { [key]: queries[key] });
+      }
+      return next;
+    }, {});
+    const url = `/api/projects/${projectId}/usecases/${usecasePath}`;
+    return axios.get(`${url}?${querystring.stringify(noNullQueries)}`);
+  },
 };

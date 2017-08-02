@@ -42,6 +42,7 @@
         ],
         "import/extensions": 2,
         "eqeqeq": ["warn", "always"],
-        "import/prefer-default-export": ["warn", "always"]
+        "import/prefer-default-export": ["warn", "always"],
+        "no-underscore-dangle": ["error", { "allowAfterThis": true }]
     }
 }

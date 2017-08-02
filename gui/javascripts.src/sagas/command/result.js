@@ -6,7 +6,7 @@ import Api from '../../apis/result';
 
 export function* getResultsSaga(name, { trialId }) {
   try {
-    const response = yield call(Api.getList, trialId);
+    const response = yield call(Api.getList, { trialId });
     const results = response.data;
     yield put(setResults({ trialId, results }));
     yield put(successCommand(name));

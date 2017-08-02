@@ -54,4 +54,5 @@ ENV DEBUG nightmare:actions*
 ENV DISPLAY :9.0
 
 # Execution
-CMD Xvfb -ac -screen scrn 1280x2000x24 :9.0 & sleep 3 && node index.js
+CMD [ -f /tmp/.X9-lock ] && rm -f /tmp/.X9-lock; \
+    Xvfb -ac -screen scrn 1280x2000x24 :9.0 & sleep 3 && node index.js

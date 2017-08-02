@@ -1,24 +1,15 @@
 import { connect } from 'react-redux';
 import Usecases from '../usecase/usecases.jsx';
-import { prepareCommand } from '../../actions/command';
-import { resetNewUsecase } from '../../actions/new-usecase';
-import { API_NAME } from '../../consts';
 
 const mapStateToProps = (state) => ({
-  usecases: state.usecases,
-  selectedUsecaseId: state.usecase.id,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  onClickNewUsecaseButton: () => {
-    dispatch(resetNewUsecase());
-    dispatch(prepareCommand(API_NAME.ADD_USECASE));
-  },
+  usecases: state.iteration && state.iteration.trials,
+  selectedUsecasePath: state.usecase && state.usecase.usecasePath,
+  projectId: state.project && state.project.id,
+  iterationNumber: state.iteration && state.iteration.iterationNumber,
 });
 
 const UsecasesContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
 )(Usecases);
 
 export default UsecasesContainer;
