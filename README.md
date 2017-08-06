@@ -1,7 +1,7 @@
 e2e-server
 ==========
 
-e2e-server is browser automation system for specification test or repeated browser operations.
+e2e-server is browser automation system for End-To-End test or repeating browser operations.
 
 There are some features to write browser operations.
 
@@ -9,10 +9,7 @@ There are some features to write browser operations.
 - e2e-server uses [fuzzy-query](https://github.com/urahiroshi/fuzzy-query) to select element.
 - Each services used by e2e-server is written by Docker container, so you can increase browser automation services (named "e2e")
 
-## Roadmap
-
-E2E-Server has aimed to use E2E test, but current codes is under development version,
-it is unstable and more features needed.
+Current version is under development, so it is unstable and may be added breaking changes.
 
 ## Requirements
 
