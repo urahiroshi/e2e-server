@@ -33,7 +33,7 @@ class Trial extends Base {
     })
     super.set({ usecase: Object.assign({}, params.usecase, {
       actions: params.usecase.actions.map((action) => {
-        if (!action.selectors) { return action; }
+        if (!action || !action.selectors) { return action; }
         return Object.assign({}, action, {
           selectors: action.selectors.map((selector) => {
             if (typeof selector === 'object') {
@@ -49,7 +49,6 @@ class Trial extends Base {
   toJSON() {
     const json = {
       id: this.id,
-      actions: this.actions,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
       state: this.state,
@@ -81,12 +80,15 @@ class Trial extends Base {
       usecase: (usecase) => {
         if (typeof usecase !== 'object') { return { usecase: 'invalid type' }; }
         const error = {};
-        if (!validator.isURL(usecase.url)) {
-          error['usecase.url'] = `invalid type` ;
+        if (typeof usecase.url !== 'string' || !validator.isURL(usecase.url)) {
+          error['usecase.url'] = `invalid type`;
+          return error;
         }
         if (
           !Array.isArray(usecase.actions) ||
+          usecase.actions.length === 0 ||
           !usecase.actions.every((action) => (
+            action != undefined &&
             (action.selectors == undefined || Array.isArray(action.selectors)) &&
             Helper.isString(action.type) &&
             Helper.isString(action.value, { nullable: true }) &&
@@ -115,6 +117,9 @@ class Trial extends Base {
 
   static _validateAction({selectors, type, value, variable}) {
     const errors = [];
+    if (!Trial._isValidType(type)) {
+      return [{ type: `'${type}' is unknown type` }]
+    }
     if (
       Trial._isInputAction(type) &&
       !(value && validator.isLength(value, { min: 1, max: 255 }))
@@ -192,6 +197,13 @@ class Trial extends Base {
   static _isSelectorAction(type) {
     const notSelectorActions = ['getScreenshot'];
     return !notSelectorActions.includes(type);
+  }
+
+  static _isValidType(type) {
+    const actions = [
+      'click', 'input', 'select', 'getText', 'getHtml', 'getScreenshot'
+    ];
+    return actions.includes(type);
   }
 
   save() {
